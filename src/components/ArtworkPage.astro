@@ -1,0 +1,74 @@
+---
+// One artwork: its three images on the left, sticky label on the right.
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { t, artworkTitles } from '../content/index.js';
+import { pageUrl } from '../lib/urls.js';
+import { artworkImages } from '../lib/images.js';
+
+const { artwork } = Astro.props;
+const title = artworkTitles[artwork.slug];
+const medium = t.media[artwork.medium];
+const images = artworkImages(artwork.slug);
+const altFor = (kind) => (kind === 'mockup' ? `${title}, ${t.artwork.view}` : `${title}, ${t.artwork.detail}`);
+---
+<Base
+  title={title}
+  description={`${title} (${artwork.year}). ${medium}, ${artwork.size}. ${t.site.name}`}
+  path={`gallery/${artwork.slug}`}
+  current="gallery"
+  image={images[0].src}
+>
+  <section class="section">
+    <div class="container content">
+      <div class="images">
+        {images.map((img, i) => (
+          <Picture
+            src={img.src}
+            alt={altFor(img.kind)}
+            formats={['avif']}
+            fallbackFormat="webp"
+            widths={[480, 720, 1080]}
+            sizes="(max-width: 767px) 100vw, 690px"
+            loading={i === 0 ? 'eager' : 'lazy'}
+          />
+        ))}
+      </div>
+
+      <div class="info">
+        <div class="label">
+          <h1 class="name">{title}</h1>
+          <p class="year">{artwork.year}</p>
+          <p>{medium}</p>
+          <p>{artwork.size}</p>
+          {artwork.status === 'available' && <p class="price">{t.artwork.price} {artwork.price}</p>}
+
+          {artwork.status === 'sold'
+            ? <span class="button" aria-disabled="true">{t.artwork.sold}</span>
+            : <a class="button" href={pageUrl('contact')}>{t.artwork[artwork.status]}</a>}
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .content { display: flex; justify-content: center; gap: 1rem; }
+
+  .images { width: 75%; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .images :global(img) { max-height: 50rem; width: auto; object-fit: contain; }
+
+  .info { width: 25%; }
+  .label { position: sticky; top: 10rem; }
+  .label p { margin: 0; }
+
+  .name { font-size: 1rem; font-weight: 700; text-transform: uppercase; margin: 0; }
+  .year { padding: .2rem 0 1rem; }
+  .price { padding-top: 1rem; font-style: italic; }
+  .button { margin-top: 1rem; }
+
+  @media (max-width: 767px) {
+    .content { flex-direction: column; gap: 2rem; }
+    .images, .info { width: 100%; }
+  }
+</style>

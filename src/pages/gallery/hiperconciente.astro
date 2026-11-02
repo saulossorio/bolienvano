@@ -1,0 +1,78 @@
+---
+// NFT artwork: painting, two performance videos and the story of the piece.
+import { Picture } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import { t } from '../../content/index.js';
+import { image } from '../../lib/images.js';
+
+const painting = image('artworks', 'hiperconciente_mockup.jpg');
+const nftUrl = 'https://rarible.com/token/0x44dcebb4374f7e01ba415c7be243f6c66636ea1c:383?tab=overview';
+
+// Vimeo player addresses (portrait videos)
+const videos = [
+  'https://player.vimeo.com/video/737055414?h=16d93d734d&dnt=1',
+  'https://player.vimeo.com/video/737064322?h=341a158399&dnt=1',
+];
+---
+<Base title={t.nft.title} description={t.nft.description} path="gallery/hiperconciente" current="nft" image={painting}>
+  <section class="section nft">
+    <div class="media">
+      <Picture
+        src={painting}
+        alt={t.nft.imageAlt}
+        formats={['avif']}
+        fallbackFormat="webp"
+        widths={[480, 720]}
+        sizes="(max-width: 767px) 100vw, 480px"
+        class="frame"
+        loading="eager"
+      />
+      {videos.map((src, i) => (
+        <div class="frame video">
+          <iframe src={src} title={t.nft.videos[i]} loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      ))}
+    </div>
+
+    <div class="text">
+      <div class="sticky">
+        <h1>{t.nft.title}</h1>
+        <p class="year">{t.nft.year}</p>
+        <p>{t.nft.medium}</p>
+        <p>{t.nft.size}</p>
+        <hr />
+        {t.nft.paragraphs.map((p) => <p>{p}</p>)}
+        <a class="button" href={nftUrl} target="_blank" rel="noopener noreferrer">
+          {t.nft.visit} <span class="visually-hidden">({t.a11y.newTab})</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nft { display: flex; justify-content: space-between; }
+
+  .media {
+    width: 50%; padding-left: 20px;
+    display: flex; flex-direction: column; align-items: flex-end;
+  }
+  .media :global(.frame), .frame { width: 100%; max-width: 30rem; padding: 2rem; }
+  .video iframe { display: block; width: 100%; aspect-ratio: 9 / 16; border: 0; }
+
+  .text { width: 50%; }
+  .sticky { position: sticky; top: 5rem; max-width: 480px; }
+  .text p { line-height: 2; margin: 0; }
+  .text .year { padding-bottom: 1rem; }
+  hr { width: 50%; margin: 2rem 0; border: 0; border-top: 1px solid var(--line); }
+  .button { margin: 2rem 0 .75rem; }
+
+  @media (max-width: 991px) {
+    .media :global(.frame), .frame { max-width: 20rem; }
+  }
+  @media (max-width: 767px) {
+    .nft { flex-direction: column; }
+    .media, .text { width: 100%; padding-left: 0; align-items: center; }
+    .media :global(.frame), .frame { max-width: 100%; padding-inline: 0; }
+  }
+</style>

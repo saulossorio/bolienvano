@@ -1,0 +1,87 @@
+/* Global styles: tokens, base elements and patterns shared by several pages.
+   Styles used by one component live inside that .astro file. */
+
+:root {
+  --text:      #000;
+  --dark:      #3d3e37;   /* logo, buttons */
+  --muted:     #767676;   /* secondary text */
+  --line:      #d5d5d7;   /* separators, footer */
+  --link-hover:#0371c4;
+  --white:     #fff;
+  --font:      'Montserrat Variable', system-ui, sans-serif;
+  --container: 940px;
+  --pad:       2rem;      /* section padding */
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--white);
+}
+
+h1, h2, h3 { font-weight: 400; line-height: 1; margin: 0 0 .625rem; }
+h1 { font-size: 3rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+p  { margin: 0 0 .625rem; }
+
+img { display: block; max-width: 100%; height: auto; }
+a   { color: inherit; }
+
+.container { max-width: var(--container); margin-inline: auto; }
+
+.section { padding: var(--pad); }
+@media (max-width: 767px) {
+  .section { padding: 1rem; }
+}
+
+/* Dark rectangular button, inverts on hover */
+.button {
+  display: inline-block;
+  padding: 20px 40px;
+  border: 2px solid var(--dark);
+  border-radius: 3px;
+  background: var(--dark);
+  color: var(--white);
+  font: inherit;
+  font-weight: 600;
+  letter-spacing: .05rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease;
+}
+.button:hover { background: transparent; color: var(--dark); }
+.button[aria-disabled='true'] { cursor: default; opacity: .6; }
+.button[aria-disabled='true']:hover { background: var(--dark); color: var(--white); }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+.skip-link {
+  position: absolute; left: 1rem; top: -100%;
+  z-index: 100; padding: .5rem 1rem;
+  background: var(--dark); color: var(--white);
+}
+.skip-link:focus { top: 0; }
+
+:focus-visible { outline: 2px solid var(--link-hover); outline-offset: 3px; }
+
+/* Pages fade in on load, like the old site */
+@media (prefers-reduced-motion: no-preference) {
+  main { animation: fadeIn .6s ease both; }
+}
+@keyframes fadeIn { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  html { scroll-behavior: auto; }
+}
