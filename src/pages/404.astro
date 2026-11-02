@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import { t } from '../content/index.js';
+import { pageUrl } from '../lib/urls.js';
+---
+<Base title={t.notFound.title} noindex>
+  <section class="section">
+    <div class="container message">
+      <h1 class="visually-hidden">{t.notFound.title}</h1>
+      {t.notFound.lines.map((line) => <p>{line}</p>)}
+      <a class="button" href={pageUrl('')} data-back>{t.notFound.back}</a>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // "Go back" returns to the previous page when there is one, otherwise home
+  document.querySelector('[data-back]')?.addEventListener('click', (e) => {
+    if (history.length > 1) { e.preventDefault(); history.back(); }
+  });
+</script>
+
+<style>
+  .message {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 60vh; font-size: 1.5rem; text-align: center;
+  }
+  .message p { margin: 0; }
+  .button { margin-top: 2rem; font-size: 1rem; }
+</style>

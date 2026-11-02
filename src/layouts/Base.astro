@@ -1,0 +1,75 @@
+---
+// Page shell shared by every page: <head> (SEO, analytics, fonts), header and footer.
+// Props:
+//   title        page title; the site name is added after it
+//   description  meta description (defaults to the site description)
+//   path         page path without .html, e.g. 'gallery/invisible' ('' for home)
+//   current      nav item to highlight: 'home' | 'about' | 'gallery' | 'nft' | 'exhibitions' | 'contact'
+//   image        social sharing image (an imported asset), optional
+//   noindex      true for pages search engines should skip
+import '@fontsource-variable/montserrat';
+import '../styles/global.css';
+import { getImage } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { t } from '../content/index.js';
+import { pageUrl, assetUrl } from '../lib/urls.js';
+
+const { title, description = t.site.description, path = '', current, image } = Astro.props;
+
+// The GitHub Pages preview is hidden from search engines and sends no analytics
+const preview = import.meta.env.PUBLIC_PREVIEW === '1';
+const noindex = Astro.props.noindex || preview;
+
+const fullTitle = title ? `${title} | ${t.site.name}` : t.site.name;
+const canonical = new URL(pageUrl(path), Astro.site);
+const ogImage = image && new URL((await getImage({ src: image, width: 1200, format: 'jpg' })).src, Astro.site);
+const GTM_ID = 'GTM-5J63MXV';
+---
+<!doctype html>
+<html lang={t.lang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+
+  <link rel="icon" type="image/png" href={assetUrl('favicon.png')} />
+  <link rel="apple-touch-icon" href={assetUrl('webclip.webp')} />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  {ogImage && <meta property="og:image" content={ogImage} />}
+  <meta name="twitter:card" content="summary_large_image" />
+
+  {/* Google Tag Manager. GA4 is configured inside GTM, not loaded separately. */}
+  {!preview && <script is:inline define:vars={{ GTM_ID }}>
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
+      j.async = true;
+      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', GTM_ID);
+  </script>}
+</head>
+<body>
+  {!preview && (
+    <noscript>
+      <iframe src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+              height="0" width="0" style="display:none;visibility:hidden" title="Google Tag Manager"></iframe>
+    </noscript>
+  )}
+
+  <a class="skip-link" href="#content">{t.a11y.skip}</a>
+  <Header current={current} />
+  <main id="content">
+    <slot />
+  </main>
+  <Footer />
+</body>
+</html>

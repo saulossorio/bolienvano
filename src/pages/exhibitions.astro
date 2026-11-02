@@ -1,0 +1,74 @@
+---
+// List of exhibitions, newest first. The whole row links to the exhibition page.
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { t, exhibitionTexts } from '../content/index.js';
+import { exhibitions } from '../data/exhibitions.js';
+import { pageUrl } from '../lib/urls.js';
+import { image } from '../lib/images.js';
+import { formatDate } from '../lib/dates.js';
+---
+<Base title={t.exhibitions.title} description={t.exhibitions.description} path="exhibitions" current="exhibitions">
+  <section class="section">
+    <div class="container">
+      <h1 class="visually-hidden">{t.exhibitions.title}</h1>
+      <ul class="list">
+        {exhibitions.map((e, i) => {
+          const text = exhibitionTexts[e.slug];
+          return (
+            <li class="row">
+              <Picture
+                src={image('exhibitions', e.cover)}
+                alt=""
+                formats={['avif']}
+                fallbackFormat="webp"
+                widths={[480, 960]}
+                sizes="(max-width: 767px) 100vw, 450px"
+                class="cover"
+                loading={i === 0 ? 'eager' : 'lazy'}
+              />
+              <div class="text">
+                <h2><a href={pageUrl(`exhibitions/${e.slug}`)}>{text.title}</a></h2>
+                <p class="when">
+                  <time datetime={e.date}>{formatDate(e.date)}</time><br />
+                  {text.venue}
+                </p>
+                <p>{text.summary}</p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .list { margin: 0; padding: 0; list-style: none; }
+
+  .row {
+    position: relative;
+    display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    min-height: 25rem; padding: 2rem 0;
+    transition: opacity .2s ease;
+  }
+  .row:hover { opacity: .5; }
+
+  .row :global(picture) { flex: 0 1 50%; }
+  .row :global(.cover) { max-height: 25rem; width: 100%; object-fit: contain; }
+
+  .text { width: 50%; }
+  h2 { font-size: 1.5rem; }
+  /* The title link covers the whole row, so the row is one big click target */
+  h2 a { color: inherit; text-decoration: none; }
+  h2 a::after { content: ''; position: absolute; inset: 0; }
+  .when { padding-bottom: 1rem; font-size: .75rem; margin: 0; }
+
+  @media (max-width: 991px) {
+    .text { width: 75%; }
+  }
+  @media (max-width: 767px) {
+    .row { flex-direction: column; gap: 1rem; }
+    .text { width: 100%; }
+  }
+</style>

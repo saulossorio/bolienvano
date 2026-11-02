@@ -1,0 +1,16 @@
+---
+// gallery/<year>.html (artworks of a year) and gallery/<slug>.html (one artwork).
+import YearPage from '../../components/YearPage.astro';
+import ArtworkPage from '../../components/ArtworkPage.astro';
+import { artworks, years } from '../../data/artworks.js';
+
+export function getStaticPaths() {
+  return [
+    ...years.map(({ year }) => ({ params: { page: String(year) }, props: { year } })),
+    ...artworks.map((artwork) => ({ params: { page: artwork.slug }, props: { artwork } })),
+  ];
+}
+
+const { year, artwork } = Astro.props;
+---
+{year ? <YearPage year={year} /> : <ArtworkPage artwork={artwork} />}
