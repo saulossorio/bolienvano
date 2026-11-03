@@ -2,8 +2,8 @@
    Styles used by one component live inside that .astro file.
 
    Design idea: the site is the gallery wall. The background is the warm grey of
-   the wall in the artwork photos, the texts read like museum labels (serif title,
-   small sans details) and nothing competes with the paintings. */
+   the wall in the artwork photos, the texts read like museum labels (light sans titles,
+   small uppercase details) and nothing competes with the paintings. */
 
 :root {
   /* Colors */
@@ -15,7 +15,7 @@
   --accent:    #8a2b1d;   /* terracotta from the paintings: links, available works */
 
   /* Type */
-  --serif: 'Instrument Serif', Georgia, serif;
+  --serif: var(--sans);   /* display face: same clean sans, set light below */
   --sans:  'Inter Variable', system-ui, sans-serif;
 
   /* Layout */
@@ -40,9 +40,9 @@ body {
 
 h1, h2, h3 {
   font-family: var(--serif);
-  font-weight: 400;
-  line-height: 1.05;
-  letter-spacing: -.01em;
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -.025em;
   margin: 0 0 1rem;
   text-wrap: balance;
 }
@@ -115,11 +115,18 @@ a   { color: inherit; text-underline-offset: .2em; text-decoration-thickness: 1p
 
 ::selection { background: var(--ink); color: var(--wall); }
 
-/* Pages fade in gently */
-@media (prefers-reduced-motion: no-preference) {
-  main { animation: fadeIn .5s ease both; }
+/* Smooth motion: links, buttons and fields ease their color instead of snapping */
+a, button, input, textarea, select {
+  transition: color .3s ease, background-color .3s ease, border-color .3s ease, opacity .3s ease;
 }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } }
+
+/* Page changes crossfade (Chromium and Safari; other browsers just navigate) */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) {
+  animation-duration: .45s;
+  animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
