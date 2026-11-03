@@ -1,0 +1,102 @@
+---
+// Sticky top bar: name on the left, menu on the right.
+// Below 992px the menu folds into a button that opens a native popover
+// (no JavaScript; Esc or a tap outside closes it).
+import { t } from '../content/index.js';
+import { pageUrl } from '../lib/urls.js';
+
+const { current } = Astro.props;
+
+const links = [
+  { id: 'home',        href: pageUrl(''),                       label: t.nav.home },
+  { id: 'about',       href: pageUrl('about'),                  label: t.nav.about },
+  { id: 'gallery',     href: pageUrl('gallery'),                label: t.nav.gallery },
+  { id: 'nft',         href: pageUrl('gallery/hiperconciente'), label: t.nav.nft },
+  { id: 'exhibitions', href: pageUrl('exhibitions'),            label: t.nav.exhibitions },
+  { id: 'contact',     href: pageUrl('contact'),                label: t.nav.contact },
+];
+---
+<header class="navbar">
+  <div class="bar">
+    <a class="logo" href={pageUrl('')}>{t.site.name}</a>
+
+    <button class="menu-button" type="button" popovertarget="menu" aria-label={t.nav.menu}>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+
+    <nav id="menu" class="menu" popover aria-label={t.nav.menu}>
+      {links.map((l) => (
+        <a href={l.href} aria-current={l.id === current ? 'page' : undefined}>{l.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .navbar {
+    position: sticky; top: 0; z-index: 5;
+    padding: 2rem;
+    background: var(--white);
+  }
+  .bar {
+    max-width: 1200px; margin-inline: auto;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .logo {
+    font-size: 1.5rem; line-height: 1;
+    color: var(--dark); text-decoration: none;
+    transition: opacity .2s ease;
+  }
+  .logo:hover { opacity: .7; }
+
+  /* Desktop: the popover is shown inline as a normal row of links */
+  .menu {
+    position: static; display: flex;
+    margin: 0; padding: 0; border: 0;
+    background: none; overflow: visible;
+  }
+  .menu a {
+    padding: 20px;
+    color: #222; text-decoration: none;
+    transition: opacity .2s ease;
+  }
+  .menu a[aria-current='page'] { opacity: .7; color: var(--text); }
+  .menu a:hover { opacity: .7; }
+
+  .menu-button { display: none; }
+
+  /* Tablet and mobile: hamburger button + dropdown */
+  @media (max-width: 991px) {
+    .menu-button {
+      display: flex; flex-direction: column; justify-content: center; gap: 5px;
+      width: 44px; height: 44px; padding: 10px;
+      border: 0; background: none; cursor: pointer;
+    }
+    .menu-button span { height: 2px; background: var(--dark); }
+    .navbar:has(.menu:popover-open) .menu-button { background: var(--dark); }
+    .navbar:has(.menu:popover-open) .menu-button span { background: var(--white); }
+
+    .menu {
+      display: none;
+      position: fixed; inset: auto 0 auto 0; top: var(--menu-top, 6.5rem);
+      width: 100%;
+      background: var(--white);
+      box-shadow: 0 4px 5px 0 var(--line);
+    }
+    .menu:popover-open { display: flex; flex-direction: column; }
+    .menu a {
+      padding: 20px 2rem;
+      border-top: 1px solid rgb(213 213 215 / 25%);
+      transition: background-color .2s ease, color .2s ease;
+    }
+    .menu a:hover { background: var(--dark); color: var(--white); opacity: 1; }
+  }
+
+  @media (max-width: 767px) {
+    .navbar { padding: 1rem; }
+    .menu { --menu-top: 4.5rem; }
+  }
+</style>

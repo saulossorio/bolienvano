@@ -1,0 +1,40 @@
+---
+// Gallery: one cell per year.
+import Base from '../layouts/Base.astro';
+import Tile from '../components/Tile.astro';
+import { t } from '../content/index.js';
+import { years } from '../data/artworks.js';
+import { pageUrl } from '../lib/urls.js';
+import { image } from '../lib/images.js';
+---
+<Base title={t.gallery.title} description={t.gallery.description} path="gallery" current="gallery">
+  <section class="section">
+    <div class="container">
+      <h1 class="visually-hidden">{t.gallery.title}</h1>
+      <ul class="grid">
+        {years.map(({ year, cover }, i) => (
+          <li>
+            <Tile
+              href={pageUrl(`gallery/${year}`)}
+              src={image('artworks', `${cover}_zoom1.jpg`)}
+              alt=""
+              label={String(year)}
+              faded
+              eager={i < 2}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    margin: 0; padding: 0; list-style: none;
+  }
+  @media (max-width: 767px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
