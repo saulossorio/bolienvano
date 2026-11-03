@@ -93,9 +93,10 @@ const recent = artworks.slice(0, 6);
     padding-block: 1.5rem;
     border-bottom: 1px solid var(--line);
     text-decoration: none;
-    transition: padding .3s ease;
   }
-  .shows a:hover { padding-left: .75rem; }
+  /* Hover nudges the text, not the padding, so nothing reflows */
+  .shows a > * { transition: transform var(--fast) var(--ease); }
+  .shows a:hover > * { transform: translateX(.75rem); }
   .show-year { font-size: .8125rem; color: var(--muted); font-variant-numeric: tabular-nums; }
   .show-title { font-family: var(--serif); font-size: clamp(1.75rem, 3.5vw, 2.5rem); line-height: 1.1; }
   .show-venue { font-size: .875rem; color: var(--muted); }

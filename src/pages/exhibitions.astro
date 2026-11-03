@@ -55,7 +55,7 @@ import { formatDate } from '../lib/dates.js';
     padding-block: clamp(2rem, 4vw, 3.5rem);
     border-top: 1px solid var(--line);
   }
-  .row :global(.cover) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: opacity .3s ease; }
+  .row :global(.cover) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: opacity var(--fast) var(--ease); }
   .row:hover :global(.cover) { opacity: .85; }
 
   .text h2 { margin-bottom: .5rem; }

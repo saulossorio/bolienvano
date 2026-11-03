@@ -22,6 +22,11 @@
   --container: 1240px;
   --gutter: clamp(1.25rem, 4vw, 3rem);   /* side margins, grows with the screen */
   --space:  clamp(4rem, 9vw, 8rem);      /* between sections */
+
+  /* Motion: one easing and two speeds for the whole site */
+  --ease: cubic-bezier(.22, .61, .36, 1);   /* soft ease-out */
+  --fast: .35s;                             /* hovers, colors, small moves */
+  --slow: .8s;                              /* image fade-in, image zoom */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -80,7 +85,7 @@ a   { color: inherit; text-underline-offset: .2em; text-decoration-thickness: 1p
   font-size: .875rem; font-weight: 500;
   text-decoration: none; white-space: nowrap;
 }
-.more::after { content: ' →'; display: inline-block; transition: transform .2s ease; }
+.more::after { content: ' →'; display: inline-block; transition: transform var(--fast) var(--ease); }
 .more:hover::after { transform: translateX(4px); }
 
 /* Buttons: solid ink, or outlined */
@@ -92,7 +97,7 @@ a   { color: inherit; text-underline-offset: .2em; text-decoration-thickness: 1p
   font: inherit; font-size: .875rem; font-weight: 500; letter-spacing: .04em;
   text-decoration: none;
   cursor: pointer;
-  transition: background-color .2s ease, color .2s ease;
+  transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease);
 }
 .button:hover { background: transparent; color: var(--ink); }
 .button.ghost { background: transparent; color: var(--ink); }
@@ -117,16 +122,23 @@ a   { color: inherit; text-underline-offset: .2em; text-decoration-thickness: 1p
 
 /* Smooth motion: links, buttons and fields ease their color instead of snapping */
 a, button, input, textarea, select {
-  transition: color .3s ease, background-color .3s ease, border-color .3s ease, opacity .3s ease;
+  transition: color var(--fast) var(--ease), background-color var(--fast) var(--ease),
+              border-color var(--fast) var(--ease), opacity var(--fast) var(--ease);
 }
 
-/* Page changes crossfade (Chromium and Safari; other browsers just navigate) */
+/* Page changes crossfade (Chromium and Safari; other browsers just navigate).
+   The header stays put so only the content fades. */
 @view-transition { navigation: auto; }
 ::view-transition-old(root), ::view-transition-new(root) {
-  animation-duration: .45s;
-  animation-timing-function: cubic-bezier(.4, 0, .2, 1);
+  animation-duration: .5s;
+  animation-timing-function: var(--ease);
 }
 
+/* Images fade in once loaded instead of popping in. The .js class and the
+   .loaded marks come from the script in Base.astro; without JS images show as usual. */
+.js img:not(.loaded) { opacity: 0; }
+.js img.loaded { animation: img-in var(--slow) var(--ease) backwards; }
+@keyframes img-in { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }

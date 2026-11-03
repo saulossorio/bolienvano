@@ -23,7 +23,7 @@ const { current, anchors = false } = Astro.props;
     border: 1px solid var(--line); border-radius: 999px;
     font-size: .8125rem; font-variant-numeric: tabular-nums;
     text-decoration: none;
-    transition: border-color .2s ease, background-color .2s ease, color .2s ease;
+    transition: border-color var(--fast) var(--ease), background-color var(--fast) var(--ease), color var(--fast) var(--ease);
   }
   .years a:hover { border-color: var(--ink); }
   .years a[aria-current='page'] { background: var(--ink); border-color: var(--ink); color: var(--wall); }

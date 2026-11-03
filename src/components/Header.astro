@@ -39,6 +39,7 @@ const active = current === 'nft' ? 'gallery' : current;
     background: color-mix(in srgb, var(--wall) 88%, transparent);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    view-transition-name: navbar;   /* stays still while the page crossfades */
   }
   .bar {
     display: flex; align-items: center; justify-content: space-between;
@@ -69,7 +70,7 @@ const active = current === 'nft' ? 'gallery' : current;
     content: ''; position: absolute; left: 0; right: 0; bottom: .2rem;
     height: 1px; background: currentColor;
     transform: scaleX(0); transform-origin: left;
-    transition: transform .25s ease;
+    transition: transform var(--fast) var(--ease);
   }
   .menu a:hover::after, .menu a[aria-current='page']::after { transform: scaleX(1); }
 
@@ -84,7 +85,7 @@ const active = current === 'nft' ? 'gallery' : current;
       width: 44px; height: 44px; margin-right: -10px; padding: 10px;
       border: 0; background: none; cursor: pointer;
     }
-    .menu-button span { height: 1.5px; background: var(--ink); transition: transform .2s ease; }
+    .menu-button span { height: 1.5px; background: var(--ink); transition: transform var(--fast) var(--ease); }
     .navbar:has(.menu:popover-open) .menu-button span:first-child { transform: translateY(4.25px) rotate(45deg); }
     .navbar:has(.menu:popover-open) .menu-button span:last-child  { transform: translateY(-4.25px) rotate(-45deg); }
 

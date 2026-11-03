@@ -38,6 +38,20 @@ const GTM_ID = 'GTM-5J63MXV';
   <link rel="icon" type="image/png" href={assetUrl('favicon.png')} />
   <link rel="apple-touch-icon" href={assetUrl('webclip.webp')} />
 
+  {/* Image fade-in (see global.css): mark each image once it has loaded or failed.
+      Runs in <head> so the listener is in place before the first image arrives. */}
+  <script is:inline>
+    (function (d) {
+      d.documentElement.classList.add('js');
+      function mark(e) { if (e.target.tagName === 'IMG') e.target.classList.add('loaded'); }
+      d.addEventListener('load', mark, true);
+      d.addEventListener('error', mark, true);
+      d.addEventListener('DOMContentLoaded', function () {
+        d.querySelectorAll('img').forEach(function (img) { if (img.complete) img.classList.add('loaded'); });
+      });
+    })(document);
+  </script>
+
   <meta property="og:type" content="website" />
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
