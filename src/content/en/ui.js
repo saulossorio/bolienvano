@@ -12,7 +12,7 @@ export default {
   nav: {
     home: 'Home',
     about: 'About',
-    gallery: 'Gallery',
+    gallery: 'Works',
     nft: 'NFT',
     exhibitions: 'Exhibitions',
     contact: 'Contact',
@@ -28,16 +28,46 @@ export default {
   },
 
   artwork: {
-    price: 'Price: U$',
-    available: 'Contact',
-    ask: 'Ask here',
-    sold: 'Not available',
+    price: 'US$',
+    available: 'Enquire about this work',
+    ask: 'Ask about this work',
+    sold: 'In a private collection',
+    status: { available: 'Available', ask: 'Price on request', sold: 'Sold' },
     detail: 'detail',
     view: 'view',
+    previous: 'Previous work',
+    next: 'Next work',
+    back: 'All works from',
+    details: 'Details',
+  },
+
+  // Home page
+  home: {
+    eyebrow: 'Bolivian painter · Curitiba, Brazil',
+    headline: 'Paintings of hidden emotions',
+    intro: 'Watercolor, ink and oil portraits of quiet, inward moments: people alone with what they feel.',
+    worksButton: 'View the works',
+    aboutButton: 'About the artist',
+    recent: 'Recent works',
+    allWorks: 'All works',
+    exhibitions: 'Exhibitions',
+    allExhibitions: 'All exhibitions',
+    featuredLabel: 'Featured work',
+  },
+
+  footer: {
+    cta: 'Interested in a work or a commission?',
+    ctaLink: 'Get in touch',
+    siteBy: 'Site by',
   },
 
   gallery: {
-    title: 'Gallery',
+    title: 'Works',
+    intro: 'Paintings and drawings from 2019 to today. Select a work to see it up close.',
+    jump: 'Jump to year',
+    works: 'works',
+    nftNote: 'Also: Hiperconciente, the first NFT artwork exhibited in a Bolivian museum (2022).',
+    nftLink: 'See the work',
     description: 'Artworks gallery by the bolivian artist Andy S.',
     yearCover: 'Artworks from',
   },
@@ -48,11 +78,13 @@ export default {
     previous: 'Previous photo',
     next: 'Next photo',
     photo: 'Photo',
+    read: 'Read more',
   },
 
   about: {
     title: 'About',
     photoAlt: 'Andy S. picture',
+    solo: 'Solo exhibitions',
     paragraphs: [
       'Andy S. is a bolivian artist currently living in Curitiba, Brazil.',
       'Inspired by the beauty of hidden emotions in the world around him, he creates paintings that unearth deep feelings capturing the inner world of the individual.',
@@ -66,6 +98,7 @@ export default {
     title: 'Contact',
     description: 'Get in touch with the artist Andy S.',
     heading: 'Get in touch',
+    intro: 'For artworks, commissions, exhibitions or press. I usually reply within a few days.',
     name: 'Name',
     email: 'Email',
     subject: 'Subject',
@@ -74,8 +107,7 @@ export default {
     sending: 'Please wait...',
     done: "Thank you for your message! I'll be in contact very soon.",
     fail: 'Oops! Something went wrong while submitting the form. Please contact me in a different way.',
-    mapHeading: "I'm currently here...",
-    mapTitle: 'Current location: Curitiba, Brazil',
+    mapTitle: 'Based in Curitiba, Brazil',
   },
 
   nft: {

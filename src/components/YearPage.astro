@@ -1,41 +1,27 @@
 ---
 import Base from '../layouts/Base.astro';
-import Tile from './Tile.astro';
-import { t, artworkTitles } from '../content/index.js';
+import WorkGrid from './WorkGrid.astro';
+import YearNav from './YearNav.astro';
+import { t } from '../content/index.js';
 import { artworks } from '../data/artworks.js';
 import { pageUrl } from '../lib/urls.js';
-import { image } from '../lib/images.js';
 
 const { year } = Astro.props;
 const items = artworks.filter((a) => a.year === year);
 ---
 <Base title={String(year)} description={`${t.gallery.yearCover} ${year} — ${t.gallery.description}`} path={`gallery/${year}`} current="gallery">
-  <section class="section">
-    <div class="container">
-      <h1 class="title">{year}</h1>
-      <ul class="grid">
-        {items.map((a, i) => (
-          <li>
-            <Tile
-              href={pageUrl(`gallery/${a.slug}`)}
-              src={image('artworks', `${a.slug}_mockup.jpg`)}
-              alt={artworkTitles[a.slug]}
-              eager={i < 2}
-            />
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  <div class="container">
+    <header class="intro">
+      <a class="eyebrow back" href={pageUrl('gallery')}>← {t.gallery.title}</a>
+      <h1>{year}</h1>
+      <YearNav current={year} />
+    </header>
+    <WorkGrid items={items} />
+  </div>
 </Base>
 
 <style>
-  .title { font-size: 2rem; text-align: center; padding-bottom: 1rem; }
-  .grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-    margin: 0; padding: 0; list-style: none;
-  }
-  @media (max-width: 767px) {
-    .grid { grid-template-columns: 1fr; }
-  }
+  .intro { padding-block: clamp(3rem, 7vw, 6rem) clamp(2rem, 4vw, 3rem); }
+  .back { text-decoration: none; }
+  .back:hover { color: var(--ink); }
 </style>

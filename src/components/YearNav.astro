@@ -1,0 +1,30 @@
+---
+// Row of year links. On the works page they jump down the page; elsewhere they
+// open the year page. Props: current (year being shown, optional), anchors (bool)
+import { t } from '../content/index.js';
+import { years } from '../data/artworks.js';
+import { pageUrl } from '../lib/urls.js';
+
+const { current, anchors = false } = Astro.props;
+---
+<nav class="years" aria-label={t.gallery.jump}>
+  {years.map(({ year }) => (
+    <a
+      href={anchors ? `#y${year}` : pageUrl(`gallery/${year}`)}
+      aria-current={year === current ? 'page' : undefined}
+    >{year}</a>
+  ))}
+</nav>
+
+<style>
+  .years { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .years a {
+    padding: .4rem .9rem;
+    border: 1px solid var(--line); border-radius: 999px;
+    font-size: .8125rem; font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    transition: border-color .2s ease, background-color .2s ease, color .2s ease;
+  }
+  .years a:hover { border-color: var(--ink); }
+  .years a[aria-current='page'] { background: var(--ink); border-color: var(--ink); color: var(--wall); }
+</style>

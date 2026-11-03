@@ -1,43 +1,74 @@
 ---
+// About: portrait, statement and a short list of solo exhibitions.
 import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import { t } from '../content/index.js';
+import { t, exhibitionTexts } from '../content/index.js';
+import { exhibitions } from '../data/exhibitions.js';
+import { pageUrl } from '../lib/urls.js';
 import { image } from '../lib/images.js';
 
 const photo = image('site', 'perfil-andys.jpg');
+const [lead, ...rest] = t.about.paragraphs;
 ---
-<Base title={t.about.title} description={t.about.paragraphs[0]} path="about" current="about" image={photo}>
-  <section class="section about">
-    <div class="container grid">
+<Base title={t.about.title} description={lead} path="about" current="about" image={photo}>
+  <div class="container about">
+    <div class="photo">
       <Picture
         src={photo}
         alt={t.about.photoAlt}
         formats={['avif']}
         fallbackFormat="webp"
-        widths={[360, 720]}
-        sizes="(max-width: 767px) 50vw, 360px"
-        class="photo"
+        widths={[400, 700, 1000]}
+        sizes="(max-width: 899px) 92vw, 40vw"
         loading="eager"
       />
-      <div class="text">
-        <h1 class="visually-hidden">{t.about.title}</h1>
-        {t.about.paragraphs.map((p) => <p>{p}</p>)}
-      </div>
     </div>
-  </section>
+
+    <div class="text">
+      <span class="eyebrow">{t.home.eyebrow}</span>
+      <h1>{t.about.title}</h1>
+      <p class="lead">{lead}</p>
+      {rest.map((p) => <p>{p}</p>)}
+
+      <h2 class="cv-title">{t.about.solo}</h2>
+      <ul class="cv">
+        {exhibitions.map((e) => (
+          <li>
+            <span class="cv-year">{e.date.slice(0, 4)}</span>
+            <span><a href={pageUrl(`exhibitions/${e.slug}`)}><em>{exhibitionTexts[e.slug].title}</em></a>, {exhibitionTexts[e.slug].venue.replace(' | ', ', ')}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
 </Base>
 
 <style>
-  .about { display: flex; align-items: center; justify-content: center; min-height: 70vh; }
-  .grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-    align-items: center;
+  .about {
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2rem, 6vw, 6rem); align-items: start;
+    padding-block: clamp(3rem, 7vw, 6rem) 0;
   }
-  .grid :global(picture) { display: flex; justify-content: center; }
-  .grid :global(.photo) { max-height: 360px; width: auto; object-fit: contain; }
+  .photo { position: sticky; top: 7rem; }
+  .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 
-  @media (max-width: 767px) {
-    .grid { grid-template-columns: 1fr; }
-    .grid :global(.photo) { max-width: 50%; }
+  .text { max-width: 38rem; }
+  .lead { font-family: var(--serif); font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.25; }
+  .text p:not(.lead) { color: #3b3935; }
+
+  .cv-title { margin-top: 3.5rem; font-size: 1.75rem; }
+  .cv { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+  .cv li {
+    display: grid; grid-template-columns: 4rem 1fr; gap: 1rem;
+    padding-block: .9rem; border-bottom: 1px solid var(--line);
+    font-size: .9375rem;
+  }
+  .cv-year { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .cv a { text-decoration: none; }
+  .cv a:hover { text-decoration: underline; }
+
+  @media (max-width: 899px) {
+    .about { grid-template-columns: 1fr; }
+    .photo { position: static; max-width: 28rem; }
   }
 </style>

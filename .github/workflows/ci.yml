@@ -3,7 +3,7 @@ name: CI
 # Builds the site and checks it on every push to v2 and every pull request.
 on:
   push:
-    branches: [v2]
+    branches: [v2, redesign]
   pull_request:
   workflow_dispatch:
 

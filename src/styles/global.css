@@ -1,65 +1,103 @@
 /* Global styles: tokens, base elements and patterns shared by several pages.
-   Styles used by one component live inside that .astro file. */
+   Styles used by one component live inside that .astro file.
+
+   Design idea: the site is the gallery wall. The background is the warm grey of
+   the wall in the artwork photos, the texts read like museum labels (serif title,
+   small sans details) and nothing competes with the paintings. */
 
 :root {
-  --text:      #000;
-  --dark:      #3d3e37;   /* logo, buttons */
-  --muted:     #767676;   /* secondary text */
-  --line:      #d5d5d7;   /* separators, footer */
-  --link-hover:#0371c4;
-  --white:     #fff;
-  --font:      'Montserrat Variable', system-ui, sans-serif;
-  --container: 940px;
-  --pad:       2rem;      /* section padding */
+  /* Colors */
+  --wall:      #f2f1ef;   /* page background, same as the wall in the artwork photos */
+  --paper:     #fbfaf8;   /* cards, form fields */
+  --ink:       #1d1c1a;   /* text */
+  --muted:     #6b6863;   /* secondary text (4.9:1 on --wall) */
+  --line:      #dcd9d3;   /* separators */
+  --accent:    #8a2b1d;   /* terracotta from the paintings: links, available works */
+
+  /* Type */
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans:  'Inter Variable', system-ui, sans-serif;
+
+  /* Layout */
+  --container: 1240px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);   /* side margins, grows with the screen */
+  --space:  clamp(4rem, 9vw, 8rem);      /* between sections */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
 body {
   margin: 0;
-  font-family: var(--font);
+  font-family: var(--sans);
   font-size: 1rem;
-  line-height: 1.5;
-  color: var(--text);
-  background: var(--white);
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--wall);
+  -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 { font-weight: 400; line-height: 1; margin: 0 0 .625rem; }
-h1 { font-size: 3rem; }
-h2 { font-size: 2rem; }
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -.01em;
+  margin: 0 0 1rem;
+  text-wrap: balance;
+}
+h1 { font-size: clamp(2.75rem, 6vw, 5rem); }
+h2 { font-size: clamp(2rem, 4vw, 3rem); }
 h3 { font-size: 1.5rem; }
-p  { margin: 0 0 .625rem; }
+p  { margin: 0 0 1rem; text-wrap: pretty; }
 
 img { display: block; max-width: 100%; height: auto; }
-a   { color: inherit; }
+a   { color: inherit; text-underline-offset: .2em; text-decoration-thickness: 1px; }
 
-.container { max-width: var(--container); margin-inline: auto; }
+.container { max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: var(--space); }
+.section + .section { padding-top: 0; }
 
-.section { padding: var(--pad); }
-@media (max-width: 767px) {
-  .section { padding: 1rem; }
+/* Small uppercase line above a heading */
+.eyebrow {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: .75rem; font-weight: 500;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--muted);
 }
 
-/* Dark rectangular button, inverts on hover */
+/* Section heading with a link on the right ("All works →") */
+.section-head {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+  margin-bottom: 2.5rem; padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+.section-head h2 { margin: 0; }
+
+/* Text link with an arrow */
+.more {
+  font-size: .875rem; font-weight: 500;
+  text-decoration: none; white-space: nowrap;
+}
+.more::after { content: ' →'; display: inline-block; transition: transform .2s ease; }
+.more:hover::after { transform: translateX(4px); }
+
+/* Buttons: solid ink, or outlined */
 .button {
-  display: inline-block;
-  padding: 20px 40px;
-  border: 2px solid var(--dark);
-  border-radius: 3px;
-  background: var(--dark);
-  color: var(--white);
-  font: inherit;
-  font-weight: 600;
-  letter-spacing: .05rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 3rem; padding: .75rem 1.75rem;
+  border: 1px solid var(--ink); border-radius: 0;
+  background: var(--ink); color: var(--wall);
+  font: inherit; font-size: .875rem; font-weight: 500; letter-spacing: .04em;
   text-decoration: none;
   cursor: pointer;
   transition: background-color .2s ease, color .2s ease;
 }
-.button:hover { background: transparent; color: var(--dark); }
-.button[aria-disabled='true'] { cursor: default; opacity: .6; }
-.button[aria-disabled='true']:hover { background: var(--dark); color: var(--white); }
+.button:hover { background: transparent; color: var(--ink); }
+.button.ghost { background: transparent; color: var(--ink); }
+.button.ghost:hover { background: var(--ink); color: var(--wall); }
+.button[aria-disabled='true'] { cursor: default; background: transparent; color: var(--muted); border-color: var(--line); }
 
 .visually-hidden {
   position: absolute; width: 1px; height: 1px;
@@ -69,17 +107,19 @@ a   { color: inherit; }
 .skip-link {
   position: absolute; left: 1rem; top: -100%;
   z-index: 100; padding: .5rem 1rem;
-  background: var(--dark); color: var(--white);
+  background: var(--ink); color: var(--wall);
 }
 .skip-link:focus { top: 0; }
 
-:focus-visible { outline: 2px solid var(--link-hover); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-/* Pages fade in on load, like the old site */
+::selection { background: var(--ink); color: var(--wall); }
+
+/* Pages fade in gently */
 @media (prefers-reduced-motion: no-preference) {
-  main { animation: fadeIn .6s ease both; }
+  main { animation: fadeIn .5s ease both; }
 }
-@keyframes fadeIn { from { opacity: 0; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }

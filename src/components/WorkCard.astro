@@ -1,0 +1,56 @@
+---
+// One artwork in a grid: the whole photo (square, never cropped) and a caption
+// like a museum label: title, year and technique, availability.
+// Props: artwork (from src/data/artworks.js), eager (load the image first)
+import { Picture } from 'astro:assets';
+import { t, artworkTitles } from '../content/index.js';
+import { pageUrl } from '../lib/urls.js';
+import { image } from '../lib/images.js';
+
+const { artwork, eager = false } = Astro.props;
+const title = artworkTitles[artwork.slug];
+---
+<a class="card" href={pageUrl(`gallery/${artwork.slug}`)}>
+  <div class="frame">
+    <Picture
+      src={image('artworks', `${artwork.slug}_mockup.jpg`)}
+      alt={title}
+      formats={['avif']}
+      fallbackFormat="webp"
+      widths={[400, 600, 800]}
+      sizes="(max-width: 599px) 92vw, (max-width: 1023px) 46vw, 400px"
+      loading={eager ? 'eager' : 'lazy'}
+    />
+  </div>
+  <div class="caption">
+    <h3 class="title">{title}</h3>
+    <p class="meta">{artwork.year} · {t.media[artwork.medium]}</p>
+    <p class:list={['status', artwork.status]}>{t.artwork.status[artwork.status]}</p>
+  </div>
+</a>
+
+<style>
+  .card { display: block; text-decoration: none; }
+
+  .frame { overflow: hidden; background: var(--paper); aspect-ratio: 1; }
+  .frame :global(img) {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform .6s cubic-bezier(.2, .7, .2, 1);
+  }
+  .card:hover .frame :global(img) { transform: scale(1.03); }
+
+  .caption { padding-top: 1rem; }
+  .title { margin: 0 0 .25rem; font-size: 1.5rem; }
+  .card:hover .title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
+  .meta, .status { margin: 0; font-size: .8125rem; color: var(--muted); }
+
+  /* Small dot before the availability */
+  .status::before {
+    content: ''; display: inline-block; width: .45rem; height: .45rem;
+    margin-right: .45rem; border-radius: 50%; vertical-align: .1em;
+    border: 1px solid currentColor;
+  }
+  .status.available { color: var(--accent); }
+  .status.available::before { background: currentColor; }
+  .status.sold::before { background: currentColor; }
+</style>

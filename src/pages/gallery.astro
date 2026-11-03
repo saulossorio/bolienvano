@@ -1,40 +1,46 @@
 ---
-// Gallery: one cell per year.
+// Works: every artwork on one page, grouped by year, newest first.
 import Base from '../layouts/Base.astro';
-import Tile from '../components/Tile.astro';
+import WorkGrid from '../components/WorkGrid.astro';
+import YearNav from '../components/YearNav.astro';
 import { t } from '../content/index.js';
-import { years } from '../data/artworks.js';
+import { artworks, years } from '../data/artworks.js';
 import { pageUrl } from '../lib/urls.js';
-import { image } from '../lib/images.js';
 ---
 <Base title={t.gallery.title} description={t.gallery.description} path="gallery" current="gallery">
-  <section class="section">
-    <div class="container">
-      <h1 class="visually-hidden">{t.gallery.title}</h1>
-      <ul class="grid">
-        {years.map(({ year, cover }, i) => (
-          <li>
-            <Tile
-              href={pageUrl(`gallery/${year}`)}
-              src={image('artworks', `${cover}_zoom1.jpg`)}
-              alt=""
-              label={String(year)}
-              faded
-              eager={i < 2}
-            />
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  <div class="container">
+    <header class="intro">
+      <h1>{t.gallery.title}</h1>
+      <p class="lead">{t.gallery.intro}</p>
+      <YearNav anchors />
+    </header>
+
+    {years.map(({ year }, i) => (
+      <section class="year" id={`y${year}`} aria-labelledby={`h${year}`}>
+        <div class="section-head">
+          <h2 id={`h${year}`}>{year}</h2>
+          <span class="count">{artworks.filter((a) => a.year === year).length} {t.gallery.works}</span>
+        </div>
+        <WorkGrid items={artworks.filter((a) => a.year === year)} eagerCount={i === 0 ? 3 : 0} />
+      </section>
+    ))}
+
+    <p class="nft">
+      {t.gallery.nftNote} <a href={pageUrl('gallery/hiperconciente')}>{t.gallery.nftLink}</a>
+    </p>
+  </div>
 </Base>
 
 <style>
-  .grid {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-    margin: 0; padding: 0; list-style: none;
-  }
-  @media (max-width: 767px) {
-    .grid { grid-template-columns: 1fr; }
+  .intro { padding-block: clamp(3rem, 7vw, 6rem) clamp(2rem, 4vw, 3rem); }
+  .lead { max-width: 40ch; margin-bottom: 2rem; font-size: 1.125rem; color: var(--muted); }
+
+  .year { padding-top: clamp(2.5rem, 5vw, 4rem); scroll-margin-top: 5rem; }
+  .count { font-size: .8125rem; color: var(--muted); }
+
+  .nft {
+    margin-top: var(--space); padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--serif); font-size: 1.5rem; line-height: 1.3;
   }
 </style>

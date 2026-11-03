@@ -1,74 +1,142 @@
 ---
-// One artwork: its three images on the left, sticky label on the right.
+// One artwork: the framed photo and a museum label beside it, the two details
+// below, and links to the previous and next works.
 import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { t, artworkTitles } from '../content/index.js';
+import { artworks } from '../data/artworks.js';
 import { pageUrl } from '../lib/urls.js';
 import { artworkImages } from '../lib/images.js';
 
 const { artwork } = Astro.props;
 const title = artworkTitles[artwork.slug];
 const medium = t.media[artwork.medium];
-const images = artworkImages(artwork.slug);
-const altFor = (kind) => (kind === 'mockup' ? `${title}, ${t.artwork.view}` : `${title}, ${t.artwork.detail}`);
+const [view, ...details] = artworkImages(artwork.slug);
+
+// Previous / next in gallery order
+const index = artworks.findIndex((a) => a.slug === artwork.slug);
+const prev = artworks[index - 1];
+const next = artworks[index + 1];
+
+// The contact form opens with the subject already written
+const subject = `${title} (${artwork.year})`;
+const enquire = `${pageUrl('contact')}?subject=${encodeURIComponent(subject)}`;
 ---
 <Base
   title={title}
   description={`${title} (${artwork.year}). ${medium}, ${artwork.size}. ${t.site.name}`}
   path={`gallery/${artwork.slug}`}
   current="gallery"
-  image={images[0].src}
+  image={view.src}
 >
-  <section class="section">
-    <div class="container content">
-      <div class="images">
-        {images.map((img, i) => (
-          <Picture
-            src={img.src}
-            alt={altFor(img.kind)}
-            formats={['avif']}
-            fallbackFormat="webp"
-            widths={[480, 720, 1080]}
-            sizes="(max-width: 767px) 100vw, 690px"
-            loading={i === 0 ? 'eager' : 'lazy'}
-          />
-        ))}
+  <div class="container">
+    <article class="work">
+      <div class="view">
+        <Picture
+          src={view.src}
+          alt={`${title}, ${t.artwork.view}`}
+          formats={['avif']}
+          fallbackFormat="webp"
+          widths={[600, 900, 1200]}
+          sizes="(max-width: 899px) 92vw, 60vw"
+          loading="eager"
+          fetchpriority="high"
+        />
       </div>
 
-      <div class="info">
-        <div class="label">
-          <h1 class="name">{title}</h1>
-          <p class="year">{artwork.year}</p>
-          <p>{medium}</p>
-          <p>{artwork.size}</p>
-          {artwork.status === 'available' && <p class="price">{t.artwork.price} {artwork.price}</p>}
+      <div class="label">
+        <a class="eyebrow back" href={pageUrl(`gallery/${artwork.year}`)}>← {t.artwork.back} {artwork.year}</a>
+        <h1>{title}</h1>
+        <dl class="facts">
+          <div><dt class="visually-hidden">Year</dt><dd>{artwork.year}</dd></div>
+          <div><dt class="visually-hidden">Technique</dt><dd>{medium}</dd></div>
+          <div><dt class="visually-hidden">Size</dt><dd>{artwork.size}</dd></div>
+        </dl>
 
-          {artwork.status === 'sold'
-            ? <span class="button" aria-disabled="true">{t.artwork.sold}</span>
-            : <a class="button" href={pageUrl('contact')}>{t.artwork[artwork.status]}</a>}
-        </div>
+        <p class:list={['status', artwork.status]}>
+          {t.artwork.status[artwork.status]}
+          {artwork.status === 'available' && <span class="price"> · {t.artwork.price} {artwork.price}</span>}
+        </p>
+
+        {artwork.status === 'sold'
+          ? <span class="button" aria-disabled="true">{t.artwork.sold}</span>
+          : <a class="button" href={enquire}>{t.artwork[artwork.status]}</a>}
       </div>
-    </div>
-  </section>
+    </article>
+
+    <section class="details" aria-label={t.artwork.details}>
+      {details.map((img) => (
+        <Picture
+          src={img.src}
+          alt={`${title}, ${t.artwork.detail}`}
+          formats={['avif']}
+          fallbackFormat="webp"
+          widths={[500, 800, 1100]}
+          sizes="(max-width: 699px) 92vw, 46vw"
+          loading="lazy"
+        />
+      ))}
+    </section>
+
+    <nav class="pager" aria-label={t.gallery.title}>
+      {prev ? (
+        <a class="prev" href={pageUrl(`gallery/${prev.slug}`)}>
+          <span class="eyebrow">← {t.artwork.previous}</span>
+          <span class="name">{artworkTitles[prev.slug]}</span>
+        </a>
+      ) : <span />}
+      {next && (
+        <a class="next" href={pageUrl(`gallery/${next.slug}`)}>
+          <span class="eyebrow">{t.artwork.next} →</span>
+          <span class="name">{artworkTitles[next.slug]}</span>
+        </a>
+      )}
+    </nav>
+  </div>
 </Base>
 
 <style>
-  .content { display: flex; justify-content: center; gap: 1rem; }
+  .work {
+    display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: clamp(2rem, 5vw, 5rem); align-items: start;
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+  }
+  .view :global(img) { width: 100%; }
 
-  .images { width: 75%; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-  .images :global(img) { max-height: 50rem; width: auto; object-fit: contain; }
+  .label { position: sticky; top: 7rem; padding-top: clamp(0rem, 4vw, 3rem); }
+  .back { text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  .label h1 { font-size: clamp(2.5rem, 4.5vw, 4rem); margin-bottom: 1.5rem; }
 
-  .info { width: 25%; }
-  .label { position: sticky; top: 10rem; }
-  .label p { margin: 0; }
+  .facts { margin: 0 0 1.5rem; padding: 1rem 0; border-block: 1px solid var(--line); }
+  .facts dd { margin: 0; }
 
-  .name { font-size: 1rem; font-weight: 700; text-transform: uppercase; margin: 0; }
-  .year { padding: .2rem 0 1rem; }
-  .price { padding-top: 1rem; font-style: italic; }
-  .button { margin-top: 1rem; }
+  .status { margin-bottom: 1.5rem; font-size: .875rem; color: var(--muted); }
+  .status.available { color: var(--accent); }
+  .price { color: var(--ink); font-weight: 500; }
 
-  @media (max-width: 767px) {
-    .content { flex-direction: column; gap: 2rem; }
-    .images, .info { width: 100%; }
+  .details {
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 3vw, 2.5rem);
+    padding-top: var(--space);
+  }
+  .details :global(img) { width: 100%; aspect-ratio: 1; object-fit: cover; }
+
+  .pager {
+    display: flex; justify-content: space-between; gap: 2rem;
+    margin-top: var(--space); padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .pager a { text-decoration: none; }
+  .pager .next { text-align: right; }
+  .pager .eyebrow { margin-bottom: .25rem; }
+  .pager .name { font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.1; }
+  .pager a:hover .name { text-decoration: underline; text-decoration-thickness: 1px; }
+
+  @media (max-width: 899px) {
+    .work { grid-template-columns: 1fr; }
+    .label { position: static; padding-top: 0; }
+  }
+  @media (max-width: 699px) {
+    .details { grid-template-columns: 1fr; }
   }
 </style>

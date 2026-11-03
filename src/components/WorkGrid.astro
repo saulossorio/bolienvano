@@ -1,0 +1,19 @@
+---
+// Grid of artwork cards: 3 columns on desktop, 2 on tablet, 1 on phones.
+import WorkCard from './WorkCard.astro';
+
+const { items, eagerCount = 3 } = Astro.props;
+---
+<ul class="grid">
+  {items.map((a, i) => <li><WorkCard artwork={a} eager={i < eagerCount} /></li>)}
+</ul>
+
+<style>
+  .grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: clamp(2.5rem, 5vw, 4rem) clamp(1.25rem, 3vw, 2.5rem);
+    margin: 0; padding: 0; list-style: none;
+  }
+  @media (max-width: 1023px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 599px)  { .grid { grid-template-columns: 1fr; } }
+</style>
