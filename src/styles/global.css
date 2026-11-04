@@ -12,7 +12,8 @@
   --ink:       #1d1c1a;   /* text */
   --muted:     #6b6863;   /* secondary text (4.9:1 on --wall) */
   --line:      #dcd9d3;   /* separators */
-  --accent:    #8a2b1d;   /* terracotta from the paintings: links, available works */
+  --accent:    #8a2b1d;   /* terracotta from the paintings: focus outline, form errors */
+  --available: #3f7a52;   /* green dot of available works (a red dot means sold in galleries) */
 
   /* Type */
   --serif: var(--sans);   /* display face: same clean sans, set light below */

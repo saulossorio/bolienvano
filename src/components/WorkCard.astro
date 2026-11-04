@@ -50,7 +50,7 @@ const title = artworkTitles[artwork.slug];
     margin-right: .45rem; border-radius: 50%; vertical-align: .1em;
     border: 1px solid currentColor;
   }
-  .status.available { color: var(--accent); }
-  .status.available::before { background: currentColor; }
+  .status.available { color: var(--ink); }
+  .status.available::before { background: var(--available); border-color: var(--available); }
   .status.sold::before { background: currentColor; }
 </style>

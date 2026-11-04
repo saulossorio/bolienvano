@@ -112,7 +112,12 @@ const enquire = `${pageUrl('contact')}?subject=${encodeURIComponent(subject)}`;
   .facts dd { margin: 0; }
 
   .status { margin-bottom: 1.5rem; font-size: .875rem; color: var(--muted); }
-  .status.available { color: var(--accent); }
+  .status.available { color: var(--ink); }
+  .status.available::before {
+    content: ''; display: inline-block; width: .45rem; height: .45rem;
+    margin-right: .45rem; border-radius: 50%; vertical-align: .1em;
+    background: var(--available);
+  }
   .price { color: var(--ink); font-weight: 500; }
 
   .details {
