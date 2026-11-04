@@ -85,7 +85,7 @@ const next = artworks[index + 1];
           <div><dt>{t.artwork.technique}</dt><dd>{medium}</dd></div>
           <div><dt>{t.artwork.size}</dt><dd>{artwork.size}</dd></div>
           {shownIn.map((e) => (
-            <div><dt>{t.exhibitions.exhibitedIn}</dt><dd><a href={pageUrl(`exhibitions/${e.slug}`)}>{exhibitionTexts[e.slug].title}</a>, {e.date.slice(0, 4)}</dd></div>
+            <div><dt>{t.exhibitions.exhibitedIn}</dt><dd><a href={`${pageUrl(`exhibitions/${e.slug}`)}#works`}>{exhibitionTexts[e.slug].title}</a>, {e.date.slice(0, 4)}</dd></div>
           ))}
         </dl>
         <Availability artwork={artwork} title={title} />

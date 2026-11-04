@@ -87,8 +87,11 @@ export default {
     next: 'Next photo',
     photo: 'Photo',
     read: 'Read more',
-    seeWorks: 'The {n} works in this exhibition',
-    nftAlso: 'Also shown: the NFT artwork',
+    tabs: 'Exhibition sections',
+    overview: 'Overview',
+    works: 'Works',
+    views: 'Installation views',
+    nftAlso: 'Also shown, as an NFT',
     exhibitedIn: 'Exhibited in',
   },
 

@@ -1,7 +1,8 @@
 ---
-// One exhibition: title and facts, the first photo large, the text in a readable
-// column, then the works that were shown folded in a disclosure (closed by default,
-// so they never interrupt the reading), and the other photos. Every photo opens the viewer.
+// One exhibition, the way galleries present them: title and facts, then three fixed
+// tabs on the same page — Overview (main photo and text), Works (the works shown) and
+// Installation views (all the photos). Without JS the three sections simply stack.
+// The open tab is kept in the URL hash (#works, #views). Every photo opens the viewer.
 import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Viewer from '../../components/Viewer.astro';
@@ -25,8 +26,13 @@ const photos = await Promise.all(
     return { src, large: await largeUrl(src), alt: `${text.title} — ${t.exhibitions.photo} ${i + 1}` };
   }),
 );
-const [first, ...rest] = photos;
+const [first] = photos;
 const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug === slug));
+const sections = [
+  { id: 'overview', label: t.exhibitions.overview },
+  ...(works.length ? [{ id: 'works', label: t.exhibitions.works }] : []),
+  { id: 'views', label: t.exhibitions.views },
+];
 ---
 <Base title={text.title} description={text.summary} path={`exhibitions/${exhibition.slug}`} current="exhibitions" image={first.src}>
   <div class="container">
@@ -39,41 +45,40 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
       </p>
     </header>
 
-    <a class="zoomable hero" href={first.large} data-zoom="photos" data-caption={first.alt}>
-      <Picture
-        src={first.src}
-        alt={first.alt}
-        formats={['avif']}
-        fallbackFormat="webp"
-        widths={[700, 1100, 1440]}
-        sizes="(max-width: 1360px) 92vw, 1264px"
-        loading="eager"
-        fetchpriority="high"
-      />
-    </a>
+    <nav class="tabs" aria-label={t.exhibitions.tabs}>
+      {sections.map((s) => <a href={`#${s.id}`} data-tab={s.id}>{s.label}</a>)}
+    </nav>
 
-    <div class="body">
-      {text.body.map((p) => <p set:html={p} />)}
-    </div>
+    <section class="panel" id="overview" aria-label={t.exhibitions.overview}>
+      <a class="zoomable hero" href={first.large} data-zoom="hero" data-caption={first.alt}>
+        <Picture
+          src={first.src}
+          alt={first.alt}
+          formats={['avif']}
+          fallbackFormat="webp"
+          widths={[700, 1100, 1440]}
+          sizes="(max-width: 1360px) 92vw, 1264px"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </a>
+      <div class="body">
+        {text.body.map((p) => <p set:html={p} />)}
+      </div>
+    </section>
 
     {works.length > 0 && (
-      <details class="works">
-        <summary>
-          <span>{t.exhibitions.seeWorks.replace('{n}', works.length)}</span>
-          <span class="sign" aria-hidden="true"></span>
-        </summary>
-        <div class="works-body">
-          <WorkGrid items={works} />
-          {exhibition.nft && (
-            <p class="nft">{t.exhibitions.nftAlso} <a href={pageUrl('gallery/hiperconciente')}>{t.nft.title}</a></p>
-          )}
-        </div>
-      </details>
+      <section class="panel" id="works" aria-label={t.exhibitions.works}>
+        <WorkGrid items={works} />
+        {exhibition.nft && (
+          <p class="nft">{t.exhibitions.nftAlso}: <a href={pageUrl('gallery/hiperconciente')}>{t.nft.title}</a></p>
+        )}
+      </section>
     )}
 
-    {rest.length > 0 && (
-      <div class:list={['photos', { single: rest.length === 1 }]}>
-        {rest.map((photo) => (
+    <section class="panel" id="views" aria-label={t.exhibitions.views}>
+      <div class:list={['photos', { single: photos.length === 1 }]}>
+        {photos.map((photo) => (
           <a class="zoomable" href={photo.large} data-zoom="photos" data-caption={photo.alt}>
             <Picture
               src={photo.src}
@@ -87,10 +92,39 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
           </a>
         ))}
       </div>
-    )}
+    </section>
   </div>
   <Viewer />
 </Base>
+
+<script>
+  // Tabs: show one section at a time, remember it in the hash, fade it in.
+  function setup() {
+    const tabs = [...document.querySelectorAll<HTMLAnchorElement>('.tabs [data-tab]')];
+    if (!tabs.length) return;
+    const panels = tabs.map((a) => document.getElementById(a.dataset.tab!)!);
+    const nav = document.querySelector<HTMLElement>('.tabs')!;
+    document.documentElement.classList.add('tabbed');
+
+    const show = (id: string, scroll: boolean) => {
+      if (!panels.some((p) => p.id === id)) id = panels[0].id;
+      panels.forEach((p) => (p.hidden = p.id !== id));
+      tabs.forEach((a) => a.toggleAttribute('aria-current', a.dataset.tab === id));
+      if (scroll && nav.getBoundingClientRect().top < 0) nav.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    tabs.forEach((a) =>
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        const id = a.dataset.tab!;
+        history.replaceState(null, '', id === panels[0].id ? location.pathname : `#${id}`);
+        show(id, true);
+      }),
+    );
+    show(location.hash.slice(1), false);
+  }
+  setup();
+</script>
 
 <style>
   .intro { padding-block: clamp(3rem, 7vw, 6rem) clamp(1.5rem, 3vw, 2.5rem); }
@@ -99,39 +133,42 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
   .intro h1 { margin-bottom: 1rem; }
   .facts { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; margin: 0; color: var(--muted); }
 
+  /* Tabs: plain words, muted until current; a thin line marks the open one */
+  .tabs {
+    box-shadow: inset 0 -1px var(--line);
+    display: flex; gap: clamp(1.25rem, 4vw, 3rem);
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    scroll-margin-top: 5rem;
+    overflow-x: auto; scrollbar-width: none; white-space: nowrap;
+  }
+  .tabs a {
+    position: relative; padding-block: 1rem;
+    font-size: .8125rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+    text-decoration: none; color: var(--muted);
+    transition: color var(--fast) var(--ease);
+  }
+  .tabs a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+    background: var(--ink); transform: scaleX(0); transform-origin: left;
+    transition: transform var(--fast) var(--ease);
+  }
+  .tabs a:hover, .tabs a[aria-current] { color: var(--ink); }
+  .tabs a[aria-current]::after { transform: scaleX(1); }
+  :global(html:not(.tabbed)) .panel + .panel { margin-top: var(--space); }
+  :global(html.tabbed) .panel:not([hidden]) { animation: panel-in var(--slow) var(--ease); }
+  @keyframes panel-in { from { opacity: 0; transform: translateY(.75rem); } }
+
   .zoomable { display: block; overflow: hidden; cursor: zoom-in; }
   .zoomable :global(img) { width: 100%; transition: transform var(--slow) var(--ease); }
   .zoomable:hover :global(img) { transform: scale(1.015); }
   .hero :global(img) { max-height: 85svh; object-fit: cover; }
 
   /* Text in a comfortable reading width */
-  .body { max-width: 42rem; padding-block: clamp(3rem, 6vw, 5rem); font-size: 1.0625rem; line-height: 1.75; }
+  .body { max-width: 42rem; padding-top: clamp(3rem, 6vw, 5rem); font-size: 1.0625rem; line-height: 1.75; }
   .body p:first-child { font-size: 1.25rem; line-height: 1.6; }
 
-  /* Works shown: one quiet line until opened; opens and closes smoothly */
-  .works { margin-bottom: clamp(3rem, 6vw, 5rem); border-block: 1px solid var(--line); interpolate-size: allow-keywords; }
-  .works summary {
-    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
-    padding-block: 1.5rem; cursor: pointer; list-style: none;
-    font-family: var(--display); font-size: clamp(1.25rem, 2.5vw, 1.75rem); line-height: 1.2;
-    transition: color var(--fast) var(--ease);
-  }
-  .works summary::-webkit-details-marker { display: none; }
-  .works summary:hover { color: var(--accent); }
-  .sign { position: relative; flex: none; width: 1.25rem; height: 1.25rem; }
-  .sign::before, .sign::after {
-    content: ''; position: absolute; inset: 50% 0 auto; height: 1.5px; margin-top: -.75px;
-    background: currentColor; transition: transform var(--fast) var(--ease);
-  }
-  .sign::after { transform: rotate(90deg); }
-  .works[open] .sign::after { transform: rotate(0); }
-  .works::details-content {
-    block-size: 0; overflow: clip; opacity: 0;
-    transition: block-size var(--slow) var(--ease), opacity var(--slow) var(--ease), content-visibility var(--slow) allow-discrete;
-  }
-  .works[open]::details-content { block-size: auto; opacity: 1; }
-  .works-body { padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(3rem, 6vw, 5rem); }
-  .nft { margin: clamp(3rem, 6vw, 5rem) 0 0; font-family: var(--display); font-size: 1.25rem; }
+  .nft { margin: clamp(3rem, 6vw, 5rem) 0 0; color: var(--muted); }
+  .nft a { color: var(--ink); }
 
   .photos { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.75rem, 1.5vw, 1.25rem); }
   .photos.single { grid-template-columns: 1fr; }
