@@ -32,6 +32,12 @@ export default {
     available: 'Enquire about this work',
     ask: 'Ask about this work',
     sold: 'In a private collection',
+    soldLong: 'Sold · in a private collection',
+    seeAvailable: 'See the works still available',
+    zoomTip: 'Select any image to see it full screen and zoom in.',
+    year: 'Year',
+    technique: 'Technique',
+    size: 'Size',
     status: { available: 'Available', ask: 'Price on request', sold: 'Sold' },
     detail: 'detail',
     view: 'view',
@@ -66,6 +72,8 @@ export default {
     intro: 'Paintings and drawings from 2019 to today. Select a work to see it up close.',
     jump: 'Jump to year',
     works: 'works',
+    availableOnly: 'Available only',
+    noneAvailable: 'No works are available right now. Get in touch about commissions.',
     nftNote: 'Also: Hiperconciente, the first NFT artwork exhibited in a Bolivian museum (2022).',
     nftLink: 'See the work',
     description: 'Artworks gallery by the bolivian artist Andy S.',
@@ -108,6 +116,7 @@ export default {
     done: "Thank you for your message! I'll be in contact very soon.",
     fail: 'Oops! Something went wrong while submitting the form. Please contact me in a different way.',
     mapTitle: 'Based in Curitiba, Brazil',
+    direct: 'Or write directly to',
   },
 
   nft: {
@@ -124,6 +133,8 @@ export default {
     imageAlt: 'Hiperconciente, Indian ink on paper',
     videos: ['Hiperconciente (NFT)', 'Hiperconciente'],
     visit: 'Visit NFT',
+    performance: 'Performance',
+    play: 'Play video',
   },
 
   // Invitation card to the Hiperconciencia opening (in Spanish, as printed)
@@ -147,6 +158,18 @@ export default {
     title: 'Page not found',
     lines: ['Page under construction', 'Please come back later'],
     back: 'Go back',
+  },
+
+  // Full-screen image viewer
+  viewer: {
+    label: 'Image viewer',
+    open: 'View full screen',
+    close: 'Close',
+    previous: 'Previous image',
+    next: 'Next image',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    fit: 'Fit to screen',
   },
 
   a11y: {

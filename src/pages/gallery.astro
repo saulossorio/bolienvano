@@ -1,29 +1,49 @@
 ---
 // Works: every artwork on one page, grouped by year, newest first.
+// A bar under the header stays visible while scrolling: jump to a year, or show
+// only the works for sale ("Available only", also opened by gallery.html#available).
 import Base from '../layouts/Base.astro';
 import WorkGrid from '../components/WorkGrid.astro';
 import YearNav from '../components/YearNav.astro';
 import { t } from '../content/index.js';
 import { artworks, years } from '../data/artworks.js';
 import { pageUrl } from '../lib/urls.js';
+
+const availableCount = artworks.filter((a) => a.status === 'available').length;
 ---
 <Base title={t.gallery.title} description={t.gallery.description} path="gallery" current="gallery">
   <div class="container">
     <header class="intro">
       <h1>{t.gallery.title}</h1>
       <p class="lead">{t.gallery.intro}</p>
-      <YearNav anchors />
     </header>
+  </div>
 
-    {years.map(({ year }, i) => (
-      <section class="year" id={`y${year}`} aria-labelledby={`h${year}`}>
-        <div class="section-head">
-          <h2 id={`h${year}`}>{year}</h2>
-          <span class="count">{artworks.filter((a) => a.year === year).length} {t.gallery.works}</span>
-        </div>
-        <WorkGrid items={artworks.filter((a) => a.year === year)} eagerCount={i === 0 ? 3 : 0} />
-      </section>
-    ))}
+  <div class="toolbar">
+    <div class="container bar">
+      <YearNav anchors />
+      <button class="filter" type="button" aria-pressed="false" data-filter hidden>
+        <span class="dot" aria-hidden="true"></span>
+        {t.gallery.availableOnly} <span class="n">({availableCount})</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="container" data-works>
+    {years.map(({ year }, i) => {
+      const items = artworks.filter((a) => a.year === year);
+      return (
+        <section class="year" id={`y${year}`} aria-labelledby={`h${year}`}>
+          <div class="section-head">
+            <h2 id={`h${year}`}>{year}</h2>
+            <span class="count">{items.length} {t.gallery.works}</span>
+          </div>
+          <WorkGrid items={items} eagerCount={i === 0 ? 3 : 0} />
+        </section>
+      );
+    })}
+
+    <p class="empty" hidden data-empty>{t.gallery.noneAvailable}</p>
 
     <p class="nft">
       {t.gallery.nftNote} <a href={pageUrl('gallery/hiperconciente')}>{t.gallery.nftLink}</a>
@@ -31,16 +51,78 @@ import { pageUrl } from '../lib/urls.js';
   </div>
 </Base>
 
-<style>
-  .intro { padding-block: clamp(3rem, 7vw, 6rem) clamp(2rem, 4vw, 3rem); }
-  .lead { max-width: 40ch; margin-bottom: 2rem; font-size: 1.125rem; color: var(--muted); }
+<script>
+  // "Available only": hides works that are not for sale and years left empty.
+  const button = document.querySelector('[data-filter]');
+  const works = document.querySelector('[data-works]');
+  const empty = document.querySelector('[data-empty]');
+  button.hidden = false;
 
-  .year { padding-top: clamp(2.5rem, 5vw, 4rem); scroll-margin-top: 5rem; }
+  function apply(on) {
+    button.setAttribute('aria-pressed', String(on));
+    works.classList.toggle('only-available', on);
+    let any = false;
+    works.querySelectorAll('.year').forEach((section) => {
+      const visible = !on || section.querySelector('[data-status="available"]');
+      section.hidden = !visible;
+      document.querySelector(`.years a[href="#${section.id}"]`).hidden = !visible;
+      any ||= Boolean(visible);
+    });
+    empty.hidden = any;
+    history.replaceState(null, '', on ? '#available' : location.pathname);
+  }
+
+  button.addEventListener('click', () => apply(button.getAttribute('aria-pressed') !== 'true'));
+  if (location.hash === '#available') apply(true);
+</script>
+
+<style>
+  .intro { padding-block: clamp(3rem, 7vw, 6rem) 1.5rem; }
+  .lead { max-width: 44ch; margin: 0; font-size: 1.125rem; color: var(--muted); }
+
+  /* Sticky bar right under the header */
+  .toolbar {
+    position: sticky; top: 5rem; z-index: 4;
+    background: color-mix(in srgb, var(--wall) 92%, transparent);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: .75rem; }
+
+  .filter {
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .4rem .9rem;
+    border: 1px solid var(--line); border-radius: 999px;
+    background: none; color: var(--ink);
+    font: inherit; font-size: .8125rem; white-space: nowrap;
+    cursor: pointer;
+  }
+  .filter:hover { border-color: var(--ink); }
+  .filter[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: var(--wall); }
+  .filter .dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--available); }
+  .filter .n { color: inherit; opacity: .6; }
+
+  .bar :global(.years a[hidden]) { display: none; }
+  .only-available :global(li:has([data-status]:not([data-status='available']))) { display: none; }
+
+  .year { padding-top: clamp(2.5rem, 5vw, 4rem); scroll-margin-top: 9rem; }
   .count { font-size: .8125rem; color: var(--muted); }
+
+  .empty { padding-block: 4rem; color: var(--muted); }
 
   .nft {
     margin-top: var(--space); padding-top: 2rem;
     border-top: 1px solid var(--line);
     font-family: var(--serif); font-size: 1.5rem; line-height: 1.3;
+  }
+
+  @media (max-width: 767px) {
+    .toolbar { top: 4rem; }
+    .bar { overflow-x: auto; scrollbar-width: none; }
+    .bar::-webkit-scrollbar { display: none; }
+    .bar :global(.years) { flex-wrap: nowrap; }
+    .filter { order: -1; }
+    .year { scroll-margin-top: 8rem; }
   }
 </style>

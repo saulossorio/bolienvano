@@ -14,7 +14,7 @@ const year = new Date().getFullYear();
   <div class="container">
     <div class="cta">
       <p class="cta-text">{t.footer.cta}</p>
-      <a class="more" href={pageUrl('contact')}>{t.footer.ctaLink}</a>
+      <a class="button" href={pageUrl('contact')}>{t.footer.ctaLink}</a>
     </div>
 
     <div class="bottom">
@@ -38,7 +38,7 @@ const year = new Date().getFullYear();
   .footer { margin-top: var(--space); border-top: 1px solid var(--line); }
 
   .cta {
-    display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 1rem 2rem;
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem 2rem;
     padding-block: 3.5rem;
   }
   .cta-text {

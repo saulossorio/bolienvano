@@ -35,7 +35,7 @@ const [lead, ...rest] = t.about.paragraphs;
         {exhibitions.map((e) => (
           <li>
             <span class="cv-year">{e.date.slice(0, 4)}</span>
-            <span><a href={pageUrl(`exhibitions/${e.slug}`)}><em>{exhibitionTexts[e.slug].title}</em></a>, {exhibitionTexts[e.slug].venue.replace(' | ', ', ')}</span>
+            <span><a href={pageUrl(`exhibitions/${e.slug}`)}><em>{exhibitionTexts[e.slug].title}</em></a>, {exhibitionTexts[e.slug].venue}</span>
           </li>
         ))}
       </ul>

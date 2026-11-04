@@ -1,0 +1,35 @@
+---
+// Availability of an artwork and what the visitor can do about it:
+//   available  green dot, price, button to enquire
+//   ask        price on request, button to ask
+//   sold       sold, link to the works still available
+// The enquiry opens the contact form with the work already in the subject.
+import { t } from '../content/index.js';
+import { pageUrl } from '../lib/urls.js';
+
+const { artwork, title } = Astro.props;
+const subject = `${title} (${artwork.year})`;
+const enquire = `${pageUrl('contact')}?subject=${encodeURIComponent(subject)}`;
+---
+<div class="availability">
+  <p class:list={['status', artwork.status]}>
+    <span class="dot" aria-hidden="true"></span>
+    {artwork.status === 'sold' ? t.artwork.soldLong : t.artwork.status[artwork.status]}
+  </p>
+  {artwork.status === 'available' && <p class="price">{t.artwork.price} {artwork.price}</p>}
+
+  {artwork.status === 'sold'
+    ? <a class="more" href={`${pageUrl('gallery')}#available`}>{t.artwork.seeAvailable}</a>
+    : <a class="button" href={enquire}>{t.artwork[artwork.status]}</a>}
+</div>
+
+<style>
+  .status { display: flex; align-items: center; gap: .5rem; margin: 0 0 .25rem; font-size: .9375rem; }
+  .price { margin: 0 0 1.5rem; font-size: 1.5rem; font-weight: 300; font-variant-numeric: tabular-nums; }
+  .status.ask, .status.sold { margin-bottom: 1.5rem; }
+  .status.sold { color: var(--muted); }
+
+  .dot { width: .5rem; height: .5rem; border-radius: 50%; border: 1px solid currentColor; }
+  .available .dot { background: var(--available); border-color: var(--available); }
+  .sold .dot { background: currentColor; }
+</style>

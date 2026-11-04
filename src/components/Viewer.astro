@@ -1,0 +1,330 @@
+---
+// Full-screen image viewer with zoom, used by the artwork, exhibition and NFT pages.
+//
+// Any link with data-zoom="<group>" opens it: the link points to the large image
+// (so without JavaScript it simply opens the image), data-caption gives the text
+// shown under it. Links of the same group can be browsed with the arrows.
+//
+//   Mouse     click or double-click to zoom in/out, wheel to zoom, drag to move
+//   Touch     pinch to zoom, double-tap to zoom in/out, drag to move, swipe to change image
+//   Keyboard  ← → change image, + − zoom, 0 fit, arrows move when zoomed, Esc closes
+import { t } from '../content/index.js';
+
+// Empty image until one is opened
+const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';
+---
+<dialog class="viewer" aria-label={t.viewer.label} data-viewer>
+  <div class="stage" data-stage>
+    <img class="image" src={BLANK} alt="" draggable="false" data-image data-blank={BLANK} />
+  </div>
+
+  <div class="top">
+    <p class="counter" aria-live="polite" data-counter></p>
+    <button class="ctrl close" type="button" data-close aria-label={t.viewer.close}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+  </div>
+
+  <button class="ctrl side prev" type="button" data-step="-1" aria-label={t.viewer.previous}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+  </button>
+  <button class="ctrl side next" type="button" data-step="1" aria-label={t.viewer.next}>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+  </button>
+
+  <div class="bottom">
+    <p class="caption" data-caption></p>
+    <div class="zoom">
+      <button class="ctrl" type="button" data-zoom-by="-1" aria-label={t.viewer.zoomOut}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" /></svg>
+      </button>
+      <button class="ctrl level" type="button" data-fit aria-label={t.viewer.fit}>100%</button>
+      <button class="ctrl" type="button" data-zoom-by="1" aria-label={t.viewer.zoomIn}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5v14" /></svg>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.querySelector('[data-viewer]');
+  const stage = dialog.querySelector('[data-stage]');
+  const img = dialog.querySelector('[data-image]');
+  const counter = dialog.querySelector('[data-counter]');
+  const caption = dialog.querySelector('[data-caption]');
+  const level = dialog.querySelector('[data-fit]');
+  const prevBtn = dialog.querySelector('[data-step="-1"]');
+  const nextBtn = dialog.querySelector('[data-step="1"]');
+
+  const MAX = 4;          // furthest zoom, relative to "fit to screen"
+  const STEP = 1.6;       // one press of + or −
+
+  let items = [];         // links of the open group
+  let index = 0;
+  let scale = 1, x = 0, y = 0;
+  let opener = null;
+
+  // ---- Layout -------------------------------------------------------------
+
+  // Keep the zoomed image covering the screen: it can't be dragged off.
+  function clamp() {
+    const w = img.offsetWidth * scale, h = img.offsetHeight * scale;
+    const maxX = Math.max(0, (w - stage.clientWidth) / 2);
+    const maxY = Math.max(0, (h - stage.clientHeight) / 2);
+    x = Math.min(maxX, Math.max(-maxX, x));
+    y = Math.min(maxY, Math.max(-maxY, y));
+  }
+
+  function render(animate = true) {
+    clamp();
+    img.style.transition = animate ? '' : 'none';
+    img.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    level.textContent = `${Math.round(scale * 100)}%`;
+    stage.classList.toggle('zoomed', scale > 1);
+  }
+
+  // Zoom to `next` keeping the point (cx, cy) of the screen still
+  function zoomTo(next, cx = stage.clientWidth / 2, cy = stage.clientHeight / 2, animate = true) {
+    next = Math.min(MAX, Math.max(1, next));
+    const ox = cx - stage.clientWidth / 2, oy = cy - stage.clientHeight / 2;
+    x = ox - (ox - x) * (next / scale);
+    y = oy - (oy - y) * (next / scale);
+    scale = next;
+    if (scale === 1) { x = 0; y = 0; }
+    render(animate);
+  }
+
+  // ---- Opening and browsing ---------------------------------------------
+
+  function show(i) {
+    index = (i + items.length) % items.length;
+    const link = items[index];
+    scale = 1; x = 0; y = 0;
+    img.classList.remove('ready');
+    img.onload = () => { img.classList.add('ready'); render(false); };
+    img.src = link.href;
+    img.alt = link.querySelector('img')?.alt || link.dataset.caption || '';
+    caption.textContent = link.dataset.caption || img.alt;
+    counter.textContent = items.length > 1 ? `${index + 1} / ${items.length}` : '';
+    prevBtn.hidden = nextBtn.hidden = items.length < 2;
+    render(false);
+  }
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[data-zoom]');
+    if (!link || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    opener = link;
+    items = [...document.querySelectorAll(`a[data-zoom="${link.dataset.zoom}"]`)];
+    show(items.indexOf(link));
+    dialog.showModal();
+    document.documentElement.classList.add('viewer-open');
+  });
+
+  dialog.addEventListener('close', () => {
+    document.documentElement.classList.remove('viewer-open');
+    img.src = img.dataset.blank;
+    opener?.focus();
+  });
+
+  dialog.querySelector('[data-close]').addEventListener('click', () => dialog.close());
+  prevBtn.addEventListener('click', () => show(index - 1));
+  nextBtn.addEventListener('click', () => show(index + 1));
+  level.addEventListener('click', () => zoomTo(1));
+  dialog.querySelectorAll('[data-zoom-by]').forEach((b) =>
+    b.addEventListener('click', () => zoomTo(b.dataset.zoomBy > 0 ? scale * STEP : scale / STEP)),
+  );
+
+  // ---- Keyboard -----------------------------------------------------------
+
+  dialog.addEventListener('keydown', (e) => {
+    const pan = 80;
+    if (e.key === '+' || e.key === '=') zoomTo(scale * STEP);
+    else if (e.key === '-' || e.key === '_') zoomTo(scale / STEP);
+    else if (e.key === '0') zoomTo(1);
+    else if (scale > 1 && e.key.startsWith('Arrow')) {
+      if (e.key === 'ArrowLeft') x += pan;
+      if (e.key === 'ArrowRight') x -= pan;
+      if (e.key === 'ArrowUp') y += pan;
+      if (e.key === 'ArrowDown') y -= pan;
+      render();
+    }
+    else if (e.key === 'ArrowLeft' && items.length > 1) show(index - 1);
+    else if (e.key === 'ArrowRight' && items.length > 1) show(index + 1);
+    else return;
+    e.preventDefault();
+  });
+
+  // ---- Mouse wheel ------------------------------------------------------
+
+  stage.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const r = stage.getBoundingClientRect();
+    zoomTo(scale * Math.exp(-e.deltaY * 0.0025), e.clientX - r.left, e.clientY - r.top, false);
+  }, { passive: false });
+
+  // ---- Pointer: drag, pinch, swipe, (double) click -----------------------
+
+  const pointers = new Map();
+  let start = null;         // gesture start: positions, scale, offset
+  let moved = false;
+  let lastTap = 0;
+  let onImage = false;      // the gesture started on the image, not on the dark area
+
+  const local = (p) => {
+    const r = stage.getBoundingClientRect();
+    return { x: p.x - r.left, y: p.y - r.top };
+  };
+  const mid = () => {
+    const [a, b] = [...pointers.values()];
+    return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.hypot(a.x - b.x, a.y - b.y) };
+  };
+
+  function begin() {
+    const p = pointers.size === 2 ? mid() : [...pointers.values()][0];
+    start = { ...p, scale, x, y };
+  }
+
+  stage.addEventListener('pointerdown', (e) => {
+    if (e.target !== img && e.target !== stage) return;
+    if (!pointers.size) onImage = e.target === img;
+    stage.setPointerCapture(e.pointerId);
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    moved = false;
+    begin();
+  });
+
+  stage.addEventListener('pointermove', (e) => {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (pointers.size === 2) {
+      // Pinch: zoom around the middle of the two fingers, and follow it
+      const m = mid();
+      const c = local(start);
+      scale = start.scale; x = start.x; y = start.y;
+      zoomTo(start.scale * (m.d / start.d), c.x, c.y, false);
+      x += m.x - start.x; y += m.y - start.y;
+      render(false);
+      moved = true;
+      return;
+    }
+
+    const p = [...pointers.values()][0];
+    const dx = p.x - start.x, dy = p.y - start.y;
+    if (Math.abs(dx) + Math.abs(dy) > 6) moved = true;
+    if (scale > 1) {
+      x = start.x + dx; y = start.y + dy;
+      render(false);
+    } else if (moved) {
+      // Not zoomed: the image follows the finger sideways as a hint of the swipe
+      img.style.transition = 'none';
+      img.style.transform = `translateX(${dx}px)`;
+    }
+  });
+
+  function end(e) {
+    if (!pointers.has(e.pointerId)) return;
+    const p = pointers.get(e.pointerId);
+    pointers.delete(e.pointerId);
+    if (pointers.size === 1) { begin(); return; }   // pinch ended, one finger left
+    if (pointers.size) return;
+
+    const dx = p.x - start.x;
+    if (scale === 1 && moved) {
+      // Swipe to the next or previous image
+      if (Math.abs(dx) > 60 && items.length > 1) show(index + (dx < 0 ? 1 : -1));
+      else render();
+      return;
+    }
+    if (moved) return;
+
+    // A tap on the dark area around a fitted image closes the viewer
+    if (!onImage && scale === 1) { dialog.close(); return; }
+
+    // A tap or click: double tap toggles zoom; on a mouse a single click does
+    const now = Date.now();
+    const at = local(p);
+    if (e.pointerType === 'mouse' || now - lastTap < 300) {
+      zoomTo(scale > 1 ? 1 : 2.5, at.x, at.y);
+      lastTap = 0;
+    } else {
+      lastTap = now;
+    }
+  }
+  stage.addEventListener('pointerup', end);
+  stage.addEventListener('pointercancel', end);
+
+  window.addEventListener('resize', () => dialog.open && render(false));
+</script>
+
+<style>
+  .viewer {
+    position: fixed; inset: 0;
+    width: 100%; max-width: none; height: 100%; max-height: none;
+    margin: 0; padding: 0; border: 0;
+    background: #121211; color: #f2f1ef;
+    overflow: hidden;
+  }
+  .viewer::backdrop { background: #121211; }
+  .viewer[open] { animation: viewer-in var(--fast) var(--ease); }
+  @keyframes viewer-in { from { opacity: 0; } }
+  :global(html.viewer-open) { overflow: hidden; }
+
+  .stage {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    padding: 4.5rem 5rem 5.5rem;
+    touch-action: none; user-select: none;
+    cursor: zoom-in;
+  }
+  .stage.zoomed { cursor: grab; }
+  .stage.zoomed:active { cursor: grabbing; }
+
+  .image {
+    max-width: 100%; max-height: 100%;
+    width: auto; height: auto;
+    opacity: 0;
+    transition: transform var(--fast) var(--ease), opacity var(--fast) var(--ease);
+    will-change: transform;
+  }
+  .image.ready { opacity: 1; }
+
+  /* Controls: round, light on dark, always reachable */
+  .ctrl {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 44px; height: 44px; padding: 0 .75rem;
+    border: 1px solid rgb(242 241 239 / 20%); border-radius: 999px;
+    background: rgb(18 18 17 / 70%); color: inherit;
+    font: inherit; font-size: .8125rem; font-variant-numeric: tabular-nums;
+    cursor: pointer;
+  }
+  .ctrl:hover { background: rgb(242 241 239 / 12%); border-color: rgb(242 241 239 / 45%); }
+  .ctrl svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .ctrl[hidden] { display: none; }
+
+  .top, .bottom {
+    position: absolute; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding: 1rem clamp(1rem, 3vw, 1.5rem);
+    pointer-events: none;
+  }
+  .top > *, .bottom > * { pointer-events: auto; }
+  /* Soft dark bands keep the controls readable over a zoomed image */
+  .top { top: 0; background: linear-gradient(rgb(18 18 17 / 70%), transparent); }
+  .bottom { bottom: 0; background: linear-gradient(transparent, rgb(18 18 17 / 70%)); }
+
+  .counter, .caption { margin: 0; font-size: .875rem; color: rgb(242 241 239 / 75%); }
+  .caption { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .zoom { display: flex; gap: .5rem; flex-shrink: 0; }
+  .level { min-width: 4.25rem; }
+
+  .side { position: absolute; top: 50%; translate: 0 -50%; }
+  .prev { left: clamp(.5rem, 2vw, 1.5rem); }
+  .next { right: clamp(.5rem, 2vw, 1.5rem); }
+
+  @media (max-width: 599px) {
+    .stage { padding: 4rem 0 5rem; }
+    .side { top: auto; bottom: 4.75rem; translate: none; }
+  }
+</style>

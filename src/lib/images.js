@@ -1,3 +1,5 @@
+import { getImage } from 'astro:assets';
+
 // Finds an image in src/assets by folder and file name, so content files can
 // refer to images by name. A missing image stops the build with a clear message.
 const files = import.meta.glob('../assets/**/*.{jpg,jpeg,png,webp,avif,svg}', { eager: true, import: 'default' });
@@ -14,4 +16,11 @@ export function artworkImages(slug) {
     kind,
     src: image('artworks', `${slug}_${kind}.jpg`),
   }));
+}
+
+// Address of the largest version of an image, for the full-screen viewer.
+// Uses the original size (up to 2400px), so sharper originals give sharper zoom.
+export async function largeUrl(src) {
+  const img = await getImage({ src, width: Math.min(src.width, 2400), format: 'webp', quality: 90 });
+  return img.src;
 }

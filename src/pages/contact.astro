@@ -6,6 +6,9 @@ import Base from '../layouts/Base.astro';
 import { t } from '../content/index.js';
 import { assetUrl } from '../lib/urls.js';
 
+// Same address contact.php sends to
+const email = 'bolienvano@gmail.com';
+
 ---
 <Base title={t.contact.title} description={t.contact.description} path="contact" current="contact">
   <div class="container contact">
@@ -13,6 +16,7 @@ import { assetUrl } from '../lib/urls.js';
       <span class="eyebrow">{t.contact.title}</span>
       <h1>{t.contact.heading}</h1>
       <p class="lead">{t.contact.intro}</p>
+      <p class="direct">{t.contact.direct} <a href={`mailto:${email}`}>{email}</a></p>
       <p class="where">{t.contact.mapTitle}</p>
     </div>
 
@@ -102,6 +106,8 @@ import { assetUrl } from '../lib/urls.js';
     padding-block: clamp(3rem, 7vw, 6rem) 0;
   }
   .lead { max-width: 30ch; font-size: 1.125rem; color: var(--muted); }
+  .direct { margin-bottom: .5rem; }
+  .direct a { font-weight: 500; }
   .where { font-size: .875rem; color: var(--muted); }
 
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem; }

@@ -1,6 +1,6 @@
 ---
 // One artwork in a grid: the whole photo (square, never cropped) and a caption
-// like a museum label: title, year and technique, availability.
+// like a museum label: title, year and technique, availability (and price).
 // Props: artwork (from src/data/artworks.js), eager (load the image first)
 import { Picture } from 'astro:assets';
 import { t, artworkTitles } from '../content/index.js';
@@ -10,7 +10,7 @@ import { image } from '../lib/images.js';
 const { artwork, eager = false } = Astro.props;
 const title = artworkTitles[artwork.slug];
 ---
-<a class="card" href={pageUrl(`gallery/${artwork.slug}`)}>
+<a class="card" href={pageUrl(`gallery/${artwork.slug}`)} data-status={artwork.status}>
   <div class="frame">
     <Picture
       src={image('artworks', `${artwork.slug}_mockup.jpg`)}
@@ -18,23 +18,27 @@ const title = artworkTitles[artwork.slug];
       formats={['avif']}
       fallbackFormat="webp"
       widths={[400, 600, 800]}
-      sizes="(max-width: 599px) 92vw, (max-width: 1023px) 46vw, 400px"
+      sizes="(max-width: 599px) 92vw, (max-width: 1023px) 46vw, 440px"
       loading={eager ? 'eager' : 'lazy'}
     />
   </div>
   <div class="caption">
     <h3 class="title">{title}</h3>
     <p class="meta">{artwork.year} · {t.media[artwork.medium]}</p>
-    <p class:list={['status', artwork.status]}>{t.artwork.status[artwork.status]}</p>
+    <p class:list={['status', artwork.status]}>
+      {t.artwork.status[artwork.status]}
+      {artwork.status === 'available' && <span class="price"> · {t.artwork.price} {artwork.price}</span>}
+    </p>
   </div>
 </a>
 
 <style>
   .card { display: block; text-decoration: none; }
 
-  .frame { overflow: hidden; background: var(--paper); aspect-ratio: 1; }
+  .frame { overflow: hidden; background: var(--wall); aspect-ratio: 1; }
   .frame :global(img) {
     width: 100%; height: 100%; object-fit: cover;
+    mix-blend-mode: darken;   /* white photo backgrounds turn wall-colored, like the other works */
     transition: transform var(--slow) var(--ease);
   }
   .card:hover .frame :global(img) { transform: scale(1.03); }
@@ -50,7 +54,7 @@ const title = artworkTitles[artwork.slug];
     margin-right: .45rem; border-radius: 50%; vertical-align: .1em;
     border: 1px solid currentColor;
   }
-  .status.available { color: var(--ink); }
+  .status.available, .status.ask { color: var(--ink); }
   .status.available::before { background: var(--available); border-color: var(--available); }
   .status.sold::before { background: currentColor; }
 </style>
