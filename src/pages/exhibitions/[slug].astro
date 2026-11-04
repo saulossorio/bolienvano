@@ -1,10 +1,11 @@
 ---
 // One exhibition: title and facts, the first photo large, the text in a readable
-// column ending with a button to the works that were shown (their own page,
-// exhibitions/<slug>-works.html), and the other photos. Every photo opens the viewer.
+// column, then the works that were shown folded in a disclosure (closed by default,
+// so they never interrupt the reading), and the other photos. Every photo opens the viewer.
 import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Viewer from '../../components/Viewer.astro';
+import WorkGrid from '../../components/WorkGrid.astro';
 import { t, exhibitionTexts } from '../../content/index.js';
 import { exhibitions } from '../../data/exhibitions.js';
 import { artworks } from '../../data/artworks.js';
@@ -53,10 +54,22 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
 
     <div class="body">
       {text.body.map((p) => <p set:html={p} />)}
-      {works.length > 0 && (
-        <a class="button" href={pageUrl(`exhibitions/${exhibition.slug}-works`)}>{t.exhibitions.seeWorks.replace('{n}', works.length)}</a>
-      )}
     </div>
+
+    {works.length > 0 && (
+      <details class="works">
+        <summary>
+          <span>{t.exhibitions.seeWorks.replace('{n}', works.length)}</span>
+          <span class="sign" aria-hidden="true"></span>
+        </summary>
+        <div class="works-body">
+          <WorkGrid items={works} />
+          {exhibition.nft && (
+            <p class="nft">{t.exhibitions.nftAlso} <a href={pageUrl('gallery/hiperconciente')}>{t.nft.title}</a></p>
+          )}
+        </div>
+      </details>
+    )}
 
     {rest.length > 0 && (
       <div class:list={['photos', { single: rest.length === 1 }]}>
@@ -94,7 +107,31 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
   /* Text in a comfortable reading width */
   .body { max-width: 42rem; padding-block: clamp(3rem, 6vw, 5rem); font-size: 1.0625rem; line-height: 1.75; }
   .body p:first-child { font-size: 1.25rem; line-height: 1.6; }
-  .body .button { margin-top: 1.5rem; }
+
+  /* Works shown: one quiet line until opened; opens and closes smoothly */
+  .works { margin-bottom: clamp(3rem, 6vw, 5rem); border-block: 1px solid var(--line); interpolate-size: allow-keywords; }
+  .works summary {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    padding-block: 1.5rem; cursor: pointer; list-style: none;
+    font-family: var(--display); font-size: clamp(1.25rem, 2.5vw, 1.75rem); line-height: 1.2;
+    transition: color var(--fast) var(--ease);
+  }
+  .works summary::-webkit-details-marker { display: none; }
+  .works summary:hover { color: var(--accent); }
+  .sign { position: relative; flex: none; width: 1.25rem; height: 1.25rem; }
+  .sign::before, .sign::after {
+    content: ''; position: absolute; inset: 50% 0 auto; height: 1.5px; margin-top: -.75px;
+    background: currentColor; transition: transform var(--fast) var(--ease);
+  }
+  .sign::after { transform: rotate(90deg); }
+  .works[open] .sign::after { transform: rotate(0); }
+  .works::details-content {
+    block-size: 0; overflow: clip; opacity: 0;
+    transition: block-size var(--slow) var(--ease), opacity var(--slow) var(--ease), content-visibility var(--slow) allow-discrete;
+  }
+  .works[open]::details-content { block-size: auto; opacity: 1; }
+  .works-body { padding-block: clamp(1.5rem, 3vw, 2.5rem) clamp(3rem, 6vw, 5rem); }
+  .nft { margin: clamp(3rem, 6vw, 5rem) 0 0; font-family: var(--display); font-size: 1.25rem; }
 
   .photos { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.75rem, 1.5vw, 1.25rem); }
   .photos.single { grid-template-columns: 1fr; }
