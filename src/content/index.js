@@ -18,4 +18,7 @@ for (const a of artworks) {
 }
 for (const e of exhibitions) {
   if (!exhibitionTexts[e.slug]) throw new Error(`Missing texts for exhibition "${e.slug}" in src/content/${ui.lang}/exhibitions.js`);
+  for (const slug of e.works ?? []) {
+    if (!artworks.some((a) => a.slug === slug)) throw new Error(`Exhibition "${e.slug}" lists unknown artwork "${slug}"`);
+  }
 }

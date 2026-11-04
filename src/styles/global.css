@@ -2,7 +2,7 @@
    Styles used by one component live inside that .astro file.
 
    Design idea: the site is the gallery wall. The background is the warm grey of
-   the wall in the artwork photos, the texts read like museum labels (light sans titles,
+   the wall in the artwork photos, the texts read like museum labels (Syne titles,
    small uppercase details) and nothing competes with the paintings. */
 
 :root {
@@ -16,13 +16,15 @@
   --available: #3f7a52;   /* green dot of available works (a red dot means sold in galleries) */
 
   /* Type */
-  --serif: var(--sans);   /* display face: same clean sans, set light below */
-  --sans:  'Inter Variable', system-ui, sans-serif;
+  /* Syne: made by Bonjour Monde for Synesthésie, an art centre near Paris.
+     Used for the name, titles and big numbers. Familjen Grotesk for reading. */
+  --display: 'Syne Variable', 'Familjen Grotesk Variable', system-ui, sans-serif;
+  --sans:    'Familjen Grotesk Variable', system-ui, sans-serif;
 
   /* Layout */
   --container: 1360px;
-  --gutter: clamp(1.25rem, 4vw, 3rem);   /* side margins, grows with the screen */
-  --space:  clamp(4rem, 9vw, 8rem);      /* between sections */
+  --gutter: clamp(1.5rem, 5vw, 4rem);    /* side margins, grows with the screen */
+  --space:  clamp(5rem, 12vw, 10rem);    /* between sections: generous, the works need air */
 
   /* Motion: one easing and two speeds for the whole site */
   --ease: cubic-bezier(.22, .61, .36, 1);   /* soft ease-out */
@@ -45,10 +47,10 @@ body {
 }
 
 h1, h2, h3 {
-  font-family: var(--serif);
-  font-weight: 300;
-  line-height: 1.08;
-  letter-spacing: -.025em;
+  font-family: var(--display);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -.02em;
   margin: 0 0 1rem;
   text-wrap: balance;
 }

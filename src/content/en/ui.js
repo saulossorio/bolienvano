@@ -7,6 +7,7 @@ export default {
     name: 'Andy S.',
     description: 'Andy S. is a bolivian contemporary artist based in Curitiba, Brazil. Works mainly with painting, using techniques such as oil painting, ink painting and watercolor.',
     credit: 'Sierra Agencia Digital',
+    place: 'Bolivian painter · Curitiba, Brazil',
   },
 
   nav: {
@@ -17,6 +18,7 @@ export default {
     exhibitions: 'Exhibitions',
     contact: 'Contact',
     menu: 'Menu',
+    close: 'Close menu',
   },
 
   // Techniques used in src/data/artworks.js
@@ -87,6 +89,10 @@ export default {
     next: 'Next photo',
     photo: 'Photo',
     read: 'Read more',
+    works: 'The works',
+    seeWorks: 'See the {n} works',
+    nftAlso: 'Also shown: the NFT artwork',
+    exhibitedIn: 'Exhibited in',
   },
 
   about: {

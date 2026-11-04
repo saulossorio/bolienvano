@@ -6,8 +6,9 @@ import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Viewer from './Viewer.astro';
 import Availability from './Availability.astro';
-import { t, artworkTitles } from '../content/index.js';
+import { t, artworkTitles, exhibitionTexts } from '../content/index.js';
 import { artworks } from '../data/artworks.js';
+import { exhibitions } from '../data/exhibitions.js';
 import { pageUrl } from '../lib/urls.js';
 import { artworkImages, largeUrl } from '../lib/images.js';
 
@@ -22,6 +23,7 @@ const images = await Promise.all(
   })),
 );
 const [view, ...details] = images;
+const shownIn = exhibitions.filter((e) => e.works?.includes(artwork.slug));
 
 // Previous / next in gallery order
 const index = artworks.findIndex((a) => a.slug === artwork.slug);
@@ -82,6 +84,9 @@ const next = artworks[index + 1];
           <div><dt>{t.artwork.year}</dt><dd>{artwork.year}</dd></div>
           <div><dt>{t.artwork.technique}</dt><dd>{medium}</dd></div>
           <div><dt>{t.artwork.size}</dt><dd>{artwork.size}</dd></div>
+          {shownIn.map((e) => (
+            <div><dt>{t.exhibitions.exhibitedIn}</dt><dd><a href={pageUrl(`exhibitions/${e.slug}`)}>{exhibitionTexts[e.slug].title}</a>, {e.date.slice(0, 4)}</dd></div>
+          ))}
         </dl>
         <Availability artwork={artwork} title={title} />
       </div>
@@ -158,7 +163,7 @@ const next = artworks[index + 1];
   .pager a { text-decoration: none; }
   .pager .next { text-align: right; }
   .pager .eyebrow { margin-bottom: .25rem; }
-  .pager .name { font-family: var(--serif); font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.1; }
+  .pager .name { font-family: var(--display); font-size: clamp(1.5rem, 3vw, 2.25rem); line-height: 1.1; }
   .pager a:hover .name { text-decoration: underline; text-decoration-thickness: 1px; }
 
   @media (max-width: 899px) {
