@@ -8,6 +8,7 @@ const paths = [
   ...years.map((y) => `gallery/${y.year}`),
   ...artworks.map((a) => `gallery/${a.slug}`),
   ...exhibitions.map((e) => `exhibitions/${e.slug}`),
+  ...exhibitions.filter((e) => e.works?.length).map((e) => `exhibitions/${e.slug}-works`),
 ];
 
 export function GET({ site }) {

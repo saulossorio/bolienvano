@@ -1,0 +1,55 @@
+---
+// The works shown in one exhibition: exhibitions/<slug>-works.html.
+// Reached from the button at the end of the exhibition text; links back to it.
+import Base from '../../layouts/Base.astro';
+import WorkGrid from '../../components/WorkGrid.astro';
+import { t, exhibitionTexts } from '../../content/index.js';
+import { exhibitions } from '../../data/exhibitions.js';
+import { artworks } from '../../data/artworks.js';
+import { pageUrl } from '../../lib/urls.js';
+
+export function getStaticPaths() {
+  return exhibitions
+    .filter((e) => e.works?.length)
+    .map((exhibition) => ({ params: { slug: exhibition.slug }, props: { exhibition } }));
+}
+
+const { exhibition } = Astro.props;
+const text = exhibitionTexts[exhibition.slug];
+const works = exhibition.works.map((slug) => artworks.find((a) => a.slug === slug));
+const year = exhibition.date.slice(0, 4);
+const intro = t.exhibitions.worksIntro.replace('{n}', works.length).replace('{venue}', text.venue).replace('{year}', year);
+---
+<Base
+  title={`${t.exhibitions.works} — ${text.title}`}
+  description={intro}
+  path={`exhibitions/${exhibition.slug}-works`}
+  current="exhibitions"
+>
+  <div class="container">
+    <header class="intro">
+      <a class="eyebrow back" href={pageUrl(`exhibitions/${exhibition.slug}`)}>← {text.title}</a>
+      <h1>{t.exhibitions.works}</h1>
+      <p class="lead">{intro}</p>
+    </header>
+
+    <WorkGrid items={works} />
+
+    {exhibition.nft && (
+      <p class="nft">{t.exhibitions.nftAlso} <a href={pageUrl('gallery/hiperconciente')}>{t.nft.title}</a></p>
+    )}
+  </div>
+</Base>
+
+<style>
+  .intro { padding-block: clamp(3rem, 7vw, 6rem) clamp(2.5rem, 5vw, 4rem); }
+  .back { text-decoration: none; }
+  .back:hover { color: var(--ink); }
+  .lead { max-width: 44ch; margin: 0; font-size: 1.125rem; color: var(--muted); }
+
+  .nft {
+    margin-top: var(--space); padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    font-family: var(--display); font-size: 1.5rem; line-height: 1.3;
+  }
+</style>

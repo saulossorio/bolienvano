@@ -1,11 +1,11 @@
 ---
 // One exhibition: title and facts, the first photo large, the text in a readable
-// column, a compact row with the works that were shown (straight to each artwork)
-// and the other photos. Every photo opens the full-screen viewer.
+// column ending with a button to the works that were shown (their own page,
+// exhibitions/<slug>-works.html), and the other photos. Every photo opens the viewer.
 import { Picture } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Viewer from '../../components/Viewer.astro';
-import { t, exhibitionTexts, artworkTitles } from '../../content/index.js';
+import { t, exhibitionTexts } from '../../content/index.js';
 import { exhibitions } from '../../data/exhibitions.js';
 import { artworks } from '../../data/artworks.js';
 import { pageUrl } from '../../lib/urls.js';
@@ -35,7 +35,6 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
       <p class="facts">
         <time datetime={exhibition.date}>{formatDate(exhibition.date)}</time>
         <span>{text.venue}</span>
-        {works.length > 0 && <a class="jump" href="#works">{t.exhibitions.seeWorks.replace('{n}', works.length)} ↓</a>}
       </p>
     </header>
 
@@ -54,50 +53,10 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
 
     <div class="body">
       {text.body.map((p) => <p set:html={p} />)}
+      {works.length > 0 && (
+        <a class="button" href={pageUrl(`exhibitions/${exhibition.slug}-works`)}>{t.exhibitions.seeWorks.replace('{n}', works.length)}</a>
+      )}
     </div>
-
-    {works.length > 0 && (
-      <section class="works" id="works" aria-labelledby="works-title">
-        <div class="works-head">
-          <h2 id="works-title">{t.exhibitions.works}</h2>
-          <span class="count">{works.length} {t.gallery.works}</span>
-        </div>
-        <ul class="strip">
-          {works.map((a) => (
-            <li>
-              <a href={pageUrl(`gallery/${a.slug}`)}>
-                <Picture
-                  src={image('artworks', `${a.slug}_mockup.jpg`)}
-                  alt=""
-                  formats={['avif']}
-                  fallbackFormat="webp"
-                  widths={[200, 400]}
-                  sizes="10rem"
-                  loading="lazy"
-                />
-                <span class="strip-title">{artworkTitles[a.slug]}</span>
-              </a>
-            </li>
-          ))}
-          {exhibition.nft && (
-            <li>
-              <a href={pageUrl('gallery/hiperconciente')}>
-                <Picture
-                  src={image('artworks', 'hiperconciente_mockup.jpg')}
-                  alt=""
-                  formats={['avif']}
-                  fallbackFormat="webp"
-                  widths={[200, 400]}
-                  sizes="10rem"
-                  loading="lazy"
-                />
-                <span class="strip-title">{t.nft.title} (NFT)</span>
-              </a>
-            </li>
-          )}
-        </ul>
-      </section>
-    )}
 
     {rest.length > 0 && (
       <div class:list={['photos', { single: rest.length === 1 }]}>
@@ -126,30 +85,6 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
   .back:hover { color: var(--ink); }
   .intro h1 { margin-bottom: 1rem; }
   .facts { display: flex; flex-wrap: wrap; gap: .25rem 1.5rem; margin: 0; color: var(--muted); }
-  .jump { color: var(--ink); text-decoration: none; }
-  .jump:hover { text-decoration: underline; }
-
-  /* Works of the exhibition: one compact row that scrolls sideways */
-  .works { padding-bottom: clamp(3rem, 6vw, 5rem); scroll-margin-top: 6rem; }
-  .works-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.25rem; }
-  .works-head h2 { margin: 0; font-size: 1.5rem; }
-  .count { font-size: .8125rem; color: var(--muted); }
-  .strip {
-    display: flex; gap: 1.25rem;
-    margin: 0; padding: 0 0 1rem; list-style: none;
-    overflow-x: auto; scroll-snap-type: x proximity;
-    scrollbar-width: thin; scrollbar-color: var(--line) transparent;
-  }
-  .strip li { flex: 0 0 10rem; scroll-snap-align: start; }
-  .strip a { display: block; text-decoration: none; }
-  .strip :global(img) {
-    width: 100%; aspect-ratio: 1; object-fit: cover;
-    mix-blend-mode: darken;
-    transition: opacity var(--fast) var(--ease);
-  }
-  .strip a:hover :global(img) { opacity: .8; }
-  .strip-title { display: block; margin-top: .5rem; font-size: .8125rem; }
-  .strip a:hover .strip-title { text-decoration: underline; }
 
   .zoomable { display: block; overflow: hidden; cursor: zoom-in; }
   .zoomable :global(img) { width: 100%; transition: transform var(--slow) var(--ease); }
@@ -159,6 +94,7 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
   /* Text in a comfortable reading width */
   .body { max-width: 42rem; padding-block: clamp(3rem, 6vw, 5rem); font-size: 1.0625rem; line-height: 1.75; }
   .body p:first-child { font-size: 1.25rem; line-height: 1.6; }
+  .body .button { margin-top: 1.5rem; }
 
   .photos { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(.75rem, 1.5vw, 1.25rem); }
   .photos.single { grid-template-columns: 1fr; }

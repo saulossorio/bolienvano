@@ -34,7 +34,7 @@ import { formatDate } from '../lib/dates.js';
               <h2><a href={pageUrl(`exhibitions/${e.slug}`)}>{text.title}</a></h2>
               <p class="venue">{text.venue}</p>
               <p class="summary">{text.summary}</p>
-              <span class="more" aria-hidden="true">{e.works ? t.exhibitions.seeWorks.replace('{n}', e.works.length) : t.exhibitions.read}</span>
+              <span class="more" aria-hidden="true">{t.exhibitions.read}</span>
             </div>
           </li>
         );
