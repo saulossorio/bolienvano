@@ -1,11 +1,17 @@
 name: Deploy
 
-# Builds the site for bolienvano.com and pushes the finished files to the
-# 'deploy' branch, which is the branch Hostinger serves (Deploy button in
-# Hostinger's Git panel). main keeps the Astro source; never edit 'deploy' by hand.
+# Publishes bolienvano.com. Hostinger serves the 'main' branch exactly as it is,
+# so main holds only the finished site (built files), never the source code.
+#
+#   redesign    work in progress; every push updates the preview (preview.yml)
+#   production  what is live; a push here builds the site and commits it to main
+#   main        the built site that Hostinger publishes; never edit it by hand
+#
+# To publish: merge redesign into production and push. To go back to an earlier
+# version: revert the last "Build of ..." commit on main (Hostinger republishes it).
 on:
   push:
-    branches: [main]
+    branches: [production]
   workflow_dispatch:
 
 permissions:
@@ -36,13 +42,22 @@ jobs:
           test -f dist/index.html
           test -f dist/contact.php
           test -f dist/.htaccess
+          ! grep -q 'name="robots" content="noindex"' dist/index.html
 
-      - name: Push dist/ to the deploy branch
-        working-directory: dist
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          path: site
+
+      # A normal commit on top of main (no force push), so every version stays in history
+      - name: Commit the build to main
+        working-directory: site
         run: |
-          git init -q -b deploy
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R ../dist/. .
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
+          if git diff --cached --quiet; then echo "No changes to publish"; exit 0; fi
           git commit -q -m "Build of ${GITHUB_SHA::7} from ${GITHUB_REF_NAME}"
-          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" deploy
+          git push origin main
