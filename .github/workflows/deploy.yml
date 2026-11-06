@@ -3,11 +3,11 @@ name: Deploy
 # Publishes bolienvano.com. Hostinger serves the 'main' branch exactly as it is,
 # so main holds only the finished site (built files), never the source code.
 #
-#   redesign    work in progress; every push updates the preview (preview.yml)
+#   claude-workspace  Claude's working copy (source code); every push updates the preview (preview.yml)
 #   production  what is live; a push here builds the site and commits it to main
 #   main        the built site that Hostinger publishes; never edit it by hand
 #
-# To publish: merge redesign into production and push. To go back to an earlier
+# To publish: merge claude-workspace into production and push. To go back to an earlier
 # version: revert the last "Build of ..." commit on main (Hostinger republishes it).
 on:
   push:

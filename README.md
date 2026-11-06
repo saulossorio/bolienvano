@@ -6,11 +6,11 @@ Website of the artist Andy S. Static site built with [Astro](https://astro.build
 
 | Branch | What | Published at |
 |---|---|---|
-| `redesign` | Work in progress (source code) | Preview: https://saulossorio.github.io/bolienvano/ |
+| `claude-workspace` | Claude's working copy: the source code, edited here | Preview: https://saulossorio.github.io/bolienvano/ |
 | `production` | Source code of what is live | Builds into `main` automatically |
 | `main` | The finished site only (built files). Never edit by hand | bolienvano.com (Hostinger publishes `main` as is) |
 
-- **Publish:** merge `redesign` into `production` and push. The Deploy workflow builds the site and commits it to `main`.
+- **Publish:** merge `claude-workspace` into `production` and push. The Deploy workflow builds the site and commits it to `main`.
 - **Undo a publish:** revert the last "Build of …" commit on `main`.
 - Never put source code on `main`: Hostinger cannot build it and the site goes down.
 

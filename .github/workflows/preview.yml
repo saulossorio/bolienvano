@@ -1,11 +1,11 @@
 name: Preview
 
-# Publishes the redesign branch to GitHub Pages: https://saulossorio.github.io/bolienvano/
+# Publishes the claude-workspace branch to GitHub Pages: https://saulossorio.github.io/bolienvano/
 # Preview build: hidden from search engines, no analytics. The contact form
 # needs PHP, so it only works on Hostinger, not here.
 on:
   push:
-    branches: [redesign]
+    branches: [claude-workspace]
   workflow_dispatch:
 
 permissions:
