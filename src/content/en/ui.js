@@ -87,8 +87,6 @@ export default {
     next: 'Next photo',
     photo: 'Photo',
     read: 'Read more',
-    tabs: 'Exhibition sections',
-    overview: 'Overview',
     works: 'Works',
     views: 'Installation views',
     nftAlso: 'Also shown, as an NFT',
