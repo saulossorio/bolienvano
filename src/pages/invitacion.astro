@@ -1,6 +1,9 @@
 ---
 // Invitation card for the "Hiperconciencia" opening (2022), in Spanish as printed.
-// The photo is the card cover: click or tap opens it like a book to show the details.
+// Rebuilt from the original Webflow interaction: the white cover ("Invitación" and a
+// hand) opens like a book on hover, click or tap; the drawing is printed on the back of
+// the cover, and the whole card slides so the open spread stays centred.
+// Desktop opens sideways (rotateY), phones open upwards (rotateX). 0.8s, as the original.
 import { Picture, Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { t } from '../content/index.js';
@@ -14,6 +17,7 @@ const seal = image('site', 'Screen-Shot-2022-07-16-at-21.45.37.svg');
   <section class="invitation" lang="es">
     <div class="card" data-card>
       <div class="details">
+        <span class="spine" aria-hidden="true"></span>
         <p><strong>{inv.host}</strong><br />{inv.intro}</p>
         <p class="event">{inv.event}</p>
         <p class="name">{inv.name}</p>
@@ -22,7 +26,13 @@ const seal = image('site', 'Screen-Shot-2022-07-16-at-21.45.37.svg');
       </div>
 
       <button class="cover" type="button" aria-expanded="false" data-cover>
+        <span class="front">
+          <span class="cover-text">{inv.title}</span>
+          <Image src={seal} alt="" width={32} height={32} />
+          <span class="visually-hidden">{inv.open}</span>
+        </span>
         <Picture
+          pictureAttributes={{ class: 'back' }}
           src={cover}
           alt=""
           formats={['avif']}
@@ -31,11 +41,7 @@ const seal = image('site', 'Screen-Shot-2022-07-16-at-21.45.37.svg');
           sizes="(max-width: 767px) 90vw, 450px"
           loading="eager"
         />
-        <span class="cover-text">
-          {inv.title}
-          <Image src={seal} alt="" width={32} height={32} />
-          <span class="visually-hidden">{inv.open}</span>
-        </span>
+        <span class="spine" aria-hidden="true"></span>
       </button>
     </div>
 
@@ -50,32 +56,45 @@ const seal = image('site', 'Screen-Shot-2022-07-16-at-21.45.37.svg');
 </Base>
 
 <script>
-  document.querySelectorAll('[data-card]').forEach((card) => {
-    const cover = card.querySelector('[data-cover]');
-    cover.addEventListener('click', () => {
-      const open = card.classList.toggle('open');
+  // Opens on hover (with a mouse) and on click/tap/keyboard; closes when the pointer
+  // leaves or on a second click.
+  document.querySelectorAll<HTMLElement>('[data-card]').forEach((card) => {
+    const cover = card.querySelector<HTMLButtonElement>('[data-cover]')!;
+    const set = (open: boolean) => {
+      card.classList.toggle('open', open);
       cover.setAttribute('aria-expanded', String(open));
-    });
+    };
+    const hover = matchMedia('(hover: hover) and (pointer: fine)');
+    card.addEventListener('pointerenter', () => hover.matches && set(true));
+    card.addEventListener('pointerleave', () => hover.matches && set(false));
+    cover.addEventListener('click', () => set(hover.matches || !card.classList.contains('open')));
   });
 </script>
 
 <style>
+  /* Sizes reproduce the printed card, so this page keeps its own values. */
   .invitation {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
     min-height: 80vh; padding: 2rem 1rem;
+    perspective: 2000px;
+    overflow-x: clip;
   }
 
   .card {
+    --open: cubic-bezier(.61, 1, .88, 1);   /* Webflow outSine */
+    --close: cubic-bezier(0, .55, .45, 1);  /* Webflow outCirc */
     position: relative;
     width: min(450px, 90vw); aspect-ratio: 1;
-    perspective: 2000px;
+    transform-style: preserve-3d;
+    transition: transform .8s var(--close);
   }
+  .card.open { transform: translateX(50%); transition-timing-function: var(--open); }
 
   .details {
     position: absolute; inset: 0;
-    display: flex; flex-direction: column; justify-content: center;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
     padding: 20px;
-    background: var(--white);
+    background: #fff;
     box-shadow: 3px 0 40px 20px rgb(0 0 0 / 7%);
     font-size: .75rem; line-height: 1rem; color: #131313;
   }
@@ -86,32 +105,49 @@ const seal = image('site', 'Screen-Shot-2022-07-16-at-21.45.37.svg');
 
   .cover {
     position: absolute; inset: 0; z-index: 2;
-    padding: 0; border: 0; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--white);
+    padding: 0; border: 0; cursor: pointer; font: inherit; color: #131313;
+    background: #fff;
     box-shadow: -3px 0 40px 20px rgb(0 0 0 / 7%);
     transform-origin: 0 50%;
-    transition: transform 1s cubic-bezier(.22, .61, .36, 1);
+    transform-style: preserve-3d;
+    transition: transform .8s var(--open);
   }
-  .cover :global(picture), .cover :global(picture img) {
-    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  .open .cover { transform: rotateY(-179.9deg); }
+
+  /* Front: white, "Invitación" and the hand */
+  .front {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .25rem;
     backface-visibility: hidden;
   }
-  .cover-text {
-    position: relative;
-    display: flex; flex-direction: column; align-items: center; gap: .5rem;
-    font-size: 1.5rem; line-height: 2;
-    font-family: inherit; color: var(--text);
+  .cover-text { font-size: 1.5rem; line-height: 2; }
+
+  /* Back: the drawing, the right way round once the cover is open */
+  .cover :global(.back) { position: absolute; inset: 0; transform: rotateY(180deg); backface-visibility: hidden; }
+  .cover :global(.back img) { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Thin shade along the fold */
+  .spine {
+    position: absolute; top: 0; bottom: 0; left: 0; width: 5px;
+    background: linear-gradient(90deg, rgb(0 0 0 / 10%), rgb(255 255 255 / 0) 75%);
   }
-  .open .cover { transform: rotateY(-160deg); }
 
   .organizers { display: flex; flex-direction: column; align-items: center; font-size: .75rem; }
   .logos { display: flex; align-items: center; gap: 1rem; }
   .logos :global(img:first-child) { width: 6rem; }
   .logos :global(img:last-child) { width: 7rem; }
 
+  /* Phones: the cover opens upwards and the card slides down */
   @media (max-width: 767px) {
+    .card { margin-block: min(225px, 45vw); }   /* room for the open card above and below */
+    .card.open { transform: translateY(50%); }
     .cover { transform-origin: 50% 0; }
-    .open .cover { transform: rotateX(160deg); }
+    .open .cover { transform: rotateX(179.9deg); }
+    .cover :global(.back) { transform: rotateX(180deg); }
+    .spine { width: auto; height: 5px; right: 0; bottom: auto;
+             background: linear-gradient(180deg, rgb(0 0 0 / 10%), rgb(255 255 255 / 0) 75%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card, .cover { transition-duration: .01ms; }
   }
 </style>
