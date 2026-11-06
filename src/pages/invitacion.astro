@@ -147,7 +147,9 @@ const seal = image('site', 'Screen-Shot-2022-07-16-at-21.45.37.svg');
     .spine { width: auto; height: 5px; right: 0; bottom: auto;
              background: linear-gradient(180deg, rgb(0 0 0 / 10%), rgb(255 255 255 / 0) 75%); }
   }
+  /* The fold is the point of this page, so it plays even with "Reduce motion" on
+     (as the original did); this beats the site-wide reduced-motion rule. */
   @media (prefers-reduced-motion: reduce) {
-    .card, .cover { transition-duration: .01ms; }
+    .card, .cover { transition-duration: .8s !important; }
   }
 </style>
