@@ -1,11 +1,12 @@
 ---
 // Grid of artwork cards: 3 columns on desktop, 2 on tablet, 1 on phones.
+// priority: the first card is the page's main image (top of the Works page).
 import WorkCard from './WorkCard.astro';
 
-const { items, eagerCount = 3 } = Astro.props;
+const { items, eagerCount = 3, priority = false } = Astro.props;
 ---
 <ul class="grid">
-  {items.map((a, i) => <li><WorkCard artwork={a} eager={i < eagerCount} /></li>)}
+  {items.map((a, i) => <li><WorkCard artwork={a} eager={i < eagerCount} priority={priority && i === 0} /></li>)}
 </ul>
 
 <style>

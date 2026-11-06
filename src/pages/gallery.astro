@@ -38,7 +38,7 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
             <h2 id={`h${year}`}>{year}</h2>
             <span class="count">{items.length} {t.gallery.works}</span>
           </div>
-          <WorkGrid items={items} eagerCount={i === 0 ? 3 : 0} />
+          <WorkGrid items={items} eagerCount={i === 0 ? 3 : 0} priority={i === 0} />
         </section>
       );
     })}
@@ -101,7 +101,7 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
   .filter:hover { border-color: var(--ink); }
   .filter[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: var(--wall); }
   .filter .dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--available); }
-  .filter .n { color: inherit; opacity: .6; }
+  .filter .n { color: inherit; opacity: .75; }
 
   .bar :global(.years a[hidden]) { display: none; }
   .only-available :global(li:has([data-status]:not([data-status='available']))) { display: none; }

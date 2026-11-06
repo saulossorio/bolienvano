@@ -1,13 +1,14 @@
 ---
 // One artwork in a grid: the whole photo (square, never cropped) and a caption
 // like a museum label: title, year and technique, availability (and price).
-// Props: artwork (from src/data/artworks.js), eager (load the image first)
+// Props: artwork (from src/data/artworks.js), eager (load the image first),
+//        priority (the page's main image: fetched first, shown without fade)
 import { Picture } from 'astro:assets';
 import { t, artworkTitles } from '../content/index.js';
 import { pageUrl } from '../lib/urls.js';
 import { image } from '../lib/images.js';
 
-const { artwork, eager = false } = Astro.props;
+const { artwork, eager = false, priority = false } = Astro.props;
 const title = artworkTitles[artwork.slug];
 ---
 <a class="card" href={pageUrl(`gallery/${artwork.slug}`)} data-status={artwork.status}>
@@ -19,7 +20,8 @@ const title = artworkTitles[artwork.slug];
       fallbackFormat="webp"
       widths={[400, 600, 800]}
       sizes="(max-width: 599px) 92vw, (max-width: 1023px) 46vw, 440px"
-      loading={eager ? 'eager' : 'lazy'}
+      loading={eager || priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : undefined}
     />
   </div>
   <div class="caption">

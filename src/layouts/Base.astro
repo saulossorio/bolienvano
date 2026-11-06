@@ -7,16 +7,18 @@
 //   current      nav item to highlight: 'home' | 'about' | 'gallery' | 'nft' | 'exhibitions' | 'contact'
 //   image        social sharing image (an imported asset), optional
 //   noindex      true for pages search engines should skip
+//   schema       structured data items for this page (see src/lib/schema.js), optional
 import '@fontsource-variable/syne';
 import '@fontsource-variable/familjen-grotesk';
 import '../styles/global.css';
-import { getImage } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { t } from '../content/index.js';
 import { pageUrl, assetUrl } from '../lib/urls.js';
+import { siteGraph } from '../lib/schema.js';
+import { shareUrl } from '../lib/images.js';
 
-const { title, description = t.site.description, path = '', current, image } = Astro.props;
+const { title, description = t.site.description, path = '', current, image, schema = [] } = Astro.props;
 
 // The GitHub Pages preview is hidden from search engines and sends no analytics
 const preview = import.meta.env.PUBLIC_PREVIEW === '1';
@@ -24,7 +26,8 @@ const noindex = Astro.props.noindex || preview;
 
 const fullTitle = title ? `${title} | ${t.site.name}` : t.site.name;
 const canonical = new URL(pageUrl(path), Astro.site);
-const ogImage = image && new URL((await getImage({ src: image, width: 1200, format: 'jpg' })).src, Astro.site);
+const ogImage = image && await shareUrl(image, Astro.site);
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': [...siteGraph(Astro.site), ...schema] });
 const GTM_ID = 'GTM-5J63MXV';
 ---
 <!doctype html>
@@ -59,17 +62,24 @@ const GTM_ID = 'GTM-5J63MXV';
   <meta property="og:url" content={canonical} />
   {ogImage && <meta property="og:image" content={ogImage} />}
   <meta name="twitter:card" content="summary_large_image" />
+  <script type="application/ld+json" set:html={jsonLd} />
 
-  {/* Google Tag Manager. GA4 is configured inside GTM, not loaded separately. */}
+  {/* Google Tag Manager. GA4 is configured inside GTM, not loaded separately.
+      Loaded once the page has finished loading (and the browser is idle), so the
+      ~300 KB of analytics never delays the artworks. */}
   {!preview && <script is:inline define:vars={{ GTM_ID }}>
-    (function (w, d, s, l, i) {
+    (function (w, d, l, i) {
       w[l] = w[l] || [];
       w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-      var f = d.getElementsByTagName(s)[0], j = d.createElement(s);
-      j.async = true;
-      j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
-      f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', GTM_ID);
+      function load() {
+        var j = d.createElement('script');
+        j.async = true;
+        j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i;
+        d.head.appendChild(j);
+      }
+      function later() { (w.requestIdleCallback || setTimeout)(load, { timeout: 3000 }); }
+      if (d.readyState === 'complete') later(); else w.addEventListener('load', later);
+    })(window, document, 'dataLayer', GTM_ID);
   </script>}
 </head>
 <body>

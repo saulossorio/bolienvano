@@ -24,3 +24,8 @@ export async function largeUrl(src) {
   const img = await getImage({ src, width: Math.min(src.width, 2400), format: 'webp', quality: 90 });
   return img.src;
 }
+
+// Full address of the 1200px JPG used for social previews and structured data
+export async function shareUrl(src, site) {
+  return new URL((await getImage({ src, width: 1200, format: 'jpg' })).src, site).href;
+}

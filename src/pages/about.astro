@@ -6,11 +6,12 @@ import { t, exhibitionTexts } from '../content/index.js';
 import { exhibitions } from '../data/exhibitions.js';
 import { pageUrl } from '../lib/urls.js';
 import { image } from '../lib/images.js';
+import { artistId } from '../lib/schema.js';
 
 const photo = image('site', 'perfil-andys.jpg');
 const [lead, ...rest] = t.about.paragraphs;
 ---
-<Base title={t.about.title} description={lead} path="about" current="about" image={photo}>
+<Base title={t.about.title} description={lead} path="about" current="about" image={photo} schema={[{ '@type': 'ProfilePage', mainEntity: { '@id': artistId(Astro.site) } }]}>
   <div class="container about">
     <div class="photo">
       <Picture

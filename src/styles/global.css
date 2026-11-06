@@ -141,8 +141,9 @@ a, button, input, textarea, select {
 
 /* Images fade in once loaded instead of popping in. The .js class and the
    .loaded marks come from the script in Base.astro; without JS images show as usual. */
-.js img:not(.loaded) { opacity: 0; }
-.js img.loaded { animation: img-in var(--slow) var(--ease) backwards; }
+.js img:not(.loaded, [fetchpriority='high']) { opacity: 0; }
+.js img.loaded:not([fetchpriority='high']) { animation: img-in var(--slow) var(--ease) backwards; }
+/* The main image of each page (fetchpriority high) shows at once: no fade, faster first paint. */
 @keyframes img-in { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {

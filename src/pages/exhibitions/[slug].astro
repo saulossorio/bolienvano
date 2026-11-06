@@ -11,7 +11,8 @@ import { t, exhibitionTexts } from '../../content/index.js';
 import { exhibitions } from '../../data/exhibitions.js';
 import { artworks } from '../../data/artworks.js';
 import { pageUrl } from '../../lib/urls.js';
-import { image, largeUrl } from '../../lib/images.js';
+import { image, largeUrl, shareUrl } from '../../lib/images.js';
+import { exhibitionSchema } from '../../lib/schema.js';
 import { formatDate } from '../../lib/dates.js';
 
 export function getStaticPaths() {
@@ -27,9 +28,10 @@ const photos = await Promise.all(
   }),
 );
 const [first] = photos;
+const schema = [exhibitionSchema(exhibition, Astro.site, await shareUrl(first.src, Astro.site))];
 const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug === slug));
 ---
-<Base title={text.title} description={text.summary} path={`exhibitions/${exhibition.slug}`} current="exhibitions" image={first.src}>
+<Base title={text.title} description={text.summary} path={`exhibitions/${exhibition.slug}`} current="exhibitions" image={first.src} schema={schema}>
   <div class="container">
     <header class="intro">
       <a class="eyebrow back" href={pageUrl('exhibitions')}>← {t.exhibitions.title}</a>
