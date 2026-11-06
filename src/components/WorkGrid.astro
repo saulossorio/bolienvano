@@ -12,7 +12,7 @@ const { items, eagerCount = 3, priority = false } = Astro.props;
 <style>
   .grid {
     display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: clamp(3.5rem, 7vw, 6rem) clamp(1.5rem, 4vw, 3.5rem);
+    gap: var(--space-xl) var(--space-l);
     margin: 0; padding: 0; list-style: none;
   }
   @media (max-width: 1023px) { .grid { grid-template-columns: repeat(2, 1fr); } }

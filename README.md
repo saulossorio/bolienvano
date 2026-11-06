@@ -40,9 +40,28 @@ npm run build    # final site in dist/
 | `src/pages/` | One file per address (`about.astro` → `about.html`) |
 | `src/components/` | Header, footer, gallery tile, year and artwork pages |
 | `src/layouts/Base.astro` | Shared `<head>`: SEO, analytics (GTM), fonts |
-| `src/styles/global.css` | Colors, fonts and shared styles |
+| `src/styles/global.css` | Design tokens (colors, type, spacing, motion) and shared styles |
+| `src/lib/schema.js` | Structured data for search engines and AI (artist, artworks, exhibitions) |
+| `src/pages/llms.txt.js` | `/llms.txt`: plain-text summary of the site for AI assistants |
 | `public/` | Copied as-is: `contact.php`, `.htaccess`, icons, exhibition PDFs |
 | `legacy/` | Old Webflow site, reference only. Deleted before v2 goes live |
+
+## Design system
+
+Every visual value is a token at the top of `src/styles/global.css`; components
+only use `var(--…)`, never raw sizes. Change a token and the whole site follows.
+
+| Tokens | Use |
+|---|---|
+| `--wall` `--ink` `--muted` `--line` `--available` `--accent` | Colors (`--accent` only for form errors) |
+| `--display` `--sans` | Syne for titles, Familjen Grotesk for text |
+| `--text-xs` … `--text-5xl` | Type scale; the large steps grow with the screen |
+| `--space-3xs` … `--space-2xl`, `--space` | Spacing scale; `--space` separates page sections |
+| `--space-row` | Space between a list line and its text, the same in every list |
+| `--container` `--gutter` | Page width and side margins |
+| `--ease` `--fast` `--slow` | The one easing and two speeds of every transition |
+
+Exception: `src/pages/invitacion.astro` keeps its own sizes (it reproduces the printed card).
 
 ## Contact form
 

@@ -47,22 +47,22 @@ const [lead, ...rest] = t.about.paragraphs;
 <style>
   .about {
     display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    gap: clamp(2rem, 6vw, 6rem); align-items: start;
-    padding-block: clamp(3rem, 7vw, 6rem) 0;
+    gap: var(--space-xl); align-items: start;
+    padding-block: var(--space-xl) 0;
   }
   .photo { position: sticky; top: 7rem; }
   .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 
   .text { max-width: 38rem; }
-  .lead { font-family: var(--display); font-size: clamp(1.5rem, 2.5vw, 2rem); line-height: 1.25; }
+  .lead { font-family: var(--display); font-size: var(--text-2xl); line-height: 1.25; }
   .text p:not(.lead) { color: #3b3935; }
 
-  .cv-title { margin-top: 3.5rem; font-size: 1.75rem; }
+  .cv-title { margin-top: var(--space-xl); font-size: var(--text-2xl); }
   .cv { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
   .cv li {
-    display: grid; grid-template-columns: 4rem 1fr; gap: 1rem;
-    padding-block: .9rem; border-bottom: 1px solid var(--line);
-    font-size: .9375rem;
+    display: grid; grid-template-columns: 4rem 1fr; gap: var(--space-s);
+    padding-block: var(--space-s); border-bottom: 1px solid var(--line);
+    font-size: var(--text-sm);
   }
   .cv-year { color: var(--muted); font-variant-numeric: tabular-nums; }
   .cv a { text-decoration: none; }

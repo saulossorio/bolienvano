@@ -44,26 +44,26 @@ import { formatDate } from '../lib/dates.js';
 </Base>
 
 <style>
-  .intro { padding-block: clamp(3rem, 7vw, 6rem) clamp(1rem, 2vw, 2rem); }
+  .intro { padding-block: var(--space-xl) var(--space-l); }
 
   .list { margin: 0; padding: 0; list-style: none; }
 
   .row {
     position: relative;
     display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: clamp(1.5rem, 5vw, 5rem); align-items: center;
-    padding-block: clamp(2rem, 4vw, 3.5rem);
+    gap: var(--space-xl); align-items: center;
+    padding-block: var(--space-row);
     border-top: 1px solid var(--line);
   }
   .row :global(.cover) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: opacity var(--fast) var(--ease); }
   .row:hover :global(.cover) { opacity: .85; }
 
-  .text h2 { margin-bottom: .5rem; }
+  .text h2 { margin-bottom: var(--space-2xs); }
   /* The title link covers the whole row, so the row is one big click target */
   h2 a { text-decoration: none; }
   h2 a::after { content: ''; position: absolute; inset: 0; }
   .row:hover h2 a { text-decoration: underline; text-decoration-thickness: 1px; }
-  .venue { font-size: .875rem; color: var(--muted); }
+  .venue { font-size: var(--text-sm); color: var(--muted); }
   .summary { max-width: 46ch; }
 
   @media (max-width: 767px) {

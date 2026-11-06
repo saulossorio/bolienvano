@@ -45,15 +45,15 @@ const title = artworkTitles[artwork.slug];
   }
   .card:hover .frame :global(img) { transform: scale(1.03); }
 
-  .caption { padding-top: 1rem; }
-  .title { margin: 0 0 .25rem; font-size: 1.5rem; }
+  .caption { padding-top: var(--space-s); }
+  .title { margin: 0 0 var(--space-3xs); font-size: var(--text-xl); }
   .card:hover .title { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .15em; }
-  .meta, .status { margin: 0; font-size: .8125rem; color: var(--muted); }
+  .meta, .status { margin: 0; font-size: var(--text-xs); color: var(--muted); }
 
   /* Small dot before the availability */
   .status::before {
     content: ''; display: inline-block; width: .45rem; height: .45rem;
-    margin-right: .45rem; border-radius: 50%; vertical-align: .1em;
+    margin-right: var(--space-2xs); border-radius: 50%; vertical-align: .1em;
     border: 1px solid currentColor;
   }
   .status.available, .status.ask { color: var(--ink); }
