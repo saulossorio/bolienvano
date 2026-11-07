@@ -66,55 +66,66 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
     history.replaceState(null, '', on ? '#available' : location.pathname);
   }
 
-  button.addEventListener('click', () => apply(button.getAttribute('aria-pressed') !== 'true'));
+  button.addEventListener('click', () => {
+    apply(button.getAttribute('aria-pressed') !== 'true');
+    // If the list is already scrolled, start again from its first year
+    const first = works.querySelector('.year:not([hidden])');
+    if (first && first.getBoundingClientRect().top < 0) first.scrollIntoView();
+  });
   if (location.hash === '#available') apply(true);
+
+  // The year in the bar follows the scroll: the year on screen is underlined
+  const links = new Map([...document.querySelectorAll('.years a')].map((a) => [a.getAttribute('href').slice(1), a]));
+  const spy = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      links.forEach((a) => a.removeAttribute('aria-current'));
+      links.get(entry.target.id)?.setAttribute('aria-current', 'true');
+    });
+  }, { rootMargin: '-30% 0px -65% 0px' });
+  works.querySelectorAll('.year').forEach((section) => spy.observe(section));
 </script>
 
 <style>
   .intro { padding-block: var(--space-xl) var(--space-m); }
 
-  /* Sticky bar right under the header */
+  /* Sticky bar right under the header: solid, so the works scrolling under it never show through */
   .toolbar {
-    position: sticky; top: 5rem; z-index: 4;
-    background: color-mix(in srgb, var(--wall) 92%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    --toolbar: 3.5rem;
+    position: sticky; top: var(--bar); z-index: 4;
+    background: var(--wall);
     border-bottom: 1px solid var(--line);
   }
-  .bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-s); padding-block: var(--space-xs); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-m); height: var(--toolbar); }
 
+  /* "Available only": quiet text like the years; underlined while on */
   .filter {
-    display: inline-flex; align-items: center; gap: var(--space-2xs);
-    padding: var(--space-2xs) var(--space-s);
-    border: 1px solid var(--line); border-radius: 999px;
-    background: none; color: var(--ink);
-    font: inherit; font-size: var(--text-xs); white-space: nowrap;
-    cursor: pointer;
+    position: relative; display: inline-flex; align-items: center; gap: var(--space-2xs);
+    padding: var(--space-2xs) 0; border: 0; background: none;
+    color: var(--muted); font: inherit; font-size: var(--text-xs); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap;
+    cursor: pointer; transition: color var(--fast) var(--ease);
   }
-  .filter:hover { border-color: var(--ink); }
-  .filter[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: var(--wall); }
-  .filter .dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--available); }
-  .filter .n { color: inherit; opacity: .75; }
+  .filter::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: .2rem; height: 1px; background: currentColor;
+    transform: scaleX(0); transform-origin: left; transition: transform var(--fast) var(--ease);
+  }
+  .filter:hover, .filter[aria-pressed='true'] { color: var(--ink); }
+  .filter[aria-pressed='true']::after { transform: scaleX(1); }
+  .filter .dot { width: .4rem; height: .4rem; border-radius: 50%; background: var(--available); }
 
   .bar :global(.years a[hidden]) { display: none; }
   .only-available :global(li:has([data-status]:not([data-status='available']))) { display: none; }
 
-  .year { padding-top: var(--space-xl); scroll-margin-top: 9rem; }
+  /* A jump to a year leaves the same space above its title as between years */
+  .year { padding-top: var(--space-xl); scroll-margin-top: calc(var(--bar) + 3.5rem - var(--space-xl) + var(--space-l)); }
   .count { font-size: var(--text-xs); color: var(--muted); }
 
   .empty { padding-block: var(--space-xl); color: var(--muted); }
 
-    margin-top: var(--space); padding-top: var(--space-l);
-    border-top: 1px solid var(--line);
-    font-family: var(--display); font-size: var(--text-xl); line-height: 1.3;
-  }
-
   @media (max-width: 767px) {
-    .toolbar { top: 4rem; }
     .bar { overflow-x: auto; scrollbar-width: none; }
     .bar::-webkit-scrollbar { display: none; }
     .bar :global(.years) { flex-wrap: nowrap; }
     .filter { order: -1; }
-    .year { scroll-margin-top: 8rem; }
   }
 </style>

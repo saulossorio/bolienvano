@@ -46,9 +46,7 @@ const active = current === 'nft' ? 'gallery' : current;
 <style>
   .navbar {
     position: sticky; top: 0; z-index: 5;
-    background: color-mix(in srgb, var(--wall) 88%, transparent);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--wall);   /* solid: nothing shows through while scrolling */
     view-transition-name: navbar;   /* stays still while the page crossfades */
   }
   .bar {

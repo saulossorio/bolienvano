@@ -17,14 +17,18 @@ const { current, anchors = false } = Astro.props;
 </nav>
 
 <style>
-  .years { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  /* Quiet text links, like the main menu: a thin line under the current year */
+  .years { display: flex; flex-wrap: wrap; gap: var(--space-m); }
   .years a {
-    padding: var(--space-2xs) var(--space-s);
-    border: 1px solid var(--line); border-radius: 999px;
-    font-size: var(--text-xs); font-variant-numeric: tabular-nums;
-    text-decoration: none;
-    transition: border-color var(--fast) var(--ease), background-color var(--fast) var(--ease), color var(--fast) var(--ease);
+    position: relative; padding-block: var(--space-2xs);
+    font-size: var(--text-xs); letter-spacing: .1em; font-variant-numeric: tabular-nums;
+    color: var(--muted); text-decoration: none;
+    transition: color var(--fast) var(--ease);
   }
-  .years a:hover { border-color: var(--ink); }
-  .years a[aria-current='page'] { background: var(--ink); border-color: var(--ink); color: var(--wall); }
+  .years a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: .2rem; height: 1px; background: currentColor;
+    transform: scaleX(0); transform-origin: left; transition: transform var(--fast) var(--ease);
+  }
+  .years a:hover, .years a[aria-current] { color: var(--ink); }
+  .years a[aria-current]::after { transform: scaleX(1); }
 </style>
