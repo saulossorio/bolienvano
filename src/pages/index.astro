@@ -1,8 +1,10 @@
 ---
 // Home: one work, whole and as large as the screen allows, with its museum label
 // and a small link to all the works. Nothing else, like a single painting on a
-// gallery wall. Each visit shows a different one of the works listed below, picked
-// at random (never the same as last time). Without JavaScript the first one shows.
+// gallery wall. Each visit shows a different one of the works listed below that is
+// still available, picked at random (never the same as last time). A work marked
+// as sold in src/data/artworks.js leaves the home page by itself.
+// Without JavaScript the first one shows.
 import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { t, artworkTitles } from '../content/index.js';
@@ -17,10 +19,10 @@ const slugs = [
   'cavilaciones-matutinas', 'espera', 'invisible', 'cargando-un-fantasma', 'pesada', 'crisis',
 ];
 
-const works = slugs.map((slug) => {
-  const artwork = artworks.find((a) => a.slug === slug);
-  return { ...artwork, title: artworkTitles[slug], src: artworkImages(slug)[0].src };
-});
+const works = slugs
+  .map((slug) => artworks.find((a) => a.slug === slug))
+  .filter((artwork) => artwork.status === 'available')
+  .map((artwork) => ({ ...artwork, title: artworkTitles[artwork.slug], src: artworkImages(artwork.slug)[0].src }));
 ---
 <Base current="home" image={works[0].src}>
   <h1 class="visually-hidden">{t.site.name}</h1>
@@ -54,8 +56,8 @@ const works = slugs.map((slug) => {
       const works = document.querySelectorAll('[data-work]');
       let last = -1;
       try { last = Number(localStorage.getItem('home-work') ?? -1); } catch {}
-      let pick = Math.floor(Math.random() * (works.length - 1));
-      if (pick >= last && last >= 0) pick += 1;   // skip the one shown last time
+      let pick = Math.floor(Math.random() * Math.max(works.length - 1, 1));
+      if (works.length > 1 && last >= 0 && last < works.length && pick >= last) pick += 1;   // skip the one shown last time
       works[0].classList.remove('is-shown');
       works[pick].classList.add('is-shown');
       const img = works[pick].querySelector('img');
