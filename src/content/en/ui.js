@@ -75,7 +75,6 @@ export default {
 
   about: {
     title: 'About',
-    photoAlt: 'Portrait of Andy S.',
     facts: 'Bolivian, lives and works in Curitiba, Brazil',
     // Biography: third person, facts only
     paragraphs: [

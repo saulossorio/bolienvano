@@ -1,17 +1,18 @@
 ---
 // About, structured like the CV pages of established artists: the name and one line
 // of facts, a short biography in the third person, then the CV as dated lists.
+// No portrait: the works represent the artist. One reading column.
 // Solo exhibitions come from src/data/exhibitions.js, the rest from src/data/cv.js.
-import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import { t, exhibitionTexts } from '../content/index.js';
 import { exhibitions } from '../data/exhibitions.js';
 import { projects } from '../data/cv.js';
 import { pageUrl } from '../lib/urls.js';
-import { image } from '../lib/images.js';
+import { artworkImages } from '../lib/images.js';
 import { artistId } from '../lib/schema.js';
 
-const photo = image('site', 'perfil-andys.jpg');
+// Picture shown when the page is shared: a work, not a portrait
+const shareImage = artworkImages('invisible')[0].src;
 
 const sections = [
   {
@@ -28,20 +29,8 @@ const sections = [
   },
 ].filter((s) => s.rows.length);
 ---
-<Base title={t.about.title} description={t.about.paragraphs[0]} path="about" current="about" image={photo} schema={[{ '@type': 'ProfilePage', mainEntity: { '@id': artistId(Astro.site) } }]}>
+<Base title={t.about.title} description={t.about.paragraphs[0]} path="about" current="about" image={shareImage} schema={[{ '@type': 'ProfilePage', mainEntity: { '@id': artistId(Astro.site) } }]}>
   <div class="container about">
-    <div class="photo">
-      <Picture
-        src={photo}
-        alt={t.about.photoAlt}
-        formats={['avif']}
-        fallbackFormat="webp"
-        widths={[400, 700, 1000]}
-        sizes="(max-width: 899px) 60vw, 30vw"
-        loading="eager"
-      />
-    </div>
-
     <div class="text">
       <header class="head">
         <h1>{t.site.name}</h1>
@@ -73,20 +62,8 @@ const sections = [
 </Base>
 
 <style>
-  /* Portrait in a narrow column that stays in view; text in a reading column */
-  .about {
-    display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
-    gap: var(--space-xl); align-items: start;
-    padding-block: var(--space-xl) 0;
-  }
-  .photo { position: sticky; top: calc(var(--bar) + var(--space-m)); }
-  .photo :global(img) {
-    width: 100%; aspect-ratio: 4 / 5; object-fit: cover;
-    mix-blend-mode: darken;   /* the white photo background turns wall-colored */
-    max-height: calc(100svh - var(--bar) - var(--space-xl) - var(--space-m));
-  }
-
-  .text { max-width: 40rem; }
+  .about { padding-block: var(--space-xl) 0; }
+  .text { max-width: 44rem; }
   .head h1 { margin-bottom: var(--space-2xs); }
   .facts { margin: 0; color: var(--muted); }
 
@@ -111,8 +88,4 @@ const sections = [
   .cv a { text-decoration: none; }
   .cv a:hover { text-decoration: underline; text-underline-offset: .2em; }
 
-  @media (max-width: 899px) {
-    .about { grid-template-columns: 1fr; gap: var(--space-l); }
-    .photo { position: static; max-width: 18rem; }
-  }
 </style>
