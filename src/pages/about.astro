@@ -1,6 +1,6 @@
 ---
-// About, structured like the CV pages of established artists: the name and one line
-// of facts, a short biography in the third person, then the CV as dated lists.
+// About, structured like the CV pages of established artists: the name, a short
+// biography in the third person, then the CV as dated lists.
 // No portrait: the works represent the artist. One reading column.
 // Solo exhibitions come from src/data/exhibitions.js, the rest from src/data/cv.js.
 import Base from '../layouts/Base.astro';
@@ -34,7 +34,6 @@ const sections = [
     <div class="text">
       <header class="head">
         <h1>{t.site.name}</h1>
-        <p class="facts">{t.about.facts}</p>
       </header>
 
       <div class="bio">
@@ -64,8 +63,7 @@ const sections = [
 <style>
   .about { padding-block: var(--space-xl) 0; }
   .text { max-width: 44rem; }
-  .head h1 { margin-bottom: var(--space-2xs); }
-  .facts { margin: 0; color: var(--muted); }
+  .head h1 { margin: 0; }
 
   .bio { margin-top: var(--space-l); font-size: var(--text-md); line-height: 1.7; }
   .bio p { margin: 0 0 var(--space-s); }

@@ -70,7 +70,6 @@ export default {
 
   about: {
     title: 'About',
-    facts: 'Bolivian, lives and works in Curitiba, Brazil',
     // Biography: third person, facts only
     paragraphs: [
       'Andy S. is a Bolivian painter who lives and works in Curitiba, Brazil. His work centers on the human figure and the inner life of the individual: quiet, private moments in which a feeling becomes visible.',
