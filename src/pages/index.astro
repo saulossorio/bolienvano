@@ -1,6 +1,6 @@
 ---
-// Home: who the artist is and what he paints, the most recent works and the
-// exhibitions. The large detail links to the featured artwork.
+// Home: one large artwork that fits the screen, then the most recent works and
+// the exhibitions. No slogan: the work speaks. The image links to the featured artwork.
 import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import WorkGrid from '../components/WorkGrid.astro';
@@ -16,16 +16,7 @@ const recent = artworks.slice(0, 6);
 ---
 <Base current="home" image={hero}>
   <section class="hero container">
-    <div class="text">
-      <span class="eyebrow">{t.home.eyebrow}</span>
-      <h1>{t.home.headline}</h1>
-      <p class="lead">{t.home.intro}</p>
-      <div class="actions">
-        <a class="button" href={pageUrl('gallery')}>{t.home.worksButton}</a>
-        <a class="button ghost" href={pageUrl('about')}>{t.home.aboutButton}</a>
-      </div>
-    </div>
-
+    <h1 class="visually-hidden">{t.site.name}</h1>
     <a class="art" href={pageUrl(`gallery/${featured.slug}`)}>
       <Picture
         src={hero}
@@ -33,7 +24,7 @@ const recent = artworks.slice(0, 6);
         formats={['avif']}
         fallbackFormat="webp"
         widths={[600, 900, 1300, 1800]}
-        sizes="(max-width: 899px) 92vw, 55vw"
+        sizes="(max-width: 1360px) 92vw, 1264px"
         loading="eager"
         fetchpriority="high"
       />
@@ -72,17 +63,14 @@ const recent = artworks.slice(0, 6);
 </Base>
 
 <style>
-  .hero {
-    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: var(--space-xl); align-items: center;
-    padding-block: var(--space-xl) 0;
-  }
-  .hero h1 { font-size: var(--text-5xl); line-height: .95; margin-bottom: var(--space-m); }
-  .lead { max-width: 34ch; font-size: var(--text-md); color: var(--muted); margin-bottom: var(--space-l); }
-  .actions { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
-
+  /* The artwork and its caption always fit the screen height, whatever the window size:
+     screen height minus the bar (--bar), the space above and the caption line */
+  .hero { padding-top: var(--space-m); }
   .art { display: block; text-decoration: none; }
-  .art :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 30%; }
+  .art :global(img) {
+    width: 100%; height: calc(100svh - var(--bar) - var(--space-m) - 3rem);
+    min-height: 16rem; object-fit: cover; object-position: 50% 30%;
+  }
   .credit { display: block; margin-top: var(--space-xs); font-size: var(--text-xs); color: var(--muted); }
   .art:hover .credit { color: var(--ink); }
 
@@ -103,10 +91,8 @@ const recent = artworks.slice(0, 6);
   .show-title { font-family: var(--display); font-size: var(--text-2xl); line-height: 1.1; }
   .show-venue { font-size: var(--text-sm); color: var(--muted); }
 
-  @media (max-width: 899px) {
-    .hero { grid-template-columns: 1fr; }
-    .art { order: -1; }
-    .art :global(img) { aspect-ratio: 4 / 3; }
+  @media (max-width: 767px) {
+    .art :global(img) { height: auto; min-height: 0; aspect-ratio: 4 / 3; }
   }
   @media (max-width: 699px) {
     .shows a { grid-template-columns: 1fr; gap: var(--space-3xs); }

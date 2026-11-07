@@ -6,7 +6,6 @@ export default {
   site: {
     name: 'Andy S.',
     description: 'Andy S. is a bolivian contemporary artist based in Curitiba, Brazil. Works mainly with painting, using techniques such as oil painting, ink painting and watercolor.',
-    place: 'Bolivian painter · Curitiba, Brazil',
   },
 
   nav: {
@@ -50,11 +49,6 @@ export default {
 
   // Home page
   home: {
-    eyebrow: 'Bolivian painter · Curitiba, Brazil',
-    headline: 'Paintings of hidden emotions',
-    intro: 'Watercolor, ink and oil portraits of quiet, inward moments: people alone with what they feel.',
-    worksButton: 'View the works',
-    aboutButton: 'About the artist',
     recent: 'Recent works',
     allWorks: 'All works',
     exhibitions: 'Exhibitions',

@@ -126,7 +126,7 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
   .zoomable :global(img) { width: 100%; transition: transform var(--slow) var(--ease); }
   .zoomable:hover :global(img) { transform: scale(1.015); }
   .view :global(img) {
-    max-height: calc(100svh - 7rem); object-fit: contain;
+    max-height: calc(100svh - var(--bar) - var(--space-l) * 2); object-fit: contain;
     mix-blend-mode: darken;   /* white photo backgrounds turn wall-colored */
   }
   .details { display: grid; grid-template-columns: 1fr 1fr; gap: inherit; }
@@ -145,7 +145,7 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
 
   .tip { margin: 0; font-size: var(--text-xs); color: var(--muted); }
 
-  .label { position: sticky; top: 7rem; }
+  .label { position: sticky; top: calc(var(--bar) + var(--space-l)); }
   .back { text-decoration: none; }
   .back:hover { color: var(--ink); }
   .label h1 { font-size: var(--text-3xl); margin-bottom: var(--space-m); }

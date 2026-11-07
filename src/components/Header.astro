@@ -39,7 +39,6 @@ const active = current === 'nft' ? 'gallery' : current;
           <a href={l.href} aria-current={l.id === active ? 'page' : undefined} style={`--i: ${i}`}>{l.label}</a>
         ))}
       </div>
-      <p class="menu-foot">{t.site.place}</p>
     </nav>
   </div>
 </header>
@@ -54,7 +53,7 @@ const active = current === 'nft' ? 'gallery' : current;
   }
   .bar {
     display: flex; align-items: center; justify-content: space-between;
-    min-height: 5rem;
+    min-height: var(--bar);
   }
 
   .logo {
@@ -85,11 +84,10 @@ const active = current === 'nft' ? 'gallery' : current;
   }
   .menu a:hover::after, .menu a[aria-current='page']::after { transform: scaleX(1); }
 
-  .menu-button, .menu-top, .menu-foot { display: none; }
+  .menu-button, .menu-top { display: none; }
   .links { display: contents; }
 
   @media (max-width: 767px) {
-    .bar { min-height: 4rem; }
     .logo { font-size: var(--text-lg); }
 
     .menu-button {
@@ -117,7 +115,7 @@ const active = current === 'nft' ? 'gallery' : current;
 
     .menu-top {
       display: flex; align-items: center; justify-content: space-between;
-      min-height: 4rem;
+      min-height: var(--bar);
     }
     /* Same name as in the bar behind, so nothing jumps when the menu opens */
     .menu-top .logo {
@@ -165,6 +163,5 @@ const active = current === 'nft' ? 'gallery' : current;
     .links a::after { display: none; }
     .links a[aria-current='page'] { color: var(--muted); }
 
-    .menu-foot { display: block; margin: 0; font-size: var(--text-xs); color: var(--muted); }
   }
 </style>

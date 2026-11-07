@@ -108,7 +108,7 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
   .facts { display: flex; flex-wrap: wrap; gap: var(--space-3xs) var(--space-m); margin: 0; color: var(--muted); }
 
   /* Collapsible sections: fixed names, a plus that turns into a minus, smooth open */
-  .fold { border-bottom: 1px solid var(--line); interpolate-size: allow-keywords; scroll-margin-top: 5rem; }
+  .fold { border-bottom: 1px solid var(--line); interpolate-size: allow-keywords; scroll-margin-top: var(--bar); }
   .overview + .fold { margin-top: var(--space-2xl); border-top: 1px solid var(--line); }
   .fold summary {
     display: flex; align-items: center; justify-content: space-between; gap: var(--space-s);
@@ -134,7 +134,7 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
   .zoomable { display: block; overflow: hidden; cursor: zoom-in; }
   .zoomable :global(img) { width: 100%; transition: transform var(--slow) var(--ease); }
   .zoomable:hover :global(img) { transform: scale(1.015); }
-  .hero :global(img) { max-height: 85svh; object-fit: cover; }
+  .hero :global(img) { max-height: calc(100svh - var(--bar) - var(--space-l)); object-fit: cover; }
 
   /* Text in a comfortable reading width */
   .body { max-width: 42rem; padding-top: var(--space-xl); font-size: var(--text-md); line-height: 1.75; }

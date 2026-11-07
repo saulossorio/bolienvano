@@ -37,6 +37,7 @@
   /* Layout */
   --container: 1360px;
   --gutter: clamp(1.5rem, 5vw, 4rem);    /* side margins, grows with the screen */
+  --bar: 5rem;                           /* height of the top bar; 4rem on phones */
 
   /* Spacing scale: every margin, padding and gap is one of these.
      Small steps are fixed; large steps grow with the screen. */
@@ -56,6 +57,7 @@
   --fast: .35s;                             /* hovers, colors, small moves */
   --slow: .8s;                              /* image fade-in, image zoom */
 }
+@media (max-width: 767px) { :root { --bar: 4rem; } }
 
 *, *::before, *::after { box-sizing: border-box; }
 

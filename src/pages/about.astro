@@ -26,7 +26,6 @@ const [lead, ...rest] = t.about.paragraphs;
     </div>
 
     <div class="text">
-      <span class="eyebrow">{t.home.eyebrow}</span>
       <h1>{t.about.title}</h1>
       <p class="lead">{lead}</p>
       {rest.map((p) => <p>{p}</p>)}
@@ -50,8 +49,8 @@ const [lead, ...rest] = t.about.paragraphs;
     gap: var(--space-xl); align-items: start;
     padding-block: var(--space-xl) 0;
   }
-  .photo { position: sticky; top: 7rem; }
-  .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+  .photo { position: sticky; top: calc(var(--bar) + var(--space-m)); }
+  .photo :global(img) { width: 100%; aspect-ratio: 4 / 5; max-height: calc(100svh - var(--bar) - var(--space-xl) - var(--space-m)); object-fit: cover; }
 
   .text { max-width: 38rem; }
   .lead { font-family: var(--display); font-size: var(--text-2xl); line-height: 1.25; }

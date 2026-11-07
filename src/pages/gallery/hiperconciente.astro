@@ -98,10 +98,10 @@ const videos = [
     padding-top: var(--space-l);
   }
   .zoomable { display: block; overflow: hidden; cursor: zoom-in; }
-  .zoomable :global(img) { width: 100%; max-height: calc(100svh - 7rem); object-fit: contain; transition: transform var(--slow) var(--ease); }
+  .zoomable :global(img) { width: 100%; max-height: calc(100svh - var(--bar) - var(--space-l) * 2); object-fit: contain; transition: transform var(--slow) var(--ease); }
   .zoomable:hover :global(img) { transform: scale(1.015); }
 
-  .label { position: sticky; top: 7rem; max-width: 34rem; }
+  .label { position: sticky; top: calc(var(--bar) + var(--space-l)); max-width: 34rem; }
   .back { text-decoration: none; }
   .back:hover { color: var(--ink); }
   .label h1 { font-size: var(--text-3xl); margin-bottom: var(--space-m); overflow-wrap: anywhere; }
