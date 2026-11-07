@@ -77,7 +77,6 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
             </a>
           ))}
         </div>
-        <p class="tip">{t.artwork.zoomTip}</p>
       </div>
 
       <div class="label">
@@ -143,7 +142,6 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
   .hint svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   .zoomable:hover .hint, .zoomable:focus-visible .hint { opacity: 1; }
 
-  .tip { margin: 0; font-size: var(--text-xs); color: var(--muted); }
 
   .label { position: sticky; top: calc(var(--bar) + var(--space-l)); }
   .back { text-decoration: none; }

@@ -7,7 +7,6 @@ import WorkGrid from '../components/WorkGrid.astro';
 import YearNav from '../components/YearNav.astro';
 import { t } from '../content/index.js';
 import { artworks, years } from '../data/artworks.js';
-import { pageUrl } from '../lib/urls.js';
 
 const availableCount = artworks.filter((a) => a.status === 'available').length;
 ---
@@ -15,7 +14,6 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
   <div class="container">
     <header class="intro">
       <h1>{t.gallery.title}</h1>
-      <p class="lead">{t.gallery.intro}</p>
     </header>
   </div>
 
@@ -44,10 +42,6 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
     })}
 
     <p class="empty" hidden data-empty>{t.gallery.noneAvailable}</p>
-
-    <p class="nft">
-      {t.gallery.nftNote} <a href={pageUrl('gallery/hiperconciente')}>{t.gallery.nftLink}</a>
-    </p>
   </div>
 </Base>
 
@@ -78,7 +72,6 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
 
 <style>
   .intro { padding-block: var(--space-xl) var(--space-m); }
-  .lead { max-width: 44ch; margin: 0; font-size: var(--text-md); color: var(--muted); }
 
   /* Sticky bar right under the header */
   .toolbar {
@@ -111,7 +104,6 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
 
   .empty { padding-block: var(--space-xl); color: var(--muted); }
 
-  .nft {
     margin-top: var(--space); padding-top: var(--space-l);
     border-top: 1px solid var(--line);
     font-family: var(--display); font-size: var(--text-xl); line-height: 1.3;

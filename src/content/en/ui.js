@@ -34,7 +34,6 @@ export default {
     sold: 'In a private collection',
     soldLong: 'Sold · in a private collection',
     seeAvailable: 'Available works',
-    zoomTip: 'Select any image to see it full screen and zoom in.',
     year: 'Year',
     technique: 'Technique',
     size: 'Size',
@@ -55,13 +54,10 @@ export default {
 
   gallery: {
     title: 'Works',
-    intro: 'Paintings and drawings, 2019 to today.',
     jump: 'Jump to year',
     works: 'works',
     availableOnly: 'Available only',
     noneAvailable: 'No works are available right now.',
-    nftNote: 'Also: Hiperconciente, the first NFT artwork exhibited in a Bolivian museum (2022).',
-    nftLink: 'See the work',
     description: 'Artworks gallery by the bolivian artist Andy S.',
     yearCover: 'Artworks from',
   },
