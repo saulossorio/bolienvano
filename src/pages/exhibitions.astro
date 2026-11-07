@@ -5,7 +5,7 @@ import Base from '../layouts/Base.astro';
 import { t, exhibitionTexts } from '../content/index.js';
 import { exhibitions } from '../data/exhibitions.js';
 import { pageUrl } from '../lib/urls.js';
-import { image } from '../lib/images.js';
+import { image, artworkImages } from '../lib/images.js';
 import { formatDate } from '../lib/dates.js';
 ---
 <Base title={t.exhibitions.title} description={t.exhibitions.description} path="exhibitions" current="exhibitions">
@@ -20,13 +20,13 @@ import { formatDate } from '../lib/dates.js';
         return (
           <li class="row">
             <Picture
-              src={image('exhibitions', e.cover)}
+              src={e.coverWork ? artworkImages(e.coverWork)[0].src : image('exhibitions', e.cover)}
               alt=""
               formats={['avif']}
               fallbackFormat="webp"
               widths={[500, 800, 1100]}
               sizes="(max-width: 767px) 92vw, 50vw"
-              class="cover"
+              class:list={['cover', { work: e.coverWork }]}
               loading={i === 0 ? 'eager' : 'lazy'}
             />
             <div class="text">
@@ -57,6 +57,8 @@ import { formatDate } from '../lib/dates.js';
   }
   .row :global(.cover) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: opacity var(--fast) var(--ease); }
   .row:hover :global(.cover) { opacity: .85; }
+  /* An artwork as cover is shown whole, on the wall color, never cropped */
+  .row :global(.cover.work) { object-fit: contain; mix-blend-mode: darken; }
 
   .text h2 { margin-bottom: var(--space-2xs); }
   /* The title link covers the whole row, so the row is one big click target */

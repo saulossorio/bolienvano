@@ -10,6 +10,7 @@ const { current, anchors = false } = Astro.props;
 <nav class="years" aria-label={t.gallery.jump}>
   {years.map(({ year }) => (
     <a
+      class="line-link"
       href={anchors ? `#y${year}` : pageUrl(`gallery/${year}`)}
       aria-current={year === current ? 'page' : undefined}
     >{year}</a>
@@ -20,15 +21,9 @@ const { current, anchors = false } = Astro.props;
   /* Quiet text links, like the main menu: a thin line under the current year */
   .years { display: flex; flex-wrap: wrap; gap: var(--space-m); }
   .years a {
-    position: relative; padding-block: var(--space-2xs);
-    font-size: var(--text-xs); letter-spacing: .1em; font-variant-numeric: tabular-nums;
-    color: var(--muted); text-decoration: none;
-    transition: color var(--fast) var(--ease);
-  }
-  .years a::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: .2rem; height: 1px; background: currentColor;
-    transform: scaleX(0); transform-origin: left; transition: transform var(--fast) var(--ease);
+    padding-block: var(--space-2xs);
+    font-size: var(--text-xs); letter-spacing: var(--tracking); font-variant-numeric: tabular-nums;
+    color: var(--muted);
   }
   .years a:hover, .years a[aria-current] { color: var(--ink); }
-  .years a[aria-current]::after { transform: scaleX(1); }
 </style>

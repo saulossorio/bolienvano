@@ -14,6 +14,7 @@
   --line:      #dcd9d3;   /* separators */
   --accent:    #8a2b1d;   /* form errors only */
   --available: #3f7a52;   /* green dot of available works (a red dot means sold in galleries) */
+  --night:     #121211;   /* background of the full-screen image viewer and the video players */
 
   /* Type */
   /* Syne: made by Bonjour Monde for Synesthésie, an art centre near Paris.
@@ -32,12 +33,14 @@
   --text-2xl:  clamp(1.75rem, 3.5vw, 2.5rem); /* list titles, section folds */
   --text-3xl:  clamp(2.25rem, 4vw, 3.5rem);   /* h2, artwork title */
   --text-4xl:  clamp(2.75rem, 6vw, 5rem);     /* h1, mobile menu */
-  --text-5xl:  clamp(3rem, 7vw, 6.25rem);     /* home headline */
+  --tracking:  .1em;                          /* letter spacing of every small uppercase text */
 
   /* Layout */
   --container: 1360px;
   --gutter: clamp(1.5rem, 5vw, 4rem);    /* side margins, grows with the screen */
   --bar: 5rem;                           /* height of the top bar; 4rem on phones */
+  --toolbar: 3.5rem;                     /* height of the sticky year bar on the works page */
+  --target: 44px;                        /* smallest tap area of icon buttons */
 
   /* Spacing scale: every margin, padding and gap is one of these.
      Small steps are fixed; large steps grow with the screen. */
@@ -100,9 +103,20 @@ main > .section:last-child { padding-bottom: 0; }
   display: block;
   margin-bottom: var(--space-s);
   font-size: var(--text-xs); font-weight: 500;
-  letter-spacing: .14em; text-transform: uppercase;
+  letter-spacing: var(--tracking); text-transform: uppercase;
   color: var(--muted);
 }
+
+/* Quiet text link (menu, years, filters): a thin line grows under it on hover
+   and stays under the current one */
+.line-link { position: relative; text-decoration: none; }
+.line-link::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: .2rem;
+  height: 1px; background: currentColor;
+  transform: scaleX(0); transform-origin: left;
+  transition: transform var(--fast) var(--ease);
+}
+.line-link:hover::after, .line-link[aria-current]::after, .line-link[aria-pressed='true']::after { transform: scaleX(1); }
 
 /* Section heading with a link on the right ("All works →") */
 .section-head {
@@ -132,8 +146,6 @@ main > .section:last-child { padding-bottom: 0; }
   transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease);
 }
 .button:hover { background: transparent; color: var(--ink); }
-.button.ghost { background: transparent; color: var(--ink); }
-.button.ghost:hover { background: var(--ink); color: var(--wall); }
 .button[aria-disabled='true'] { cursor: default; background: transparent; color: var(--muted); border-color: var(--line); }
 
 .visually-hidden {

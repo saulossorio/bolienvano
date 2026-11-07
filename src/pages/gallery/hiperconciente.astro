@@ -105,7 +105,6 @@ const videos = [
   .back { text-decoration: none; }
   .back:hover { color: var(--ink); }
   .label h1 { font-size: var(--text-3xl); margin-bottom: var(--space-m); overflow-wrap: anywhere; }
-  .label p { color: #3b3935; }
   .label .button { margin-top: var(--space-s); }
 
   .facts { margin: 0 0 var(--space-m); border-top: 1px solid var(--line); }
@@ -113,7 +112,7 @@ const videos = [
     display: grid; grid-template-columns: 6.5rem 1fr; gap: var(--space-s);
     padding-block: var(--space-xs); border-bottom: 1px solid var(--line);
   }
-  .facts dt { font-size: var(--text-xs); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-top: var(--space-3xs); }
+  .facts dt { font-size: var(--text-xs); letter-spacing: var(--tracking); text-transform: uppercase; color: var(--muted); padding-top: var(--space-3xs); }
   .facts dd { margin: 0; }
 
   .performance { padding-top: var(--space); }
@@ -124,7 +123,7 @@ const videos = [
   .video, .videos :global(.player) {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-s);
     width: 100%; aspect-ratio: 9 / 16; border: 0;
-    background: #1d1c1a; color: var(--wall); text-decoration: none;
+    background: var(--night); color: var(--wall); text-decoration: none;
   }
   .play {
     display: grid; place-items: center;

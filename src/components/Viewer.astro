@@ -263,10 +263,10 @@ const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAI
     position: fixed; inset: 0;
     width: 100%; max-width: none; height: 100%; max-height: none;
     margin: 0; padding: 0; border: 0;
-    background: #121211; color: #f2f1ef;
+    background: var(--night); color: var(--wall);
     overflow: hidden;
   }
-  .viewer::backdrop { background: #121211; }
+  .viewer::backdrop { background: var(--night); }
   .viewer[open] { animation: viewer-in var(--fast) var(--ease); }
   @keyframes viewer-in { from { opacity: 0; } }
   :global(html.viewer-open) { overflow: hidden; }

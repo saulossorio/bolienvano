@@ -36,7 +36,7 @@ const active = current === 'nft' ? 'gallery' : current;
       </div>
       <div class="links">
         {links.map((l, i) => (
-          <a href={l.href} aria-current={l.id === active ? 'page' : undefined} style={`--i: ${i}`}>{l.label}</a>
+          <a class="line-link" href={l.href} aria-current={l.id === active ? 'page' : undefined} style={`--i: ${i}`}>{l.label}</a>
         ))}
       </div>
     </nav>
@@ -66,21 +66,12 @@ const active = current === 'nft' ? 'gallery' : current;
     margin: 0; padding: 0; border: 0;
     background: none; color: inherit; overflow: visible;
   }
+  /* Thin line under the current page and on hover: .line-link in global.css */
   .menu a {
-    position: relative;
     padding-block: var(--space-2xs);
     font-size: var(--text-xs); font-weight: 500;
-    letter-spacing: .1em; text-transform: uppercase;
-    text-decoration: none;
+    letter-spacing: var(--tracking); text-transform: uppercase;
   }
-  /* Thin line under the current page and on hover */
-  .menu a::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: .2rem;
-    height: 1px; background: currentColor;
-    transform: scaleX(0); transform-origin: left;
-    transition: transform var(--fast) var(--ease);
-  }
-  .menu a:hover::after, .menu a[aria-current='page']::after { transform: scaleX(1); }
 
   .menu-button, .menu-top { display: none; }
   .links { display: contents; }
@@ -90,7 +81,7 @@ const active = current === 'nft' ? 'gallery' : current;
 
     .menu-button {
       display: flex; flex-direction: column; justify-content: center; gap: 7px;
-      width: 44px; height: 44px; margin-right: -10px; padding: 10px;
+      width: var(--target); height: var(--target); margin-right: -10px; padding: 10px;
       border: 0; background: none; cursor: pointer;
     }
     .menu-button span { height: 1.5px; background: var(--ink); }
@@ -123,7 +114,7 @@ const active = current === 'nft' ? 'gallery' : current;
     }
     .menu-top .logo::after { display: none; }
     .close {
-      position: relative; width: 44px; height: 44px; margin-right: -10px;
+      position: relative; width: var(--target); height: var(--target); margin-right: -10px;
       border: 0; background: none; cursor: pointer;
     }
     .close span {

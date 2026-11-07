@@ -61,13 +61,17 @@ only use `var(--…)`, never raw sizes. Change a token and the whole site follow
 
 | Tokens | Use |
 |---|---|
-| `--wall` `--ink` `--muted` `--line` `--available` `--accent` | Colors (`--accent` only for form errors) |
+| `--wall` `--paper` `--ink` `--muted` `--line` `--available` `--accent` `--night` | Colors (`--accent` only for form errors, `--night` behind the image viewer and videos) |
 | `--display` `--sans` | Syne for titles, Familjen Grotesk for text |
-| `--text-xs` … `--text-5xl` | Type scale; the large steps grow with the screen |
+| `--text-xs` … `--text-4xl` | Type scale; the large steps grow with the screen |
+| `--tracking` | Letter spacing of every small uppercase text |
 | `--space-3xs` … `--space-2xl`, `--space` | Spacing scale; `--space` separates page sections |
 | `--space-row` | Space between a list line and its text, the same in every list |
 | `--container` `--gutter` | Page width and side margins |
+| `--bar` `--toolbar` `--target` | Height of the top bar and of the works year bar; smallest tap area |
 | `--ease` `--fast` `--slow` | The one easing and two speeds of every transition |
+
+Shared patterns in `global.css`: `.eyebrow` (small uppercase label), `.line-link` (quiet link with a thin line under it), `.button`, `.more`, `.section-head`.
 
 Exception: `src/pages/invitacion.astro` keeps its own sizes (it reproduces the printed card).
 

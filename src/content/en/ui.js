@@ -9,10 +9,8 @@ export default {
   },
 
   nav: {
-    home: 'Home',
     about: 'About',
     gallery: 'Works',
-    nft: 'NFT',
     exhibitions: 'Exhibitions',
     contact: 'Contact',
     menu: 'Menu',
@@ -41,7 +39,6 @@ export default {
     previous: 'Previous work',
     next: 'Next work',
     back: 'All works from',
-    details: 'Details',
   },
 
   // Home page
@@ -63,8 +60,6 @@ export default {
   exhibitions: {
     title: 'Exhibitions',
     description: 'Solo exhibitions of the bolivian artist Andy S.',
-    previous: 'Previous photo',
-    next: 'Next photo',
     photo: 'Photo',
     read: 'Read more',
     works: 'Works',
@@ -141,14 +136,13 @@ export default {
 
   notFound: {
     title: 'Page not found',
-    lines: ['Page under construction', 'Please come back later'],
+    lines: ['This page does not exist.'],
     back: 'Go back',
   },
 
   // Full-screen image viewer
   viewer: {
     label: 'Image viewer',
-    open: 'View full screen',
     close: 'Close',
     previous: 'Previous image',
     next: 'Next image',

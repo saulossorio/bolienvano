@@ -20,7 +20,7 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
   <div class="toolbar" id="available">
     <div class="container bar">
       <YearNav anchors />
-      <button class="filter" type="button" aria-pressed="false" data-filter hidden>
+      <button class="filter line-link" type="button" aria-pressed="false" data-filter hidden>
         <span class="dot" aria-hidden="true"></span>
         {t.gallery.availableOnly} <span class="n">({availableCount})</span>
       </button>
@@ -91,7 +91,6 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
 
   /* Sticky bar right under the header: solid, so the works scrolling under it never show through */
   .toolbar {
-    --toolbar: 3.5rem;
     position: sticky; top: var(--bar); z-index: 4;
     background: var(--wall);
     border-bottom: 1px solid var(--line);
@@ -100,24 +99,19 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
 
   /* "Available only": quiet text like the years; underlined while on */
   .filter {
-    position: relative; display: inline-flex; align-items: center; gap: var(--space-2xs);
+    display: inline-flex; align-items: center; gap: var(--space-2xs);
     padding: var(--space-2xs) 0; border: 0; background: none;
-    color: var(--muted); font: inherit; font-size: var(--text-xs); letter-spacing: .1em; text-transform: uppercase; white-space: nowrap;
-    cursor: pointer; transition: color var(--fast) var(--ease);
-  }
-  .filter::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: .2rem; height: 1px; background: currentColor;
-    transform: scaleX(0); transform-origin: left; transition: transform var(--fast) var(--ease);
+    color: var(--muted); font: inherit; font-size: var(--text-xs); letter-spacing: var(--tracking); text-transform: uppercase; white-space: nowrap;
+    cursor: pointer;
   }
   .filter:hover, .filter[aria-pressed='true'] { color: var(--ink); }
-  .filter[aria-pressed='true']::after { transform: scaleX(1); }
   .filter .dot { width: .4rem; height: .4rem; border-radius: 50%; background: var(--available); }
 
   .bar :global(.years a[hidden]) { display: none; }
   .only-available :global(li:has([data-status]:not([data-status='available']))) { display: none; }
 
   /* A jump to a year leaves the same space above its title as between years */
-  .year { padding-top: var(--space-xl); scroll-margin-top: calc(var(--bar) + 3.5rem - var(--space-xl) + var(--space-l)); }
+  .year { padding-top: var(--space-xl); scroll-margin-top: calc(var(--bar) + var(--toolbar) - var(--space-xl) + var(--space-l)); }
   .count { font-size: var(--text-xs); color: var(--muted); }
 
   .empty { padding-block: var(--space-xl); color: var(--muted); }
