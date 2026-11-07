@@ -58,7 +58,7 @@ import { formatDate } from '../lib/dates.js';
   .row :global(.cover) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: opacity var(--fast) var(--ease); }
   .row:hover :global(.cover) { opacity: .85; }
   /* An artwork as cover is shown whole, on the wall color, never cropped */
-  .row :global(.cover.work) { object-fit: contain; mix-blend-mode: darken; }
+  .row :global(.cover.work) { object-fit: contain; mix-blend-mode: var(--blend); }
 
   .text h2 { margin-bottom: var(--space-2xs); }
   /* The title link covers the whole row, so the row is one big click target */

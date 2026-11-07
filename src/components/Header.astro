@@ -3,6 +3,8 @@
 // so there is no "Home" link. Below 768px the links fold into a button that opens
 // a full-screen menu (native popover, no JavaScript; Esc or the close button
 // closes it). It fades in and the links rise one after another.
+// The round button next to the links switches between light and dark; it only
+// shows with JavaScript, since it needs it to work.
 import { t } from '../content/index.js';
 import { pageUrl } from '../lib/urls.js';
 
@@ -21,11 +23,7 @@ const active = current === 'nft' ? 'gallery' : current;
   <div class="bar container">
     <a class="logo" href={pageUrl('')} aria-current={current === 'home' ? 'page' : undefined}>{t.site.name}</a>
 
-    <button class="menu-button" type="button" popovertarget="menu" aria-label={t.nav.menu}>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </button>
-
+    <div class="right">
     <nav id="menu" class="menu" popover aria-label={t.nav.menu}>
       <div class="menu-top">
         <a class="logo" href={pageUrl('')}>{t.site.name}</a>
@@ -40,8 +38,38 @@ const active = current === 'nft' ? 'gallery' : current;
         ))}
       </div>
     </nav>
+
+    <button class="theme" type="button" aria-label={t.nav.theme} aria-pressed="false" data-theme-toggle>
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7" /><path d="M10 3a7 7 0 0 1 0 14z" /></svg>
+    </button>
+
+    <button class="menu-button" type="button" popovertarget="menu" aria-label={t.nav.menu}>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+    </div>
   </div>
 </header>
+
+<script>
+  // Switch: flip what is showing now and remember it (Base.astro reads it back on
+  // every page). The page crossfades into the new colors where the browser can.
+  const root = document.documentElement;
+  const button = document.querySelector('[data-theme-toggle]');
+  const system = matchMedia('(prefers-color-scheme: dark)');
+  const isDark = () => (root.dataset.theme ?? (system.matches ? 'dark' : 'light')) === 'dark';
+  const sync = () => button.setAttribute('aria-pressed', String(isDark()));
+
+  button.addEventListener('click', () => {
+    const theme = isDark() ? 'light' : 'dark';
+    const apply = () => { root.dataset.theme = theme; sync(); };
+    if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.startViewTransition(apply);
+    else apply();
+    try { localStorage.setItem('theme', theme); } catch {}
+  });
+  system.addEventListener('change', sync);
+  sync();
+</script>
 
 <style>
   .navbar {
@@ -53,6 +81,8 @@ const active = current === 'nft' ? 'gallery' : current;
     display: flex; align-items: center; justify-content: space-between;
     min-height: var(--bar);
   }
+
+  .right { display: flex; align-items: center; gap: var(--space-m); }
 
   .logo {
     font-family: var(--display);
@@ -74,10 +104,25 @@ const active = current === 'nft' ? 'gallery' : current;
   }
 
   .menu-button, .menu-top { display: none; }
+
+  /* Light / dark switch: a circle half filled with the text color */
+  .theme { display: none; }
+  :global(.js) .theme {
+    display: grid; place-items: center;
+    width: var(--target); height: var(--target); margin-right: -12px;
+    padding: 0; border: 0; background: none; color: var(--ink); cursor: pointer;
+  }
+  .theme svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; transition: transform var(--slow) var(--ease); }
+  .theme path { fill: currentColor; stroke: none; }
+  .theme[aria-pressed='true'] svg { transform: rotate(180deg); }
+  .theme:hover { color: var(--muted); }
   .links { display: contents; }
 
   @media (max-width: 767px) {
     .logo { font-size: var(--text-lg); }
+
+    .right { gap: 0; }
+    :global(.js) .theme { margin-right: 0; }
 
     .menu-button {
       display: flex; flex-direction: column; justify-content: center; gap: 7px;

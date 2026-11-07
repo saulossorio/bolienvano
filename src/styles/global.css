@@ -6,15 +6,23 @@
    small uppercase details) and nothing competes with the paintings. */
 
 :root {
-  /* Colors */
-  --wall:      #f2f1ef;   /* page background, same as the wall in the artwork photos */
-  --paper:     #fbfaf8;   /* cards, form fields */
-  --ink:       #1d1c1a;   /* text */
-  --muted:     #6b6863;   /* secondary text (4.9:1 on --wall) */
-  --line:      #dcd9d3;   /* separators */
-  --accent:    #8a2b1d;   /* form errors only */
-  --available: #3f7a52;   /* green dot of available works (a red dot means sold in galleries) */
+  /* Colors: light (the gallery wall) and dark (the same room with the lights down).
+     The page follows the visitor's system setting until they use the switch in the
+     header; then data-theme on <html> (set in Base.astro) fixes one of the two. */
+  color-scheme: light dark;
+  --wall:      light-dark(#f2f1ef, #171615);   /* page background, same as the wall in the artwork photos */
+  --paper:     light-dark(#fbfaf8, #1f1e1c);   /* cards, form fields */
+  --ink:       light-dark(#1d1c1a, #ebe8e3);   /* text */
+  --muted:     light-dark(#6b6863, #a29e97);   /* secondary text (4.9:1 and 6.9:1 on --wall) */
+  --line:      light-dark(#dcd9d3, #353330);   /* separators */
+  --accent:    light-dark(#8a2b1d, #e0907d);   /* form errors only */
+  --available: light-dark(#3f7a52, #74b98b);   /* green dot of available works (a red dot means sold in galleries) */
   --night:     #121211;   /* background of the full-screen image viewer and the video players */
+  /* Artwork photos: in light mode their white backgrounds take the wall color;
+     in dark mode they stay as they are, like paper on a dark wall, with crisp edges
+     (no fade on the home page work) */
+  --blend: darken;
+  --edge-fade: 3%;
 
   /* Type */
   /* Syne: made by Bonjour Monde for Synesthésie, an art centre near Paris.
@@ -61,6 +69,9 @@
   --slow: .8s;                              /* image fade-in, image zoom */
 }
 @media (max-width: 767px) { :root { --bar: 4rem; } }
+:root[data-theme='light'] { color-scheme: light; }
+:root[data-theme='dark']  { color-scheme: dark; --blend: normal; --edge-fade: 0%; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --blend: normal; --edge-fade: 0%; } }
 
 *, *::before, *::after { box-sizing: border-box; }
 

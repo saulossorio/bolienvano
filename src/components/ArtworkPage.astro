@@ -126,7 +126,7 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
   .zoomable:hover :global(img) { transform: scale(1.015); }
   .view :global(img) {
     max-height: calc(100svh - var(--bar) - var(--space-l) * 2); object-fit: contain;
-    mix-blend-mode: darken;   /* white photo backgrounds turn wall-colored */
+    mix-blend-mode: var(--blend);   /* white photo backgrounds turn wall-colored */
   }
   .details { display: grid; grid-template-columns: 1fr 1fr; gap: inherit; }
   .details :global(img) { aspect-ratio: 1; object-fit: cover; }
@@ -136,7 +136,7 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
     position: absolute; right: .75rem; bottom: .75rem;
     display: grid; place-items: center;
     width: 2.5rem; height: 2.5rem; border-radius: 50%;
-    background: rgb(242 241 239 / 85%); color: var(--ink);
+    background: color-mix(in srgb, var(--wall) 85%, transparent); color: var(--ink);
     opacity: .7; transition: opacity var(--fast) var(--ease);
   }
   .hint svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }

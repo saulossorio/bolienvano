@@ -83,10 +83,10 @@ const works = slugs
     width: auto; max-width: 100%;
     max-height: calc(100svh - var(--bar) - var(--space-m) * 2 - var(--space-l) * 2 - var(--label) - var(--link));
     object-fit: contain;
-    mix-blend-mode: darken;   /* white paper edges turn wall-colored */
+    mix-blend-mode: var(--blend);   /* white paper edges turn wall-colored (light mode) */
     /* and the faint scan border around the paper melts into the page */
-    mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent),
-                linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 var(--edge-fade), #000 calc(100% - var(--edge-fade)), transparent),
+                linear-gradient(to bottom, transparent, #000 var(--edge-fade), #000 calc(100% - var(--edge-fade)), transparent);
     mask-composite: intersect;
     animation: appear var(--slow) var(--ease) both;
   }

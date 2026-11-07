@@ -40,7 +40,7 @@ const title = artworkTitles[artwork.slug];
   .frame { overflow: hidden; background: var(--wall); aspect-ratio: 1; }
   .frame :global(img) {
     width: 100%; height: 100%; object-fit: cover;
-    mix-blend-mode: darken;   /* white photo backgrounds turn wall-colored, like the other works */
+    mix-blend-mode: var(--blend);   /* white photo backgrounds turn wall-colored, like the other works */
     transition: transform var(--slow) var(--ease);
   }
   .card:hover .frame :global(img) { transform: scale(1.03); }

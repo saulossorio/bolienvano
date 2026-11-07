@@ -15,6 +15,7 @@ export default {
     contact: 'Contact',
     menu: 'Menu',
     close: 'Close menu',
+    theme: 'Dark mode',
   },
 
   // Techniques used in src/data/artworks.js
