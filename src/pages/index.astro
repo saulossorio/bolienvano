@@ -77,11 +77,11 @@ const works = slugs
     padding-block: var(--space-m) var(--space-l);
   }
   .work { display: none; margin: 0; }
-  .work.is-shown { display: flex; flex-direction: column; align-items: center; gap: var(--space-s); }
+  .work.is-shown { display: flex; flex-direction: column; align-items: center; gap: var(--space-m); }
   .work a { display: block; }
   .work :global(img) {
     width: auto; max-width: 100%;
-    max-height: calc(100svh - var(--bar) - var(--space-m) - var(--space-l) - var(--label) - var(--link) - var(--space-s) * 3);
+    max-height: calc(100svh - var(--bar) - var(--space-m) * 2 - var(--space-l) * 2 - var(--label) - var(--link));
     object-fit: contain;
     mix-blend-mode: darken;   /* white paper edges turn wall-colored */
     /* and the faint scan border around the paper melts into the page */
@@ -102,7 +102,7 @@ const works = slugs
 
   /* Small link to all the works, the same size as the label */
   .all {
-    display: inline-flex; align-items: center; gap: .35em; height: var(--link); margin-top: var(--space-s);
+    display: inline-flex; align-items: center; gap: .35em; height: var(--link); margin-top: var(--space-l);
     font-size: var(--text-xs); letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
     color: var(--muted); transition: color var(--fast) var(--ease);
     animation: rise var(--slow) var(--ease) .4s both;
