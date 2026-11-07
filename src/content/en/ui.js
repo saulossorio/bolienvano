@@ -75,15 +75,17 @@ export default {
 
   about: {
     title: 'About',
-    photoAlt: 'Andy S. picture',
-    solo: 'Solo exhibitions',
+    photoAlt: 'Portrait of Andy S.',
+    facts: 'Bolivian, lives and works in Curitiba, Brazil',
+    // Biography: third person, facts only
     paragraphs: [
-      'Andy S. is a bolivian artist currently living in Curitiba, Brazil.',
-      'Inspired by the beauty of hidden emotions in the world around him, he creates paintings that unearth deep feelings capturing the inner world of the individual.',
-      'Andy works focused on figurative art, expressionism and minimalism, however, his work is under constant experimentation.',
-      'His contemporary artworks focus above all on the human figure.',
-      'While mostly known for his oil paintings and ink drawings, Andy S. has also experience as a watercolorist and digital illustrator.',
+      'Andy S. is a Bolivian painter who lives and works in Curitiba, Brazil. His work centers on the human figure and the inner life of the individual: quiet, private moments in which a feeling becomes visible.',
+      'He works mainly in oil and ink, and also in watercolor. His language moves between figuration, expressionism and minimalism, and stays open to experiment.',
+      'His work has been shown in Bolivia and Brazil, including a solo exhibition at the Contemporary Art Museum of Santa Cruz de la Sierra in 2022.',
     ],
+    cv: 'CV',
+    solo: 'Solo exhibitions',
+    projects: 'Projects',
   },
 
   contact: {
