@@ -14,7 +14,7 @@ const enquire = `${pageUrl('contact')}?subject=${encodeURIComponent(subject)}`;
 <div class="availability">
   <p class:list={['status', artwork.status]}>
     <span class="dot" aria-hidden="true"></span>
-    {artwork.status === 'sold' ? t.artwork.soldLong : t.artwork.status[artwork.status]}
+    {t.artwork.status[artwork.status]}
   </p>
   {artwork.status === 'available' && <p class="price">{t.artwork.price} {artwork.price}</p>}
 

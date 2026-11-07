@@ -31,8 +31,6 @@ export default {
     price: 'US$',
     available: 'Enquire about this work',
     ask: 'Ask about this work',
-    sold: 'In a private collection',
-    soldLong: 'Sold · in a private collection',
     seeAvailable: 'Available works',
     year: 'Year',
     technique: 'Technique',
