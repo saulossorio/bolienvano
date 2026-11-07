@@ -1,20 +1,15 @@
 ---
-// Footer: invitation to get in touch, social links, credits.
+// Footer: one quiet line: email, social links and credits.
 import { t } from '../content/index.js';
-import { pageUrl } from '../lib/urls.js';
-import { socials } from '../data/socials.js';
+import { socials, email } from '../data/socials.js';
 
 const year = new Date().getFullYear();
 ---
 <footer class="footer">
   <div class="container">
-    <div class="cta">
-      <p class="cta-text">{t.footer.cta}</p>
-      <a class="button" href={pageUrl('contact')}>{t.footer.ctaLink}</a>
-    </div>
-
     <div class="bottom">
       <ul class="socials">
+        <li><a href={`mailto:${email}`}>{email}</a></li>
         {socials.map((s) => (
           <li>
             <a href={s.url} target="_blank" rel="noopener noreferrer">
@@ -31,22 +26,12 @@ const year = new Date().getFullYear();
 <style>
   .footer { margin-top: var(--space); border-top: 1px solid var(--line); }
 
-  .cta {
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-s) var(--space-l);
-    padding-block: var(--space-xl);
-  }
-  .cta-text {
-    margin: 0; max-width: 22ch;
-    font-family: var(--display); font-size: var(--text-2xl); line-height: 1.1;
-  }
-
   .bottom {
     display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space-s);
     padding-block: var(--space-m) var(--space-l);
-    border-top: 1px solid var(--line);
     font-size: var(--text-xs); color: var(--muted);
   }
-  .socials { display: flex; gap: var(--space-m); margin: 0; padding: 0; list-style: none; }
+  .socials { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-m); margin: 0; padding: 0; list-style: none; }
   .socials a { color: var(--ink); text-decoration: none; }
   .socials a:hover { text-decoration: underline; }
 

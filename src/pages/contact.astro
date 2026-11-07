@@ -5,9 +5,7 @@
 import Base from '../layouts/Base.astro';
 import { t } from '../content/index.js';
 import { assetUrl } from '../lib/urls.js';
-
-// Same address contact.php sends to
-const email = 'bolienvano@gmail.com';
+import { email } from '../data/socials.js';   // same address contact.php sends to
 
 ---
 <Base title={t.contact.title} description={t.contact.description} path="contact" current="contact">
