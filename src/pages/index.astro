@@ -1,100 +1,117 @@
 ---
-// Home: one large artwork that fits the screen, then the most recent works and
-// the exhibitions. No slogan: the work speaks. The image links to the featured artwork.
+// Home: one work, whole and as large as the screen allows, with its museum label
+// and a small link to all the works. Nothing else, like a single painting on a
+// gallery wall. Each visit shows a different one of the works listed below, picked
+// at random (never the same as last time). Without JavaScript the first one shows.
 import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import WorkGrid from '../components/WorkGrid.astro';
-import { t, artworkTitles, exhibitionTexts } from '../content/index.js';
+import { t, artworkTitles } from '../content/index.js';
 import { artworks } from '../data/artworks.js';
-import { exhibitions } from '../data/exhibitions.js';
 import { pageUrl } from '../lib/urls.js';
-import { image } from '../lib/images.js';
+import { artworkImages } from '../lib/images.js';
 
-const hero = image('site', 'brochure-full-min.jpg');
-const featured = artworks.find((a) => a.slug === 'invisible');
-const recent = artworks.slice(0, 6);
+// The works that can appear on the home page. They should all be photos of the
+// work alone (not on a wall), so the page always looks the same.
+const slugs = [
+  'humana', 'paciencia', 'ultimo-recurso', 'incertidumbre', 'nadie', 'luchas',
+  'cavilaciones-matutinas', 'espera', 'invisible', 'cargando-un-fantasma', 'pesada', 'crisis',
+];
+
+const works = slugs.map((slug) => {
+  const artwork = artworks.find((a) => a.slug === slug);
+  return { ...artwork, title: artworkTitles[slug], src: artworkImages(slug)[0].src };
+});
 ---
-<Base current="home" image={hero}>
-  <section class="hero container">
-    <h1 class="visually-hidden">{t.site.name}</h1>
-    <a class="art" href={pageUrl(`gallery/${featured.slug}`)}>
-      <Picture
-        src={hero}
-        alt={artworkTitles[featured.slug]}
-        formats={['avif']}
-        fallbackFormat="webp"
-        widths={[600, 900, 1300, 1800]}
-        sizes="(max-width: 1360px) 92vw, 1264px"
-        loading="eager"
-        fetchpriority="high"
-      />
-      <span class="credit">{t.home.featuredLabel}: <em>{artworkTitles[featured.slug]}</em>, {featured.year}</span>
-    </a>
-  </section>
+<Base current="home" image={works[0].src}>
+  <h1 class="visually-hidden">{t.site.name}</h1>
 
-  <section class="section container">
-    <div class="section-head">
-      <h2>{t.home.recent}</h2>
-      <a class="more" href={pageUrl('gallery')}>{t.home.allWorks}</a>
-    </div>
-    <WorkGrid items={recent} eagerCount={0} />
-  </section>
+  <div class="home container">
+    {works.map((w, i) => (
+      <figure class:list={['work', { 'is-shown': i === 0 }]} data-work>
+        <a href={pageUrl(`gallery/${w.slug}`)}>
+          <Picture
+            src={w.src}
+            alt={w.title}
+            formats={['avif']}
+            fallbackFormat="webp"
+            widths={[600, 900, 1300]}
+            sizes="(max-width: 767px) 92vw, 70vh"
+            loading="lazy"
+          />
+        </a>
+        <figcaption class="label">
+          <span><em>{w.title}</em>, {w.year}</span>
+          <span>{t.media[w.medium]}, {w.size}</span>
+        </figcaption>
+      </figure>
+    ))}
+    <a class="all" href={pageUrl('gallery')}>{t.home.allWorks} <span aria-hidden="true">→</span></a>
+  </div>
 
-  <section class="section container">
-    <div class="section-head">
-      <h2>{t.home.exhibitions}</h2>
-      <a class="more" href={pageUrl('exhibitions')}>{t.home.allExhibitions}</a>
-    </div>
-    <ul class="shows">
-      {exhibitions.map((e) => {
-        const text = exhibitionTexts[e.slug];
-        return (
-          <li>
-            <a href={pageUrl(`exhibitions/${e.slug}`)}>
-              <span class="show-year">{e.date.slice(0, 4)}</span>
-              <span class="show-title">{text.title}</span>
-              <span class="show-venue">{text.venue}</span>
-            </a>
-          </li>
-        );
-      })}
-    </ul>
-  </section>
+  <!-- Runs right away, before the page is painted, so no other work flashes first -->
+  <script is:inline>
+    (() => {
+      const works = document.querySelectorAll('[data-work]');
+      let last = -1;
+      try { last = Number(localStorage.getItem('home-work') ?? -1); } catch {}
+      let pick = Math.floor(Math.random() * (works.length - 1));
+      if (pick >= last && last >= 0) pick += 1;   // skip the one shown last time
+      works[0].classList.remove('is-shown');
+      works[pick].classList.add('is-shown');
+      const img = works[pick].querySelector('img');
+      img.loading = 'eager';
+      img.fetchPriority = 'high';
+      try { localStorage.setItem('home-work', pick); } catch {}
+    })();
+  </script>
 </Base>
 
 <style>
-  /* The artwork and its caption always fit the screen height, whatever the window size:
-     screen height minus the bar (--bar), the space above and the caption line */
-  .hero { padding-top: var(--space-m); }
-  .art { display: block; text-decoration: none; }
-  .art :global(img) {
-    width: 100%; height: calc(100svh - var(--bar) - var(--space-m) - 3rem);
-    min-height: 16rem; object-fit: cover; object-position: 50% 30%;
+  /* The work, its label and the link fill the screen below the bar, centered */
+  .home {
+    --label: 2.5rem; --link: 1.5rem;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: calc(100svh - var(--bar));
+    padding-block: var(--space-m) var(--space-l);
   }
-  .credit { display: block; margin-top: var(--space-xs); font-size: var(--text-xs); color: var(--muted); }
-  .art:hover .credit { color: var(--ink); }
-
-  /* Rows: the same space from every line to its text, the first row included */
-  .section-head:has(+ .shows) { margin-bottom: 0; }
-  .shows { margin: 0; padding: 0; list-style: none; }
-  .shows a {
-    display: grid; grid-template-columns: 6rem minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--space-s) var(--space-l); align-items: baseline;
-    padding-block: var(--space-row);
-    border-bottom: 1px solid var(--line);
-    text-decoration: none;
+  .work { display: none; margin: 0; }
+  .work.is-shown { display: flex; flex-direction: column; align-items: center; gap: var(--space-s); }
+  .work a { display: block; }
+  .work :global(img) {
+    width: auto; max-width: 100%;
+    max-height: calc(100svh - var(--bar) - var(--space-m) - var(--space-l) - var(--label) - var(--link) - var(--space-s) * 3);
+    object-fit: contain;
+    mix-blend-mode: darken;   /* white paper edges turn wall-colored */
+    /* and the faint scan border around the paper melts into the page */
+    mask-image: linear-gradient(to right, transparent, #000 3%, #000 97%, transparent),
+                linear-gradient(to bottom, transparent, #000 3%, #000 97%, transparent);
+    mask-composite: intersect;
+    animation: appear var(--slow) var(--ease) both;
   }
-  /* Hover nudges the text, not the padding, so nothing reflows */
-  .shows a > * { transition: transform var(--fast) var(--ease); }
-  .shows a:hover > * { transform: translateX(.75rem); }
-  .show-year { font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
-  .show-title { font-family: var(--display); font-size: var(--text-2xl); line-height: 1.1; }
-  .show-venue { font-size: var(--text-sm); color: var(--muted); }
+  /* The work fades in and settles, the label follows a moment later */
+  @keyframes appear { from { opacity: 0; transform: scale(1.015); } }
+  .label {
+    display: flex; flex-direction: column; align-items: center; height: var(--label); justify-content: center;
+    font-size: var(--text-xs); line-height: 1.5; color: var(--muted); text-align: center;
+    animation: rise var(--slow) var(--ease) .25s both;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(.35rem); } }
+  .label em { color: var(--ink); }
 
+  /* Small link to all the works, the same size as the label */
+  .all {
+    display: inline-flex; align-items: center; gap: .35em; height: var(--link); margin-top: var(--space-s);
+    font-size: var(--text-xs); letter-spacing: .1em; text-transform: uppercase; text-decoration: none;
+    color: var(--muted); transition: color var(--fast) var(--ease);
+    animation: rise var(--slow) var(--ease) .4s both;
+  }
+  .all span { transition: transform var(--fast) var(--ease); }
+  .all:hover { color: var(--ink); }
+  .all:hover span { transform: translateX(.25rem); }
+
+  /* Phones: the work sits near the top and uses the full width */
   @media (max-width: 767px) {
-    .art :global(img) { height: auto; min-height: 0; aspect-ratio: 4 / 3; }
-  }
-  @media (max-width: 699px) {
-    .shows a { grid-template-columns: 1fr; gap: var(--space-3xs); }
+    .home { justify-content: flex-start; min-height: 0; padding-block: var(--space-l) var(--space-xl); }
+    .work :global(img) { width: 100%; max-height: none; }
   }
 </style>

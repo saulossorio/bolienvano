@@ -49,11 +49,7 @@ export default {
 
   // Home page
   home: {
-    recent: 'Recent works',
     allWorks: 'All works',
-    exhibitions: 'Exhibitions',
-    allExhibitions: 'All exhibitions',
-    featuredLabel: 'Featured work',
   },
 
   footer: {
