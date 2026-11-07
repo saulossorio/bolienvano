@@ -1,7 +1,8 @@
 ---
-// Footer: one quiet line: email, social links and credits.
+// Footer: one quiet line: social links and credits. No email address in the page
+// (spam bots harvest it); people write through the contact form.
 import { t } from '../content/index.js';
-import { socials, email } from '../data/socials.js';
+import { socials } from '../data/socials.js';
 
 const year = new Date().getFullYear();
 ---
@@ -9,7 +10,6 @@ const year = new Date().getFullYear();
   <div class="container">
     <div class="bottom">
       <ul class="socials">
-        <li><a href={`mailto:${email}`}>{email}</a></li>
         {socials.map((s) => (
           <li>
             <a href={s.url} target="_blank" rel="noopener noreferrer">

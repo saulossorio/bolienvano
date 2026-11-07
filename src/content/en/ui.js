@@ -95,7 +95,6 @@ export default {
     done: "Thank you for your message! I'll be in contact very soon.",
     fail: 'Oops! Something went wrong while submitting the form. Please contact me in a different way.',
     mapTitle: 'Based in Curitiba, Brazil',
-    direct: 'Or write directly to',
   },
 
   nft: {
