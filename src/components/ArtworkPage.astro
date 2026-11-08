@@ -128,8 +128,10 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
     max-height: calc(100svh - var(--bar) - var(--space-l) * 2); object-fit: contain;
     mix-blend-mode: var(--blend);   /* white photo backgrounds turn wall-colored */
   }
-  /* A watercolor: the whole sheet, white, with room around it for its shadow */
-  .view.sheet { padding: var(--space-l); }
+  /* A watercolor: the whole sheet, white, aligned with the details below; its shadow
+     falls outside, and it does not grow on hover */
+  .view.sheet { overflow: visible; }
+  .view.sheet:hover :global(img) { transform: none; }
   .view.sheet :global(img) { mix-blend-mode: normal; box-shadow: var(--sheet-shadow); }
   .details { display: grid; grid-template-columns: 1fr 1fr; gap: inherit; }
   .details :global(img) { aspect-ratio: 1; object-fit: cover; }
