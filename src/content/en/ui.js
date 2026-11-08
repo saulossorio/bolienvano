@@ -4,8 +4,8 @@ export default {
   locale: 'en-US',   // used to write dates ("August 4, 2022")
 
   site: {
-    name: 'Andy S.',
-    description: 'Andy S. is a bolivian contemporary artist based in Curitiba, Brazil. Works mainly with painting, using techniques such as oil painting, ink painting and watercolor.',
+    name: 'Andy Ossorio',
+    description: 'Andy Ossorio is a bolivian contemporary artist based in Curitiba, Brazil. Works mainly with painting, using techniques such as oil painting, ink painting and watercolor.',
   },
 
   nav: {
@@ -55,13 +55,13 @@ export default {
     works: 'works',
     availableOnly: 'Available only',
     noneAvailable: 'No works are available right now.',
-    description: 'Artworks gallery by the bolivian artist Andy S.',
+    description: 'Artworks gallery by the bolivian artist Andy Ossorio',
     yearCover: 'Artworks from',
   },
 
   exhibitions: {
     title: 'Exhibitions',
-    description: 'Solo exhibitions of the bolivian artist Andy S.',
+    description: 'Solo exhibitions of the bolivian artist Andy Ossorio',
     photo: 'Photo',
     read: 'Read more',
     works: 'Works',
@@ -74,7 +74,7 @@ export default {
     title: 'About',
     // Biography: third person, facts only
     paragraphs: [
-      'Andy S. is a Bolivian painter who lives and works in Curitiba, Brazil. His work centers on the human figure and the inner life of the individual: quiet, private moments in which a feeling becomes visible.',
+      'Andy Ossorio is a Bolivian painter who lives and works in Curitiba, Brazil. His work centers on the human figure and the inner life of the individual: quiet, private moments in which a feeling becomes visible.',
       'He works mainly in oil and ink, and also in watercolor. His language moves between figuration, expressionism and minimalism, and stays open to experiment.',
       'His work has been shown in Bolivia and Brazil, including a solo exhibition at the Contemporary Art Museum of Santa Cruz de la Sierra in 2022.',
     ],
@@ -85,7 +85,7 @@ export default {
 
   contact: {
     title: 'Contact',
-    description: 'Get in touch with the artist Andy S.',
+    description: 'Get in touch with the artist Andy Ossorio',
     intro: 'For artworks, commissions, exhibitions or press. I usually reply within a few days.',
     name: 'Name',
     email: 'Email',
@@ -148,12 +148,12 @@ export default {
 
   nft: {
     title: 'Hiperconciente',
-    description: 'Hiperconciente is the first incursion of the artist Andy S. in the world of crypto art, and also, the first NFT (Non Fungible Token) artwork exhibited in a Bolivian museum.',
+    description: 'Hiperconciente is the first incursion of the artist Andy Ossorio in the world of crypto art, and also, the first NFT (Non Fungible Token) artwork exhibited in a Bolivian museum.',
     year: '2022',
     medium: 'Indian ink on paper / Performance',
     size: '100x152 cm',
     paragraphs: [
-      'Hiperconciente is the first incursion of the artist Andy S. in the world of crypto art, and also, the first NFT (Non Fungible Token) artwork exhibited in a Bolivian museum.',
+      'Hiperconciente is the first incursion of the artist Andy Ossorio in the world of crypto art, and also, the first NFT (Non Fungible Token) artwork exhibited in a Bolivian museum.',
       'Minted in the Ethereum blockchain, the work is made up of a digital part and a physical part. A series of videos present us a wonderful performance full of symbolism. Likewise, a painting, made in the middle of the aforementioned performance, stands out for its level of abstraction and richness of details.',
       'The physical part of the work is exhibited at the Museum of Contemporary Art, and its digital part, on the NFT Verisart art platform.',
     ],
@@ -169,7 +169,7 @@ export default {
     title: 'Invitación',
     description: 'Invitación a la noche de inauguración de la exposición de arte "Hiperconciencia".',
     open: 'Abrir invitación',
-    host: 'Andy S.',
+    host: 'Andy S.',   // as printed on the 2022 card
     intro: 'tiene el grato honor de invitarte a la',
     event: 'NOCHE DE INAUGURACIÓN DE LA EXPOSICIÓN DE ARTE',
     name: '"Hiperconciencia"',

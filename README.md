@@ -1,6 +1,6 @@
 # bolienvano.com
 
-Website of the artist Andy S. Static site built with [Astro](https://astro.build).
+Website of the artist Andy Ossorio Static site built with [Astro](https://astro.build).
 
 ## Branches and publishing
 

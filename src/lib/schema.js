@@ -16,7 +16,8 @@ export function siteGraph(site) {
       '@type': 'Person',
       '@id': artistId(site),
       name: t.site.name,
-      alternateName: ['Andy Serrano', 'bolienvano'],
+      // Earlier names, so search engines link them to the same artist
+      alternateName: ['Andy S.', 'Andy Serrano', 'bolienvano'],
       jobTitle: 'Painter',
       description: t.site.description,
       nationality: { '@type': 'Country', name: 'Bolivia' },
