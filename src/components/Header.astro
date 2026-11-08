@@ -74,7 +74,7 @@ const active = current === 'nft' ? 'gallery' : current;
 <style>
   .navbar {
     position: sticky; top: 0; z-index: 5;
-    background: var(--wall);   /* solid: nothing shows through while scrolling */
+    background: var(--wall) var(--grain);   /* solid: nothing shows through while scrolling */
     view-transition-name: navbar;   /* stays still while the page crossfades */
   }
   .bar {
@@ -137,7 +137,7 @@ const active = current === 'nft' ? 'gallery' : current;
       width: 100%; height: 100%; max-width: none; max-height: none;
       display: flex; flex-direction: column;
       padding: 0 var(--gutter) var(--space-l);
-      background: var(--wall);
+      background: var(--wall) var(--grain);
       opacity: 0;
       transition: opacity var(--slow) var(--ease),
                   display var(--slow) allow-discrete, overlay var(--slow) allow-discrete;

@@ -23,6 +23,10 @@
      (no fade on the home page work) */
   --blend: darken;
   --edge-fade: 3%;
+  /* Grain: a very fine noise over the wall, like plaster or paper, so the background
+     is not flat. Dark specks in light mode, light specks in dark mode. Used as
+     background: var(--wall) var(--grain) wherever the wall shows; never over a work. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.09 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 
   /* Type */
   /* Syne: made by Bonjour Monde for Synesthésie, an art centre near Paris.
@@ -70,8 +74,8 @@
 }
 @media (max-width: 767px) { :root { --bar: 4rem; } }
 :root[data-theme='light'] { color-scheme: light; }
-:root[data-theme='dark']  { color-scheme: dark; --blend: normal; --edge-fade: 0%; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --blend: normal; --edge-fade: 0%; } }
+:root[data-theme='dark']  { color-scheme: dark; --blend: normal; --edge-fade: 0%; --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.07 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --blend: normal; --edge-fade: 0%; --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.07 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); } }
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -83,7 +87,7 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--ink);
-  background: var(--wall);
+  background: var(--wall) var(--grain);
   -webkit-font-smoothing: antialiased;
 }
 

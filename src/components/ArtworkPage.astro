@@ -121,7 +121,7 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
 
   /* Images: the main one as tall as the screen, details in two columns */
   .images { display: grid; gap: var(--space-s); }
-  .zoomable { position: relative; display: block; overflow: hidden; cursor: zoom-in; background: var(--wall); }
+  .zoomable { position: relative; display: block; overflow: hidden; cursor: zoom-in; background: var(--wall) var(--grain); }
   .zoomable :global(img) { width: 100%; transition: transform var(--slow) var(--ease); }
   .zoomable:hover :global(img) { transform: scale(1.015); }
   .view :global(img) {

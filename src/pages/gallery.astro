@@ -92,7 +92,7 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
   /* Sticky bar right under the header: solid, so the works scrolling under it never show through */
   .toolbar {
     position: sticky; top: var(--bar); z-index: 4;
-    background: var(--wall);
+    background: var(--wall) var(--grain);
     border-bottom: 1px solid var(--line);
   }
   .bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-m); height: var(--toolbar); }
