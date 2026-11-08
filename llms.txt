@@ -1,8 +1,8 @@
-# Andy S.
+# Andy Ossorio
 
-> Andy S. is a bolivian contemporary artist based in Curitiba, Brazil. Works mainly with painting, using techniques such as oil painting, ink painting and watercolor.
+> Andy Ossorio is a bolivian contemporary artist based in Curitiba, Brazil. Works mainly with painting, using techniques such as oil painting, ink painting and watercolor.
 
-Andy S. is a Bolivian painter who lives and works in Curitiba, Brazil. His work centers on the human figure and the inner life of the individual: quiet, private moments in which a feeling becomes visible.
+Andy Ossorio is a Bolivian painter who lives and works in Curitiba, Brazil. His work centers on the human figure and the inner life of the individual: quiet, private moments in which a feeling becomes visible.
 He works mainly in oil and ink, and also in watercolor. His language moves between figuration, expressionism and minimalism, and stays open to experiment.
 His work has been shown in Bolivia and Brazil, including a solo exhibition at the Contemporary Art Museum of Santa Cruz de la Sierra in 2022.
 
@@ -12,7 +12,7 @@ His work has been shown in Bolivia and Brazil, including a solo exhibition at th
 - [Exhibitions](https://bolienvano.com/exhibitions.html): solo exhibitions
 - [About](https://bolienvano.com/about.html): biography
 - [Contact](https://bolienvano.com/contact.html): enquiries about works and commissions
-- [Hiperconciente](https://bolienvano.com/gallery/hiperconciente.html): Hiperconciente is the first incursion of the artist Andy S. in the world of crypto art, and also, the first NFT (Non Fungible Token) artwork exhibited in a Bolivian museum.
+- [Hiperconciente](https://bolienvano.com/gallery/hiperconciente.html): Hiperconciente is the first incursion of the artist Andy Ossorio in the world of crypto art, and also, the first NFT (Non Fungible Token) artwork exhibited in a Bolivian museum.
 
 ## Artworks
 
