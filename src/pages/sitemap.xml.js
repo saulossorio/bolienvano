@@ -4,7 +4,7 @@ import { exhibitions } from '../data/exhibitions.js';
 import { pageUrl } from '../lib/urls.js';
 
 const paths = [
-  '', 'about', 'gallery', 'gallery/hiperconciente', 'exhibitions', 'contact',
+  '', 'about', 'gallery', 'gallery/hiperconciente', 'exhibitions', 'contact', 'privacy',
   ...years.map((y) => `gallery/${y.year}`),
   ...artworks.map((a) => `gallery/${a.slug}`),
   ...exhibitions.map((e) => `exhibitions/${e.slug}`),

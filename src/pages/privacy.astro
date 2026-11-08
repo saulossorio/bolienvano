@@ -1,0 +1,43 @@
+---
+// Privacy: what the site keeps about visitors (cookies, browser storage, the
+// contact form). Texts in src/content/en/ui.js. The button under Cookies opens
+// the cookie notice (CookieNotice.astro) to change the choice; it needs JavaScript.
+import Base from '../layouts/Base.astro';
+import { t } from '../content/index.js';
+
+const p = t.privacy;
+---
+<Base title={p.title} description={p.description} path="privacy" current="privacy">
+  <div class="container privacy">
+    <div class="text">
+      <h1>{p.title}</h1>
+      <p class="updated">{p.updated}</p>
+
+      {p.sections.map((s) => (
+        <section>
+          <h2>{s.title}</h2>
+          {s.paragraphs.map((text) => <p set:html={text} />)}
+          {s.change && <button class="button" type="button" hidden data-cookies-open>{p.change}</button>}
+        </section>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .privacy { padding-block: var(--space-xl) 0; }
+  .text { max-width: 44rem; }
+  h1 { margin: 0; }
+  .updated { margin: var(--space-xs) 0 0; font-size: var(--text-sm); color: var(--muted); }
+
+  /* Same small uppercase section titles as the CV on the About page */
+  section { margin-top: var(--space-l); padding-top: var(--space-s); border-top: 1px solid var(--line); }
+  h2 {
+    margin: 0 0 var(--space-xs);
+    font-family: var(--sans); font-size: var(--text-xs); font-weight: 500; line-height: 1.6;
+    letter-spacing: var(--tracking); text-transform: uppercase; color: var(--muted);
+  }
+  section p { font-size: var(--text-md); line-height: 1.7; }
+  .button { margin-top: var(--space-2xs); }
+  .button[hidden] { display: none; }
+</style>

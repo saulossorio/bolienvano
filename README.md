@@ -85,5 +85,6 @@ so it works on Hostinger but not on the GitHub Pages preview.
 
 Google Tag Manager (`GTM-5J63MXV`) is the only script loaded; GA4 is configured inside it.
 It runs with Google Consent Mode: no analytics cookies until the visitor accepts the cookie
-notice (`src/components/CookieNotice.astro`); the "Cookies" link in the footer changes the
-choice. The GA4 tag in GTM must keep its built-in consent checks on.
+notice (`src/components/CookieNotice.astro`). The Privacy page (`src/pages/privacy.astro`,
+linked in the footer) explains the cookies and the contact form and lets visitors change
+their choice; update its text if the analytics change. The GA4 tag in GTM must keep its built-in consent checks on.

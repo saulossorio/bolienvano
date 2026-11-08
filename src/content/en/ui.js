@@ -13,6 +13,7 @@ export default {
     gallery: 'Works',
     exhibitions: 'Exhibitions',
     contact: 'Contact',
+    privacy: 'Privacy',
     menu: 'Menu',
     close: 'Close menu',
     theme: 'Dark mode',
@@ -105,9 +106,45 @@ export default {
   cookies: {
     label: 'Cookies',
     text: 'May this site use cookies to count visits? Nothing else is tracked.',
+    more: 'Details',
     accept: 'Accept',
     decline: 'Decline',
-    settings: 'Cookies',
+  },
+
+  // Privacy page: what the site keeps about visitors, in plain words
+  privacy: {
+    title: 'Privacy',
+    description: 'How bolienvano.com uses cookies and the messages sent through the contact form.',
+    updated: 'Last updated November 2026',
+    sections: [
+      {
+        title: 'Cookies',
+        paragraphs: [
+          'Only if you accept, this site uses Google Analytics to count visits and see which pages are read. It sets two cookies, <em>_ga</em> and <em>_ga_SSX1X19GRH</em>, which last up to two years. Google receives your visit without your name or email. There is no advertising and nothing is sold or shared.',
+          'If you decline, no analytics cookies are set and the cookies set before are removed.',
+        ],
+        change: true,
+      },
+      {
+        title: 'Stored in your browser',
+        paragraphs: [
+          'The site remembers, only in your browser, your cookie choice, whether you chose light or dark mode and which work the home page showed last. None of this is sent anywhere.',
+        ],
+      },
+      {
+        title: 'Contact form',
+        paragraphs: [
+          'Your name, email and message are sent by email to the artist and used only to reply to you. They are not added to any list and not shared.',
+        ],
+      },
+      {
+        title: 'Your rights',
+        paragraphs: [
+          'Under the Brazilian LGPD and the European GDPR you can ask what is kept about you, or ask for it to be deleted, by writing through the contact form.',
+        ],
+      },
+    ],
+    change: 'Change cookie choice',
   },
 
   nft: {

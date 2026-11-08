@@ -2,12 +2,13 @@
 // Cookie notice: a small note in the bottom corner the first time someone visits.
 // Analytics (GA4 inside GTM) start without cookies (Google Consent Mode, see
 // Base.astro) and only use them after "Accept". The choice is remembered; the
-// "Cookies" link in the footer opens the note again to change it.
+// Privacy page explains it and has a button that opens the note again.
 // Without JavaScript nothing shows, and no analytics run either.
 import { t } from '../content/index.js';
+import { pageUrl } from '../lib/urls.js';
 ---
 <aside class="cookies" aria-label={t.cookies.label} hidden data-cookies>
-  <p>{t.cookies.text}</p>
+  <p>{t.cookies.text} <a href={pageUrl('privacy')}>{t.cookies.more}</a></p>
   <div class="actions">
     <button class="line-link" type="button" data-consent="granted">{t.cookies.accept}</button>
     <button class="line-link" type="button" data-consent="denied">{t.cookies.decline}</button>
@@ -58,6 +59,7 @@ import { t } from '../content/index.js';
   .cookies[hidden] { display: none; }
   @keyframes rise { from { opacity: 0; transform: translateY(.5rem); } }
   p { margin: 0 0 var(--space-xs); }
+  p a { color: var(--ink); }
 
   /* Both answers look the same: declining is as easy as accepting */
   .actions { display: flex; gap: var(--space-m); }
