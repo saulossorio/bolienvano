@@ -115,6 +115,10 @@ a   { color: inherit; text-underline-offset: .2em; text-decoration-thickness: 1p
 /* The footer already leaves space above it */
 main > .section:last-child { padding-bottom: 0; }
 
+/* A heading that is a number (a year): in the reading type, plain figures of equal
+   width. Numbers are never set in Syne, whose figures are too decorative. */
+.numeral { font-family: var(--sans); font-weight: 400; letter-spacing: 0; font-variant-numeric: tabular-nums; }
+
 /* Small uppercase line above a heading */
 .eyebrow {
   display: block;

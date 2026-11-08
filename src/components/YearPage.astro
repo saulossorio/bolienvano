@@ -13,7 +13,7 @@ const items = artworks.filter((a) => a.year === year);
   <div class="container">
     <header class="intro">
       <a class="eyebrow back" href={pageUrl('gallery')}>← {t.gallery.title}</a>
-      <h1>{year}</h1>
+      <h1 class="numeral">{year}</h1>
       <YearNav current={year} />
     </header>
     <WorkGrid items={items} />

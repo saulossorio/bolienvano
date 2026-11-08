@@ -33,7 +33,7 @@ const availableCount = artworks.filter((a) => a.status === 'available').length;
       return (
         <section class="year" id={`y${year}`} aria-labelledby={`h${year}`}>
           <div class="section-head">
-            <h2 id={`h${year}`}>{year}</h2>
+            <h2 class="numeral" id={`h${year}`}>{year}</h2>
             <span class="count">{items.length} {t.gallery.works}</span>
           </div>
           <WorkGrid items={items} eagerCount={i === 0 ? 3 : 0} priority={i === 0} />
