@@ -91,7 +91,7 @@ export default {
     email: 'Email',
     topic: 'Subject',
     // Reasons to write, sent as the email subject. 'buy' is picked when coming from an artwork.
-    topics: { buy: 'Buying a work', commission: 'A commission', exhibition: 'An exhibition', press: 'Press', other: 'Something else' },
+    topics: { buy: 'Buy a work', commission: 'Commission', exhibition: 'Exhibition', press: 'Press', other: 'Other' },
     work: 'Regarding',
     message: 'Message',
     required: 'required',

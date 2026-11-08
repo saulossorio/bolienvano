@@ -36,7 +36,7 @@ $name    = $clean($_POST['name'] ?? '', 256);
 $email   = $clean($_POST['email'] ?? '', 256);
 $work    = $clean($_POST['work'] ?? '', 256);
 // Reason chosen in the form; anything unexpected counts as 'Something else'
-$topics  = ['buy' => 'Buying a work', 'commission' => 'A commission', 'exhibition' => 'An exhibition', 'press' => 'Press', 'other' => 'Something else'];
+$topics  = ['buy' => 'Buy a work', 'commission' => 'Commission', 'exhibition' => 'Exhibition', 'press' => 'Press', 'other' => 'Other'];
 $topic   = $topics[(string) ($_POST['topic'] ?? '')] ?? $topics['other'];
 $message = mb_substr(trim((string) ($_POST['message'] ?? '')), 0, 5000);
 

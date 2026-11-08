@@ -1,10 +1,10 @@
 ---
 // Contact form (sent by contact.php on the server). Built only from the site's shared
 // patterns: .eyebrow labels, fields as a single --line under the text, the reason to
-// write as quiet .line-link choices (like the years on the works page), one .button.
+// write as .choice options, one .button.
 // Without JavaScript the form posts normally; with it, it sends in the background
 // and shows the thank-you or error message in place.
-// Coming from an artwork (?subject=Title (year)), "Buying a work" is picked and the
+// Coming from an artwork (?subject=Title (year)), "Buy a work" is picked and the
 // work is named above the message.
 import Base from '../layouts/Base.astro';
 import { t } from '../content/index.js';
@@ -25,7 +25,7 @@ const c = t.contact;
           <legend class="eyebrow">{c.topic}</legend>
           <div class="choices">
             {Object.entries(c.topics).map(([value, label], i) => (
-              <label class="choice line-link">
+              <label class="choice">
                 <input type="radio" name="topic" value={value} checked={i === 0} />
                 {label}
               </label>
@@ -129,21 +129,13 @@ const c = t.contact;
   /* Labels are .eyebrow (global.css) */
   .eyebrow { margin-bottom: var(--space-2xs); }
 
-  /* Reason to write: quiet uppercase words like the years on the works page;
-     the picked one turns ink with the thin line under it (.line-link) */
+  /* Reason to write: a row of .choice options (global.css), with more air above
+     them than a field label so the question reads first */
   .topics { margin: 0 0 var(--space-l); padding: 0; border: 0; }
-  .topics legend { padding: 0; }
-  .choices { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-m); }
-  .choice {
-    padding-block: var(--space-2xs); cursor: pointer;
-    font-size: var(--text-xs); letter-spacing: var(--tracking); text-transform: uppercase;
-    color: var(--muted); transition: color var(--fast) var(--ease);
-  }
-  .choice:hover, .choice:has(:checked) { color: var(--ink); }
-  .choice:has(:focus-visible) { outline: 1.5px solid var(--ink); outline-offset: 3px; }
-  .choice input { position: absolute; opacity: 0; pointer-events: none; }
+  .topics legend { padding: 0; margin-bottom: var(--space-s); }
+  .choices { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
 
-  .work { margin: var(--space-s) 0 0; font-size: var(--text-sm); color: var(--muted); }
+  .work { margin: var(--space-m) 0 0; font-size: var(--text-sm); color: var(--muted); }
   .work em { color: var(--ink); }
 
   /* Fields: a single line under the text, ink when focused */

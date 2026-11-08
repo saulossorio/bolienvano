@@ -71,7 +71,7 @@ only use `var(--…)`, never raw sizes. Change a token and the whole site follow
 | `--bar` `--toolbar` `--target` | Height of the top bar and of the works year bar; smallest tap area |
 | `--ease` `--fast` `--slow` | The one easing and two speeds of every transition |
 
-Shared patterns in `global.css`: `.eyebrow` (small uppercase label), `.line-link` (quiet link with a thin line under it), `.button`, `.more`, `.section-head`.
+Shared patterns in `global.css`: `.eyebrow` (small uppercase label), `.line-link` (quiet link with a thin line under it), `.button`, `.choice` (one option of a small set in a form: outlined, solid ink when picked), `.more`, `.section-head`.
 
 Exception: `src/pages/invitacion.astro` keeps its own sizes (it reproduces the printed card).
 

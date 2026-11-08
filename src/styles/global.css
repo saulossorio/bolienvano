@@ -118,8 +118,8 @@ main > .section:last-child { padding-bottom: 0; }
   color: var(--muted);
 }
 
-/* Quiet text link (menu, years, filters, form choices): a thin line grows under it
-   on hover and stays under the current, pressed or checked one */
+/* Quiet text link (menu, years, filters): a thin line grows under it on hover
+   and stays under the current one */
 .line-link { position: relative; text-decoration: none; }
 .line-link::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: .2rem;
@@ -127,8 +127,7 @@ main > .section:last-child { padding-bottom: 0; }
   transform: scaleX(0); transform-origin: left;
   transition: transform var(--fast) var(--ease);
 }
-.line-link:hover::after, .line-link[aria-current]::after, .line-link[aria-pressed='true']::after,
-.line-link:has(:checked)::after { transform: scaleX(1); }
+.line-link:hover::after, .line-link[aria-current]::after, .line-link[aria-pressed='true']::after { transform: scaleX(1); }
 
 /* Section heading with a link on the right ("All works →") */
 .section-head {
@@ -159,6 +158,22 @@ main > .section:last-child { padding-bottom: 0; }
 }
 .button:hover { background: transparent; color: var(--ink); }
 .button[aria-disabled='true'] { cursor: default; background: transparent; color: var(--muted); border-color: var(--line); }
+
+/* Choice: one option of a small set, a radio or checkbox inside a <label class="choice">.
+   The same square and type as .button, but quiet: a thin outline until picked, then
+   solid ink like a button. Set them in a row with a --space-2xs gap. */
+.choice {
+  position: relative; display: inline-flex; align-items: center;
+  min-height: var(--target); padding: 0 var(--space-s);
+  border: 1px solid var(--line);
+  font-size: var(--text-sm); font-weight: 500; letter-spacing: .04em; color: var(--ink);
+  cursor: pointer; user-select: none;
+  transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+}
+.choice input { position: absolute; opacity: 0; pointer-events: none; }
+.choice:hover { border-color: var(--ink); }
+.choice:has(:checked) { background: var(--ink); border-color: var(--ink); color: var(--wall); }
+.choice:has(:focus-visible) { outline: 1.5px solid var(--ink); outline-offset: 3px; }
 
 .visually-hidden {
   position: absolute; width: 1px; height: 1px;
