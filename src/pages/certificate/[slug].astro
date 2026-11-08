@@ -28,7 +28,6 @@ const statement = c.statement.replace('{title}', `<em>${title}</em>`);
 ---
 <Base title={`${c.title}, ${title}`} path={path} noindex>
   <div class="container page">
-    <button class="button outline print" type="button" hidden data-print>{c.print}</button>
 
     <article class="sheet">
       <header class="head">
@@ -64,6 +63,8 @@ const statement = c.statement.replace('{title}', `<em>${title}</em>`);
         <p>{c.verify}<br /><span class="url">{url.host}{url.pathname}</span><br /><span class="note">{c.note}</span></p>
       </footer>
     </article>
+
+    <button class="button outline print" type="button" hidden data-print>{c.print}</button>
   </div>
 </Base>
 

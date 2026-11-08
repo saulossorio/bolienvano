@@ -85,7 +85,7 @@ so it works on Hostinger but not on the GitHub Pages preview.
 
 Every artwork has its certificate at `certificate/<slug>.html`
 (`src/pages/certificate/[slug].astro`), filled in from `src/data/artworks.js`: photo, title,
-year, technique, size and its number (`coa`, AO-<year>-<nn>, never renumbered). It prints
+year, technique, size and its number (`coa`, AO-<year>- and 4 random characters, so it reveals nothing about how many works there are; never changed). It prints
 (or saves as PDF) on one A4 page with blank lines for the owner, the date and the artist's
 handwritten signature. Its QR code leads back to the same page to check it. Not in the menu
 or the sitemap, hidden from search engines.
