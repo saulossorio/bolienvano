@@ -86,7 +86,6 @@ export default {
     title: 'Contact',
     description: 'Get in touch with the artist Andy S.',
     intro: 'For artworks, commissions, exhibitions or press. I usually reply within a few days.',
-    mapTitle: 'Based in Curitiba, Brazil',
     name: 'Name',
     email: 'Email',
     topic: 'About',
