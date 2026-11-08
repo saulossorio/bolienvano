@@ -44,7 +44,11 @@ import { pageUrl } from '../lib/urls.js';
 
   document.querySelectorAll('[data-cookies-open]').forEach((link) => {
     link.hidden = false;
-    link.addEventListener('click', () => { note.hidden = false; note.querySelector('button').focus(); });
+    link.addEventListener('click', () => {
+      note.classList.add('now');   // asked for: no wait
+      note.hidden = false;
+      note.querySelector('button').focus();
+    });
   });
 </script>
 
@@ -56,6 +60,7 @@ import { pageUrl } from '../lib/urls.js';
     font-size: var(--text-xs); line-height: 1.5; color: var(--muted);
     animation: rise var(--slow) var(--ease) 1s both;   /* after the artwork has appeared */
   }
+  .cookies.now { animation-delay: 0s; }
   .cookies[hidden] { display: none; }
   @keyframes rise { from { opacity: 0; transform: translateY(.5rem); } }
   p { margin: 0 0 var(--space-xs); }
