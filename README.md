@@ -81,6 +81,15 @@ Exception: `src/pages/invitacion.astro` keeps its own sizes (it reproduces the p
 form (and the artwork, when the visitor came from one) in the email subject. It needs PHP,
 so it works on Hostinger but not on the GitHub Pages preview.
 
+## Certificates of authenticity
+
+Every artwork has its certificate at `certificate/<slug>.html`
+(`src/pages/certificate/[slug].astro`), filled in from `src/data/artworks.js`: photo, title,
+year, technique, size and its number (`coa`, AO-<year>-<nn>, never renumbered). It prints
+(or saves as PDF) on one A4 page with blank lines for the owner, the date and the artist's
+handwritten signature. Its QR code leads back to the same page to check it. Not in the menu
+or the sitemap, hidden from search engines.
+
 ## Analytics
 
 Google Tag Manager (`GTM-5J63MXV`) is the only script loaded; GA4 is configured inside it.

@@ -147,6 +147,27 @@ export default {
     change: 'Change cookie choice',
   },
 
+  // Certificate of authenticity, one per artwork (certificate/<slug>.html). {title} and
+  // {artist} are filled in by the page.
+  certificate: {
+    title: 'Certificate of Authenticity',
+    number: 'Certificate no.',
+    artist: 'Artist',
+    work: 'Title',
+    year: 'Year',
+    technique: 'Technique',
+    size: 'Dimensions',
+    edition: 'Edition',
+    unique: 'Unique original, 1/1',
+    statement: 'I certify that {title} is an original, unique work, conceived and made entirely by my own hand, and that no other version of it exists. The artist keeps the copyright and the right to reproduce the work; ownership of the physical work passes to its buyer.',
+    owner: 'Issued to',
+    date: 'Date',
+    signature: 'Signature',
+    verify: 'Verify this certificate at',
+    print: 'Print or save as PDF',
+    note: 'Valid only with the artist’s handwritten signature.',
+  },
+
   nft: {
     title: 'Hiperconciente',
     description: 'Hiperconciente is the first incursion of the artist Andy Ossorio in the world of crypto art, and also, the first NFT (Non Fungible Token) artwork exhibited in a Bolivian museum.',

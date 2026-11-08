@@ -1,0 +1,135 @@
+---
+// certificate/<slug>.html: the certificate of authenticity of one artwork, always in
+// the same format and filled in from src/data/artworks.js (title, year, technique,
+// size, number, photo). On screen it is a sheet of paper on the wall; printed (or
+// saved as PDF from the print dialog) it is one A4 page, signed by hand.
+// The QR code leads back to this page, so anyone holding the paper can check it.
+// Internal: not in the menu or the sitemap, hidden from search engines.
+import { getImage } from 'astro:assets';
+import QRCode from 'qrcode';
+import Base from '../../layouts/Base.astro';
+import { t, artworkTitles } from '../../content/index.js';
+import { artworks } from '../../data/artworks.js';
+import { pageUrl } from '../../lib/urls.js';
+import { artworkImages } from '../../lib/images.js';
+
+export function getStaticPaths() {
+  return artworks.map((artwork) => ({ params: { slug: artwork.slug }, props: { artwork } }));
+}
+
+const { artwork } = Astro.props;
+const c = t.certificate;
+const title = artworkTitles[artwork.slug];
+const path = `certificate/${artwork.slug}`;
+const url = new URL(pageUrl(path), Astro.site);
+const photo = await getImage({ src: artworkImages(artwork.slug)[0].src, width: 1200, format: 'webp', quality: 85 });
+const qr = await QRCode.toString(url.href, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#1d1c1aff', light: '#0000' } });
+const statement = c.statement.replace('{title}', `<em>${title}</em>`);
+---
+<Base title={`${c.title}, ${title}`} path={path} noindex>
+  <div class="container page">
+    <button class="button outline print" type="button" hidden data-print>{c.print}</button>
+
+    <article class="sheet">
+      <header class="head">
+        <p class="eyebrow">{c.title}</p>
+        <p class="number"><span>{c.number}</span> <span class="numeral">{artwork.coa}</span></p>
+      </header>
+
+      <div class="body">
+        <img class="photo" src={photo.src} alt={title} fetchpriority="high" width={photo.attributes.width} height={photo.attributes.height} />
+
+        <div class="text">
+          <h1>{title}</h1>
+          <dl class="facts">
+            <div><dt>{c.artist}</dt><dd>{t.site.name}</dd></div>
+            <div><dt>{c.year}</dt><dd class="numeral">{artwork.year}</dd></div>
+            <div><dt>{c.technique}</dt><dd>{t.media[artwork.medium]}</dd></div>
+            <div><dt>{c.size}</dt><dd>{artwork.size}</dd></div>
+            <div><dt>{c.edition}</dt><dd>{c.unique}</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <p class="statement" set:html={statement} />
+
+      <div class="sign">
+        <div class="field"><span class="line" /><span class="eyebrow">{c.owner}</span></div>
+        <div class="field"><span class="line" /><span class="eyebrow">{c.date}</span></div>
+        <div class="field wide"><span class="line" /><span class="eyebrow">{c.signature}, {t.site.name}</span></div>
+      </div>
+
+      <footer class="foot">
+        <div class="qr" set:html={qr} />
+        <p>{c.verify}<br /><span class="url">{url.host}{url.pathname}</span><br /><span class="note">{c.note}</span></p>
+      </footer>
+    </article>
+  </div>
+</Base>
+
+<script>
+  // The print button needs JavaScript, so it only shows when it works
+  const button = document.querySelector('[data-print]');
+  button.hidden = false;
+  button.addEventListener('click', () => print());
+</script>
+
+<style>
+  .page { display: grid; justify-items: center; gap: var(--space-m); padding-block: var(--space-l) var(--space-xl); }
+  .print[hidden] { display: none; }
+
+  /* An A4 sheet: white paper, always light, whatever the site theme */
+  .sheet {
+    --ink: #1d1c1a; --muted: #6b6863; --line: #dcd9d3;
+    color-scheme: light;
+    display: flex; flex-direction: column; gap: 7mm;
+    width: min(100%, 210mm); aspect-ratio: 210 / 297;
+    padding: clamp(1.25rem, 6%, 16mm);
+    background: #fff; color: var(--ink);
+    box-shadow: var(--sheet-shadow);
+  }
+
+  .head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-s); padding-bottom: 4mm; border-bottom: 1px solid var(--line); }
+  .head .eyebrow { margin: 0; color: var(--ink); }
+  .number { margin: 0; font-size: var(--text-xs); color: var(--muted); }
+  .number .numeral { color: var(--ink); white-space: nowrap; }
+
+  .body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8mm; align-items: start; }
+  .photo { width: 100%; height: auto; max-height: 110mm; object-fit: contain; object-position: left top; }
+  h1 { margin: 0 0 5mm; font-size: clamp(1.5rem, 3.4vw, 2.1rem); }
+  .facts { margin: 0; display: grid; gap: 2.5mm; }
+  .facts div { display: grid; gap: .1rem; }
+  .facts dt { font-size: var(--text-xs); letter-spacing: var(--tracking); text-transform: uppercase; color: var(--muted); }
+  .facts dd { margin: 0; font-size: var(--text-sm); }
+
+  .statement { margin: 0; font-size: var(--text-sm); line-height: 1.7; }
+
+  /* Lines to fill in by hand, pushed to the bottom of the sheet */
+  .sign { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 9mm 8mm; }
+  .field { display: grid; gap: 1.5mm; }
+  .field.wide { grid-column: 1 / -1; }
+  .line { height: 10mm; border-bottom: 1px solid var(--ink); }
+  .field .eyebrow { margin: 0; }
+
+  .foot { display: flex; align-items: center; gap: 5mm; padding-top: 4mm; border-top: 1px solid var(--line); }
+  .qr { flex: none; width: 20mm; }
+  .qr :global(svg) { display: block; width: 100%; height: auto; }
+  .foot p { margin: 0; font-size: var(--text-xs); line-height: 1.6; color: var(--muted); }
+  .url { color: var(--ink); overflow-wrap: anywhere; }
+
+  /* Phone: no fixed paper shape, everything in one column */
+  @media (max-width: 599px) {
+    .sheet { aspect-ratio: auto; }
+    .body { grid-template-columns: 1fr; }
+  }
+
+  /* Printed: only the sheet, on one A4 page, with the page margins inside it */
+  @page { size: A4; margin: 0; }
+  @media print {
+    :global(.navbar), :global(.footer), :global(.cookies), :global(.skip-link), .print { display: none !important; }
+    :global(body) { background: #fff; }
+    .page { padding: 0; }
+    .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; padding: 16mm; box-shadow: none; }
+    .body { grid-template-columns: 1fr 1fr; }
+  }
+</style>
