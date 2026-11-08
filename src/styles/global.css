@@ -10,7 +10,9 @@
      The page follows the visitor's system setting until they use the switch in the
      header; then data-theme on <html> (set in Base.astro) fixes one of the two. */
   color-scheme: light dark;
-  --wall:      light-dark(#f2f1ef, #171615);   /* page background, same as the wall in the artwork photos */
+  --wall:      light-dark(#f9f8f6, #0f0e0d);   /* page background; a bit lighter (darker) than meant, because
+                                                 --grain over it averages to the wall in the artwork photos,
+                                                 #f2f1ef (and #171615 in dark mode) */
   --paper:     light-dark(#fbfaf8, #1f1e1c);   /* cards, form fields */
   --ink:       light-dark(#1d1c1a, #ebe8e3);   /* text */
   --muted:     light-dark(#6b6863, #a29e97);   /* secondary text (4.9:1 and 6.9:1 on --wall) */
@@ -26,7 +28,7 @@
   /* Grain: a very fine noise over the wall, like plaster or paper, so the background
      is not flat. Dark specks in light mode, light specks in dark mode. Used as
      background: var(--wall) var(--grain) wherever the wall shows; never over a work. */
-  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 
   /* Type */
   /* Syne: made by Bonjour Monde for Synesthésie, an art centre near Paris.
@@ -74,8 +76,8 @@
 }
 @media (max-width: 767px) { :root { --bar: 4rem; } }
 :root[data-theme='light'] { color-scheme: light; }
-:root[data-theme='dark']  { color-scheme: dark; --blend: normal; --edge-fade: 0%; --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.07 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --blend: normal; --edge-fade: 0%; --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.07 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); } }
+:root[data-theme='dark']  { color-scheme: dark; --blend: normal; --edge-fade: 0%; --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.045 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --blend: normal; --edge-fade: 0%; --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.045 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); } }
 
 *, *::before, *::after { box-sizing: border-box; }
 
