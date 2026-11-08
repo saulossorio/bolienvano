@@ -89,7 +89,7 @@ export default {
     intro: 'For artworks, commissions, exhibitions or press. I usually reply within a few days.',
     name: 'Name',
     email: 'Email',
-    topic: 'About',
+    topic: 'Subject',
     // Reasons to write, sent as the email subject. 'buy' is picked when coming from an artwork.
     topics: { buy: 'Buying a work', commission: 'A commission', exhibition: 'An exhibition', press: 'Press', other: 'Something else' },
     work: 'Regarding',

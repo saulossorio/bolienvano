@@ -118,8 +118,8 @@ main > .section:last-child { padding-bottom: 0; }
   color: var(--muted);
 }
 
-/* Quiet text link (menu, years, filters): a thin line grows under it on hover
-   and stays under the current one */
+/* Quiet text link (menu, years, filters, form choices): a thin line grows under it
+   on hover and stays under the current, pressed or checked one */
 .line-link { position: relative; text-decoration: none; }
 .line-link::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: .2rem;
@@ -127,7 +127,8 @@ main > .section:last-child { padding-bottom: 0; }
   transform: scaleX(0); transform-origin: left;
   transition: transform var(--fast) var(--ease);
 }
-.line-link:hover::after, .line-link[aria-current]::after, .line-link[aria-pressed='true']::after { transform: scaleX(1); }
+.line-link:hover::after, .line-link[aria-current]::after, .line-link[aria-pressed='true']::after,
+.line-link:has(:checked)::after { transform: scaleX(1); }
 
 /* Section heading with a link on the right ("All works →") */
 .section-head {

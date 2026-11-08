@@ -1,7 +1,7 @@
 ---
-// Contact form (sent by contact.php on the server). Fields are a single line under
-// the text, like a label on the wall; the reason to write is picked from a short row
-// of choices instead of typing a subject.
+// Contact form (sent by contact.php on the server). Built only from the site's shared
+// patterns: .eyebrow labels, fields as a single --line under the text, the reason to
+// write as quiet .line-link choices (like the years on the works page), one .button.
 // Without JavaScript the form posts normally; with it, it sends in the background
 // and shows the thank-you or error message in place.
 // Coming from an artwork (?subject=Title (year)), "Buying a work" is picked and the
@@ -22,33 +22,32 @@ const c = t.contact;
     <div>
       <form class="form" action={assetUrl('contact.php')} method="post" data-contact-form>
         <fieldset class="topics">
-          <legend>{c.topic}</legend>
+          <legend class="eyebrow">{c.topic}</legend>
           <div class="choices">
             {Object.entries(c.topics).map(([value, label], i) => (
-              <label class="choice">
+              <label class="choice line-link">
                 <input type="radio" name="topic" value={value} checked={i === 0} />
-                <span>{label}</span>
+                {label}
               </label>
             ))}
           </div>
+          <p class="work" hidden data-work>{c.work} <em></em></p>
+          <input type="hidden" name="work" />
         </fieldset>
-
-        <p class="work" hidden data-work>{c.work} <em></em></p>
-        <input type="hidden" name="work" />
 
         <div class="row2">
           <div class="field">
-            <label for="name">{c.name}</label>
+            <label class="eyebrow" for="name">{c.name}</label>
             <input id="name" name="name" type="text" maxlength="256" autocomplete="name" />
           </div>
           <div class="field">
-            <label for="email">{c.email} <span class="req" aria-hidden="true">*</span><span class="visually-hidden">({c.required})</span></label>
+            <label class="eyebrow" for="email">{c.email} <span aria-hidden="true">*</span><span class="visually-hidden">({c.required})</span></label>
             <input id="email" name="email" type="email" maxlength="256" autocomplete="email" required />
           </div>
         </div>
 
         <div class="field">
-          <label for="message">{c.message} <span class="req" aria-hidden="true">*</span><span class="visually-hidden">({c.required})</span></label>
+          <label class="eyebrow" for="message">{c.message} <span aria-hidden="true">*</span><span class="visually-hidden">({c.required})</span></label>
           <textarea id="message" name="message" maxlength="5000" rows="5" required></textarea>
         </div>
 
@@ -59,7 +58,7 @@ const c = t.contact;
         </div>
 
         <div class="send">
-          <button class="button" type="submit" data-sending={c.sending}>{c.submit} <span aria-hidden="true">→</span></button>
+          <button class="button" type="submit" data-sending={c.sending}>{c.submit}</button>
           <p class="privacy">{c.privacy}</p>
         </div>
       </form>
@@ -127,34 +126,27 @@ const c = t.contact;
   .side h1 { margin-bottom: var(--space-m); }
   .lead { max-width: 30ch; font-size: var(--text-md); color: var(--muted); }
 
-  /* Small uppercase labels, like the CV and the artwork details */
-  label, legend {
-    display: block; padding: 0;
-    font-size: var(--text-xs); font-weight: 500; letter-spacing: var(--tracking); text-transform: uppercase;
-    color: var(--muted);
-  }
-  .req { color: var(--ink); }
+  /* Labels are .eyebrow (global.css) */
+  .eyebrow { margin-bottom: var(--space-2xs); }
 
-  /* Reason to write: a row of quiet choices; the picked one is filled with ink */
+  /* Reason to write: quiet uppercase words like the years on the works page;
+     the picked one turns ink with the thin line under it (.line-link) */
   .topics { margin: 0 0 var(--space-l); padding: 0; border: 0; }
-  .topics legend { margin-bottom: var(--space-xs); }
-  .choices { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
-  .choice { position: relative; margin: 0; letter-spacing: normal; text-transform: none; }
-  .choice input { position: absolute; opacity: 0; pointer-events: none; }
-  .choice span {
-    display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0 var(--space-s);
-    border: 1px solid var(--line); border-radius: 999px;
-    font-size: var(--text-sm); color: var(--ink); cursor: pointer;
-    transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease);
+  .topics legend { padding: 0; }
+  .choices { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-m); }
+  .choice {
+    padding-block: var(--space-2xs); cursor: pointer;
+    font-size: var(--text-xs); letter-spacing: var(--tracking); text-transform: uppercase;
+    color: var(--muted); transition: color var(--fast) var(--ease);
   }
-  .choice:hover span { border-color: var(--ink); }
-  .choice input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--wall); }
-  .choice input:focus-visible + span { outline: 1.5px solid var(--ink); outline-offset: 3px; }
+  .choice:hover, .choice:has(:checked) { color: var(--ink); }
+  .choice:has(:focus-visible) { outline: 1.5px solid var(--ink); outline-offset: 3px; }
+  .choice input { position: absolute; opacity: 0; pointer-events: none; }
 
-  .work { margin: calc(var(--space-m) * -1) 0 var(--space-l); font-size: var(--text-sm); color: var(--muted); }
+  .work { margin: var(--space-s) 0 0; font-size: var(--text-sm); color: var(--muted); }
   .work em { color: var(--ink); }
 
-  /* Fields: one line under the text, darker when focused */
+  /* Fields: a single line under the text, ink when focused */
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-l); }
   .field { margin-bottom: var(--space-l); }
   input:not([type='radio']), textarea {
@@ -165,20 +157,17 @@ const c = t.contact;
     font: inherit; font-size: var(--text-md); color: var(--ink);
   }
   input:not([type='radio']):focus, textarea:focus { outline: none; border-bottom-color: var(--ink); }
-  textarea { min-height: 8rem; resize: vertical; field-sizing: content; max-height: 24rem; }
+  textarea { resize: vertical; }
 
   .trap { position: absolute; left: -9999px; }
 
   .send { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-s) var(--space-m); }
-  .send .button span { margin-left: .5em; transition: transform var(--fast) var(--ease); }
-  .send .button:hover span { transform: translateX(.25rem); }
   .button:disabled { opacity: .6; cursor: wait; }
   .privacy { margin: 0; font-size: var(--text-xs); color: var(--muted); }
 
-  .done, .fail { padding-left: var(--space-m); font-size: var(--text-md); }
-  .done { border-left: 1px solid var(--ink); }
+  .done { font-size: var(--text-md); }
   .done:focus { outline: none; }
-  .fail { margin-top: var(--space-m); border-left: 1px solid var(--accent); color: var(--accent); }
+  .fail { margin-top: var(--space-m); font-size: var(--text-sm); color: var(--accent); }
 
   @media (max-width: 899px) {
     .contact { grid-template-columns: 1fr; gap: var(--space-l); }
