@@ -172,10 +172,11 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
         <div class="pattern">
           <div class="demo row-demo">
             <a class="button" href="#patterns">Enquire about this work</a>
+            <a class="button outline" href="#patterns">All works<span class="arrow" aria-hidden="true">→</span></a>
             <span class="button" aria-disabled="true">Unavailable</span>
           </div>
-          <code>.button</code>
-          <p class="use">The one action of a page. Solid ink, outlined on hover; <code>aria-disabled</code> when it cannot be used.</p>
+          <code>.button</code> · <code>.button.outline</code>
+          <p class="use">The one action of a page. Solid ink, outlined on hover; <code>aria-disabled</code> when it cannot be used. <code>.outline</code> is the lighter version for a way on to more, like All works on the home page; an <code>.arrow</code> span moves on hover.</p>
         </div>
 
         <div class="pattern">

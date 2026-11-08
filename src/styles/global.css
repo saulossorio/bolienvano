@@ -177,6 +177,11 @@ main > .section:last-child { padding-bottom: 0; }
   transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease);
 }
 .button:hover { background: transparent; color: var(--ink); }
+/* Outlined: a way on to more (All works), lighter than the page's one action */
+.button.outline { background: transparent; color: var(--ink); }
+.button.outline:hover { background: var(--ink); color: var(--wall); }
+.button .arrow { margin-left: .5em; transition: transform var(--fast) var(--ease); }
+.button:hover .arrow { transform: translateX(4px); }
 .button[aria-disabled='true'] { cursor: default; background: transparent; color: var(--muted); border-color: var(--line); }
 
 /* Form field: <input class="input"> or <textarea class="input">. A single line under

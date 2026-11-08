@@ -47,7 +47,7 @@ const works = slugs
         </figcaption>
       </figure>
     ))}
-    <a class="all" href={pageUrl('gallery')}>{t.home.allWorks} <span aria-hidden="true">→</span></a>
+    <a class="button outline all" href={pageUrl('gallery')}>{t.home.allWorks}<span class="arrow" aria-hidden="true">→</span></a>
   </div>
 
   <!-- Runs right away, before the page is painted, so no other work flashes first -->
@@ -104,15 +104,7 @@ const works = slugs
   .label em { color: var(--ink); }
 
   /* Small link to all the works, the same size as the label */
-  .all {
-    display: inline-flex; align-items: center; gap: .35em; height: var(--link); margin-top: var(--space-l);
-    font-size: var(--text-xs); letter-spacing: var(--tracking); text-transform: uppercase; text-decoration: none;
-    color: var(--muted); transition: color var(--fast) var(--ease);
-    animation: rise var(--slow) var(--ease) .4s both;
-  }
-  .all span { transition: transform var(--fast) var(--ease); }
-  .all:hover { color: var(--ink); }
-  .all:hover span { transform: translateX(.25rem); }
+  .all { margin-top: var(--space-l); animation: rise var(--slow) var(--ease) .4s both; }
 
   /* Phones: the work sits near the top and uses the full width */
   @media (max-width: 767px) {
