@@ -23,9 +23,10 @@ export function artworkImages(slug) {
 }
 
 // Address of the largest version of an image, for the full-screen viewer.
-// Uses the original size (up to 2400px), so sharper originals give sharper zoom.
+// Uses the original size (up to 3840px, the size of the watercolor photos), so sharper
+// originals give sharper zoom. Only loaded when the visitor opens the viewer.
 export async function largeUrl(src) {
-  const img = await getImage({ src, width: Math.min(src.width, 2400), format: 'webp', quality: 90 });
+  const img = await getImage({ src, width: Math.min(src.width, 3840), format: 'webp', quality: 90 });
   return img.src;
 }
 
