@@ -159,6 +159,18 @@ main > .section:last-child { padding-bottom: 0; }
 .button:hover { background: transparent; color: var(--ink); }
 .button[aria-disabled='true'] { cursor: default; background: transparent; color: var(--muted); border-color: var(--line); }
 
+/* Form field: <input class="input"> or <textarea class="input">. A single line under
+   the text, ink when focused; no boxes. The label above is an .eyebrow. */
+.input {
+  display: block; width: 100%;
+  padding: var(--space-2xs) 0;
+  border: 0; border-bottom: 1px solid var(--line); border-radius: 0;
+  background: transparent;
+  font: inherit; font-size: var(--text-md); color: var(--ink);
+}
+.input:focus { outline: none; border-bottom-color: var(--ink); }
+textarea.input { resize: vertical; }
+
 /* Choice: one option of a small set, a radio or checkbox inside a <label class="choice">.
    The same square and type as .button, but quiet: a thin outline until picked, then
    solid ink like a button. Set them in a row with a --space-2xs gap. */

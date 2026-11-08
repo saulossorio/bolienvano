@@ -1,7 +1,7 @@
 ---
 // Contact form (sent by contact.php on the server). Built only from the site's shared
-// patterns: .eyebrow labels, fields as a single --line under the text, the reason to
-// write as .choice options, one .button.
+// patterns: .eyebrow labels, .input fields, the reason to write as .choice options,
+// one .button. The design system page shows each of them.
 // Without JavaScript the form posts normally; with it, it sends in the background
 // and shows the thank-you or error message in place.
 // Coming from an artwork (?subject=Title (year)), "Buy a work" is picked and the
@@ -38,17 +38,17 @@ const c = t.contact;
         <div class="row2">
           <div class="field">
             <label class="eyebrow" for="name">{c.name}</label>
-            <input id="name" name="name" type="text" maxlength="256" autocomplete="name" />
+            <input class="input" id="name" name="name" type="text" maxlength="256" autocomplete="name" />
           </div>
           <div class="field">
             <label class="eyebrow" for="email">{c.email} <span aria-hidden="true">*</span><span class="visually-hidden">({c.required})</span></label>
-            <input id="email" name="email" type="email" maxlength="256" autocomplete="email" required />
+            <input class="input" id="email" name="email" type="email" maxlength="256" autocomplete="email" required />
           </div>
         </div>
 
         <div class="field">
           <label class="eyebrow" for="message">{c.message} <span aria-hidden="true">*</span><span class="visually-hidden">({c.required})</span></label>
-          <textarea id="message" name="message" maxlength="5000" rows="5" required></textarea>
+          <textarea class="input" id="message" name="message" maxlength="5000" rows="5" required></textarea>
         </div>
 
         {/* Spam trap: hidden from people, bots fill it in and get ignored */}
@@ -138,18 +138,9 @@ const c = t.contact;
   .work { margin: var(--space-m) 0 0; font-size: var(--text-sm); color: var(--muted); }
   .work em { color: var(--ink); }
 
-  /* Fields: a single line under the text, ink when focused */
+  /* Fields are .input (global.css) */
   .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-l); }
   .field { margin-bottom: var(--space-l); }
-  input:not([type='radio']), textarea {
-    display: block; width: 100%;
-    padding: var(--space-2xs) 0;
-    border: 0; border-bottom: 1px solid var(--line); border-radius: 0;
-    background: transparent;
-    font: inherit; font-size: var(--text-md); color: var(--ink);
-  }
-  input:not([type='radio']):focus, textarea:focus { outline: none; border-bottom-color: var(--ink); }
-  textarea { resize: vertical; }
 
   .trap { position: absolute; left: -9999px; }
 

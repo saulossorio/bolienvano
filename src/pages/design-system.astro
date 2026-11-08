@@ -198,10 +198,10 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
         <div class="pattern">
           <div class="demo">
             <label class="eyebrow" for="ds-field">Email</label>
-            <input class="field" id="ds-field" type="email" placeholder="name@example.com" />
+            <input class="input" id="ds-field" type="email" placeholder="name@example.com" />
           </div>
-          <code>Form field</code>
-          <p class="use">A single <code>--line</code> under the text, ink when focused. No boxes.</p>
+          <code>.input</code>
+          <p class="use">Form field: a single <code>--line</code> under the text, ink when focused. No boxes. Its label is an <code>.eyebrow</code>.</p>
         </div>
 
         <div class="pattern wide">
@@ -226,6 +226,35 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
       <p class="use">What a visitor can do about a work, on its page. A green dot means available (a red dot means sold in galleries).</p>
       <div class="availability-row">
         {examples.map((a) => <div><Availability artwork={a} title={artworkTitles[a.slug]} /></div>)}
+      </div>
+
+      <h3 class="eyebrow sub">Contact form · <code>pages/contact.astro</code></h3>
+      <p class="use">Only shared patterns: the reason to write as <code>.choice</code> options under an <code>.eyebrow</code>, <code>.input</code> fields (a <code>*</code> marks the required ones), one <code>.button</code> with the privacy line beside it. Coming from an artwork, "Buy a work" is picked and the work is named under the options. It never sends from this page.</p>
+      <div class="form-demo">
+        <fieldset class="topics">
+          <legend class="eyebrow">Subject</legend>
+          <div class="row-demo">
+            <label class="choice"><input type="radio" name="ds-topic" checked /> Buy a work</label>
+            <label class="choice"><input type="radio" name="ds-topic" /> Commission</label>
+            <label class="choice"><input type="radio" name="ds-topic" /> Exhibition</label>
+            <label class="choice"><input type="radio" name="ds-topic" /> Press</label>
+            <label class="choice"><input type="radio" name="ds-topic" /> Other</label>
+          </div>
+          <p class="work">Regarding <em>{artworkTitles[examples[0].slug]} ({examples[0].year})</em></p>
+        </fieldset>
+        <div class="form-row">
+          <div><label class="eyebrow" for="ds-name">Name</label><input class="input" id="ds-name" type="text" /></div>
+          <div><label class="eyebrow" for="ds-email">Email *</label><input class="input" id="ds-email" type="email" /></div>
+        </div>
+        <div><label class="eyebrow" for="ds-message">Message *</label><textarea class="input" id="ds-message" rows="3"></textarea></div>
+        <div class="send">
+          <span class="button">Send message</span>
+          <span class="privacy">Your details are only used to reply to you.</span>
+        </div>
+      </div>
+      <div class="messages">
+        <div><span class="eyebrow">Sent</span><p class="done">Thank you. Your message has been sent and I will reply soon.</p></div>
+        <div><span class="eyebrow">Error</span><p class="fail">The message could not be sent. Please try again in a moment.</p></div>
       </div>
 
       <h3 class="eyebrow sub">Also</h3>
@@ -315,20 +344,29 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
   .demo .section-head { margin: 0; }
   .links-demo, .row-demo { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: var(--space-2xs) var(--space-m); }
   .links-demo a { padding-block: var(--space-2xs); font-size: var(--text-xs); font-weight: 500; letter-spacing: var(--tracking); text-transform: uppercase; }
-  .row-demo { gap: var(--space-2xs); }
-  .field {
-    display: block; width: 100%; padding: var(--space-2xs) 0;
-    border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent;
-    font: inherit; font-size: var(--text-md); color: var(--ink);
-  }
-  .field:focus { outline: none; border-bottom-color: var(--ink); }
+  .row-demo { display: flex; gap: var(--space-2xs); }
+
+  /* Contact form: the same spacing as on the contact page */
+  .form-demo { display: flex; flex-direction: column; gap: var(--space-l); max-width: 44rem; margin-top: var(--space-m); padding: var(--space-l); border: 1px solid var(--line); }
+  .form-demo .eyebrow { margin-bottom: var(--space-2xs); }
+  .topics { margin: 0; padding: 0; border: 0; }
+  .topics legend { padding: 0; margin-bottom: var(--space-s); }
+  .work { margin: var(--space-m) 0 0; font-size: var(--text-sm); color: var(--muted); }
+  .work em { color: var(--ink); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-l); }
+  .send { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-s) var(--space-m); }
+  .privacy { font-size: var(--text-xs); color: var(--muted); }
+  .messages { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-m); max-width: 44rem; margin-top: var(--space-m); }
+  .messages p { margin: var(--space-2xs) 0 0; }
+  .done { font-size: var(--text-md); }
+  .fail { font-size: var(--text-sm); color: var(--accent); }
 
   /* Components */
   .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-m); margin-top: var(--space-m); }
   .availability-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-m); margin-top: var(--space-m); }
 
   @media (max-width: 767px) {
-    .families, .cards, .availability-row { grid-template-columns: 1fr; }
+    .families, .cards, .availability-row, .form-row, .messages { grid-template-columns: 1fr; }
     .type-row, .token-row { grid-template-columns: 1fr; gap: var(--space-3xs); }
     .space-row { grid-template-columns: 7rem minmax(0, 1fr); }
     .space-row .value { grid-column: 1 / -1; }
