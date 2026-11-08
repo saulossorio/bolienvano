@@ -11,7 +11,6 @@ const p = t.privacy;
   <div class="container privacy">
     <div class="text">
       <h1>{p.title}</h1>
-      <p class="updated">{p.updated}</p>
 
       {p.sections.map((s) => (
         <section>
@@ -28,7 +27,6 @@ const p = t.privacy;
   .privacy { padding-block: var(--space-xl) 0; }
   .text { max-width: 44rem; }
   h1 { margin: 0; }
-  .updated { margin: var(--space-xs) 0 0; font-size: var(--text-sm); color: var(--muted); }
 
   /* Same small uppercase section titles as the CV on the About page */
   section { margin-top: var(--space-l); padding-top: var(--space-s); border-top: 1px solid var(--line); }

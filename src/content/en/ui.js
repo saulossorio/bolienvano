@@ -115,7 +115,6 @@ export default {
   privacy: {
     title: 'Privacy',
     description: 'How bolienvano.com uses cookies and the messages sent through the contact form.',
-    updated: 'Last updated November 2026',
     sections: [
       {
         title: 'Cookies',
