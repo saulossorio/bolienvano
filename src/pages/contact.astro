@@ -1,42 +1,56 @@
 ---
-// Contact form (sent by contact.php on the server).
+// Contact form (sent by contact.php on the server). Fields are a single line under
+// the text, like a label on the wall; the reason to write is picked from a short row
+// of choices instead of typing a subject.
 // Without JavaScript the form posts normally; with it, it sends in the background
 // and shows the thank-you or error message in place.
+// Coming from an artwork (?subject=Title (year)), "Buying a work" is picked and the
+// work is named above the message.
 import Base from '../layouts/Base.astro';
 import { t } from '../content/index.js';
 import { assetUrl } from '../lib/urls.js';
 
+const c = t.contact;
 ---
-<Base title={t.contact.title} description={t.contact.description} path="contact" current="contact">
+<Base title={c.title} description={c.description} path="contact" current="contact">
   <div class="container contact">
     <div class="side">
-      <span class="eyebrow">{t.contact.title}</span>
-      <h1>{t.contact.heading}</h1>
-      <p class="lead">{t.contact.intro}</p>
-      <p class="where">{t.contact.mapTitle}</p>
+      <h1>{c.title}</h1>
+      <p class="lead">{c.intro}</p>
+      <p class="where">{c.mapTitle}</p>
     </div>
 
     <div>
       <form class="form" action={assetUrl('contact.php')} method="post" data-contact-form>
+        <fieldset class="topics">
+          <legend>{c.topic}</legend>
+          <div class="choices">
+            {Object.entries(c.topics).map(([value, label], i) => (
+              <label class="choice">
+                <input type="radio" name="topic" value={value} checked={i === 0} />
+                <span>{label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <p class="work" hidden data-work>{c.work} <em></em></p>
+        <input type="hidden" name="work" />
+
         <div class="row2">
           <div class="field">
-            <label for="name">{t.contact.name}</label>
+            <label for="name">{c.name}</label>
             <input id="name" name="name" type="text" maxlength="256" autocomplete="name" />
           </div>
           <div class="field">
-            <label for="email">{t.contact.email}</label>
+            <label for="email">{c.email} <span class="req" aria-hidden="true">*</span><span class="visually-hidden">({c.required})</span></label>
             <input id="email" name="email" type="email" maxlength="256" autocomplete="email" required />
           </div>
         </div>
 
         <div class="field">
-          <label for="subject">{t.contact.subject}</label>
-          <input id="subject" name="subject" type="text" maxlength="256" />
-        </div>
-
-        <div class="field">
-          <label for="message">{t.contact.message}</label>
-          <textarea id="message" name="message" maxlength="5000" required></textarea>
+          <label for="message">{c.message} <span class="req" aria-hidden="true">*</span><span class="visually-hidden">({c.required})</span></label>
+          <textarea id="message" name="message" maxlength="5000" rows="5" required></textarea>
         </div>
 
         {/* Spam trap: hidden from people, bots fill it in and get ignored */}
@@ -45,11 +59,14 @@ import { assetUrl } from '../lib/urls.js';
           <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
         </div>
 
-        <button class="button" type="submit" data-sending={t.contact.sending}>{t.contact.submit}</button>
+        <div class="send">
+          <button class="button" type="submit" data-sending={c.sending}>{c.submit} <span aria-hidden="true">→</span></button>
+          <p class="privacy">{c.privacy}</p>
+        </div>
       </form>
 
-      <p class="done" role="status" hidden>{t.contact.done}</p>
-      <p class="fail" role="alert" hidden>{t.contact.fail}</p>
+      <p class="done" role="status" tabindex="-1" hidden>{c.done}</p>
+      <p class="fail" role="alert" hidden>{c.fail}</p>
     </div>
   </div>
 </Base>
@@ -67,9 +84,15 @@ import { assetUrl } from '../lib/urls.js';
     if (params.has('sent')) { form.hidden = true; done.hidden = false; }
     if (params.has('error')) fail.hidden = false;
 
-    // Coming from an artwork: its title is already in the subject
-    const subject = params.get('subject');
-    if (subject) form.querySelector('#subject').value = subject.slice(0, 256);
+    // Coming from an artwork: about buying it, with the work named above the message
+    const work = params.get('subject')?.slice(0, 256);
+    if (work) {
+      form.querySelector('input[value="buy"]').checked = true;
+      form.elements.work.value = work;
+      const line = form.querySelector('[data-work]');
+      line.querySelector('em').textContent = work;
+      line.hidden = false;
+    }
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -85,6 +108,7 @@ import { assetUrl } from '../lib/urls.js';
         if (!response.ok) throw new Error(String(response.status));
         form.hidden = true;
         done.hidden = false;
+        done.focus();
       } catch {
         fail.hidden = false;
       } finally {
@@ -101,37 +125,65 @@ import { assetUrl } from '../lib/urls.js';
     gap: var(--space-xl); align-items: start;
     padding-block: var(--space-xl) 0;
   }
+  .side h1 { margin-bottom: var(--space-m); }
   .lead { max-width: 30ch; font-size: var(--text-md); color: var(--muted); }
   .where { font-size: var(--text-sm); color: var(--muted); }
 
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-m); }
-  .field { margin-bottom: var(--space-m); }
-  label {
-    display: block; margin-bottom: var(--space-2xs);
+  /* Small uppercase labels, like the CV and the artwork details */
+  label, legend {
+    display: block; padding: 0;
     font-size: var(--text-xs); font-weight: 500; letter-spacing: var(--tracking); text-transform: uppercase;
     color: var(--muted);
   }
-  input, textarea {
-    display: block; width: 100%;
-    padding: var(--space-xs) var(--space-s);
-    border: 1px solid var(--line); border-radius: 0;
-    background: var(--paper);
-    font: inherit; color: var(--ink);
-    transition: border-color var(--fast) var(--ease);
+  .req { color: var(--ink); }
+
+  /* Reason to write: a row of quiet choices; the picked one is filled with ink */
+  .topics { margin: 0 0 var(--space-l); padding: 0; border: 0; }
+  .topics legend { margin-bottom: var(--space-xs); }
+  .choices { display: flex; flex-wrap: wrap; gap: var(--space-2xs); }
+  .choice { position: relative; margin: 0; letter-spacing: normal; text-transform: none; }
+  .choice input { position: absolute; opacity: 0; pointer-events: none; }
+  .choice span {
+    display: inline-flex; align-items: center; min-height: 2.5rem; padding: 0 var(--space-s);
+    border: 1px solid var(--line); border-radius: 999px;
+    font-size: var(--text-sm); color: var(--ink); cursor: pointer;
+    transition: background-color var(--fast) var(--ease), color var(--fast) var(--ease), border-color var(--fast) var(--ease);
   }
-  input:focus, textarea:focus { outline: none; border-color: var(--ink); }
-  textarea { min-height: 10rem; resize: vertical; }
+  .choice:hover span { border-color: var(--ink); }
+  .choice input:checked + span { background: var(--ink); border-color: var(--ink); color: var(--wall); }
+  .choice input:focus-visible + span { outline: 1.5px solid var(--ink); outline-offset: 3px; }
+
+  .work { margin: calc(var(--space-m) * -1) 0 var(--space-l); font-size: var(--text-sm); color: var(--muted); }
+  .work em { color: var(--ink); }
+
+  /* Fields: one line under the text, darker when focused */
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--space-l); }
+  .field { margin-bottom: var(--space-l); }
+  input:not([type='radio']), textarea {
+    display: block; width: 100%;
+    padding: var(--space-2xs) 0;
+    border: 0; border-bottom: 1px solid var(--line); border-radius: 0;
+    background: transparent;
+    font: inherit; font-size: var(--text-md); color: var(--ink);
+  }
+  input:not([type='radio']):focus, textarea:focus { outline: none; border-bottom-color: var(--ink); }
+  textarea { min-height: 8rem; resize: vertical; field-sizing: content; max-height: 24rem; }
 
   .trap { position: absolute; left: -9999px; }
 
+  .send { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-s) var(--space-m); }
+  .send .button span { margin-left: .5em; transition: transform var(--fast) var(--ease); }
+  .send .button:hover span { transform: translateX(.25rem); }
   .button:disabled { opacity: .6; cursor: wait; }
+  .privacy { margin: 0; font-size: var(--text-xs); color: var(--muted); }
 
-  .done, .fail { padding: var(--space-m); }
-  .done { background: var(--paper); border-left: 2px solid var(--ink); }
-  .fail { background: color-mix(in srgb, var(--accent) 10%, var(--wall)); border-left: 2px solid var(--accent); }
+  .done, .fail { padding-left: var(--space-m); font-size: var(--text-md); }
+  .done { border-left: 1px solid var(--ink); }
+  .done:focus { outline: none; }
+  .fail { margin-top: var(--space-m); border-left: 1px solid var(--accent); color: var(--accent); }
 
   @media (max-width: 899px) {
-    .contact { grid-template-columns: 1fr; }
+    .contact { grid-template-columns: 1fr; gap: var(--space-l); }
   }
   @media (max-width: 599px) {
     .row2 { grid-template-columns: 1fr; }

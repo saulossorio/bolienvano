@@ -13,6 +13,7 @@ import '@fontsource-variable/familjen-grotesk';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import CookieNotice from '../components/CookieNotice.astro';
 import { t } from '../content/index.js';
 import { pageUrl, assetUrl } from '../lib/urls.js';
 import { siteGraph } from '../lib/schema.js';
@@ -70,6 +71,19 @@ const GTM_ID = 'GTM-5J63MXV';
   <meta name="twitter:card" content="summary_large_image" />
   <script type="application/ld+json" set:html={jsonLd} />
 
+  {/* Consent first (Google Consent Mode): analytics may only use cookies once the
+      visitor accepts in the cookie notice (CookieNotice.astro); until then GA4 sends
+      cookieless pings. No ads, so ad storage is always denied. */}
+  <script is:inline>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    var consent = 'denied';
+    try { if (localStorage.getItem('cookies') === 'granted') consent = 'granted'; } catch (e) {}
+    gtag('consent', 'default', {
+      analytics_storage: consent, ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+    });
+  </script>
+
   {/* Google Tag Manager. GA4 is configured inside GTM, not loaded separately.
       Loaded once the page has finished loading (and the browser is idle), so the
       ~300 KB of analytics never delays the artworks. */}
@@ -102,5 +116,6 @@ const GTM_ID = 'GTM-5J63MXV';
     <slot />
   </main>
   <Footer />
+  <CookieNotice />
 </body>
 </html>

@@ -77,9 +77,13 @@ Exception: `src/pages/invitacion.astro` keeps its own sizes (it reproduces the p
 
 ## Contact form
 
-`public/contact.php` sends the form to bolienvano@gmail.com. It needs PHP, so it works on
-Hostinger but not on the GitHub Pages preview.
+`public/contact.php` sends the form to bolienvano@gmail.com, with the reason picked in the
+form (and the artwork, when the visitor came from one) in the email subject. It needs PHP,
+so it works on Hostinger but not on the GitHub Pages preview.
 
 ## Analytics
 
 Google Tag Manager (`GTM-5J63MXV`) is the only script loaded; GA4 is configured inside it.
+It runs with Google Consent Mode: no analytics cookies until the visitor accepts the cookie
+notice (`src/components/CookieNotice.astro`); the "Cookies" link in the footer changes the
+choice. The GA4 tag in GTM must keep its built-in consent checks on.

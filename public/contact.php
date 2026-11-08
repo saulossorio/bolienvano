@@ -34,14 +34,17 @@ $clean = fn ($value, $max) => mb_substr(trim(str_replace(["\r", "\n"], ' ', (str
 
 $name    = $clean($_POST['name'] ?? '', 256);
 $email   = $clean($_POST['email'] ?? '', 256);
-$subject = $clean($_POST['subject'] ?? '', 256);
+$work    = $clean($_POST['work'] ?? '', 256);
+// Reason chosen in the form; anything unexpected counts as 'Something else'
+$topics  = ['buy' => 'Buying a work', 'commission' => 'A commission', 'exhibition' => 'An exhibition', 'press' => 'Press', 'other' => 'Something else'];
+$topic   = $topics[(string) ($_POST['topic'] ?? '')] ?? $topics['other'];
 $message = mb_substr(trim((string) ($_POST['message'] ?? '')), 0, 5000);
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $message === '') {
     finish(400, $isFetch);
 }
 
-$body = "From: $name\nEmail: $email\nSubject: $subject\n\n$message\n";
+$body = "From: $name\nEmail: $email\nAbout: $topic" . ($work !== '' ? " ($work)" : '') . "\n\n$message\n";
 
 $headers = [
     'From'         => FROM,
@@ -49,5 +52,7 @@ $headers = [
     'Content-Type' => 'text/plain; charset=utf-8',
 ];
 
-$sent = mail(RECIPIENT, 'Contact | Andy S.', $body, $headers);
+// Encoded so accented titles arrive intact in the subject line
+$subject = mb_encode_mimeheader("Contact | $topic" . ($work !== '' ? " | $work" : ''), 'UTF-8');
+$sent = mail(RECIPIENT, $subject, $body, $headers);
 finish($sent ? 200 : 500, $isFetch);

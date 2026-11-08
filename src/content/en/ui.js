@@ -85,17 +85,30 @@ export default {
   contact: {
     title: 'Contact',
     description: 'Get in touch with the artist Andy S.',
-    heading: 'Get in touch',
     intro: 'For artworks, commissions, exhibitions or press. I usually reply within a few days.',
+    mapTitle: 'Based in Curitiba, Brazil',
     name: 'Name',
     email: 'Email',
-    subject: 'Subject',
+    topic: 'About',
+    // Reasons to write, sent as the email subject. 'buy' is picked when coming from an artwork.
+    topics: { buy: 'Buying a work', commission: 'A commission', exhibition: 'An exhibition', press: 'Press', other: 'Something else' },
+    work: 'Regarding',
     message: 'Message',
-    submit: 'Submit',
-    sending: 'Please wait...',
-    done: "Thank you for your message! I'll be in contact very soon.",
-    fail: 'Oops! Something went wrong while submitting the form. Please contact me in a different way.',
-    mapTitle: 'Based in Curitiba, Brazil',
+    required: 'required',
+    privacy: 'Your details are only used to reply to you.',
+    submit: 'Send message',
+    sending: 'Sending…',
+    done: 'Thank you. Your message has been sent and I will reply soon.',
+    fail: 'The message could not be sent. Please try again in a moment.',
+  },
+
+  // Cookie notice: analytics only run after the visitor agrees
+  cookies: {
+    label: 'Cookies',
+    text: 'May this site use cookies to count visits? Nothing else is tracked.',
+    accept: 'Accept',
+    decline: 'Decline',
+    settings: 'Cookies',
   },
 
   nft: {

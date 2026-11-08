@@ -1,0 +1,68 @@
+---
+// Cookie notice: a small note in the bottom corner the first time someone visits.
+// Analytics (GA4 inside GTM) start without cookies (Google Consent Mode, see
+// Base.astro) and only use them after "Accept". The choice is remembered; the
+// "Cookies" link in the footer opens the note again to change it.
+// Without JavaScript nothing shows, and no analytics run either.
+import { t } from '../content/index.js';
+---
+<aside class="cookies" aria-label={t.cookies.label} hidden data-cookies>
+  <p>{t.cookies.text}</p>
+  <div class="actions">
+    <button class="line-link" type="button" data-consent="granted">{t.cookies.accept}</button>
+    <button class="line-link" type="button" data-consent="denied">{t.cookies.decline}</button>
+  </div>
+</aside>
+
+<script>
+  const note = document.querySelector('[data-cookies]');
+  let choice = null;
+  try { choice = localStorage.getItem('cookies'); } catch {}
+  if (!choice) note.hidden = false;
+
+  // Same queue Base.astro and GTM use; gtag needs the arguments object, not an array
+  function gtag(..._args) { window.dataLayer.push(arguments); }
+
+  note.querySelectorAll('[data-consent]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const value = button.dataset.consent;
+      gtag('consent', 'update', { analytics_storage: value });
+      try { localStorage.setItem('cookies', value); } catch {}
+      // Declining after accepting: remove the analytics cookies already set
+      if (value === 'denied') {
+        document.cookie.split('; ').map((c) => c.split('=')[0]).filter((name) => name.startsWith('_ga'))
+          .forEach((name) => { document.cookie = `${name}=; max-age=0; path=/; domain=.${location.hostname.replace(/^www\./, '')}`; });
+      }
+      note.hidden = true;
+    });
+  });
+
+  document.querySelectorAll('[data-cookies-open]').forEach((link) => {
+    link.hidden = false;
+    link.addEventListener('click', () => { note.hidden = false; note.querySelector('button').focus(); });
+  });
+</script>
+
+<style>
+  .cookies {
+    position: fixed; left: var(--gutter); bottom: var(--space-m); z-index: 10;
+    max-width: 22rem; padding: var(--space-s) var(--space-m);
+    background: var(--paper); border: 1px solid var(--line);
+    font-size: var(--text-xs); line-height: 1.5; color: var(--muted);
+    animation: rise var(--slow) var(--ease) 1s both;   /* after the artwork has appeared */
+  }
+  .cookies[hidden] { display: none; }
+  @keyframes rise { from { opacity: 0; transform: translateY(.5rem); } }
+  p { margin: 0 0 var(--space-xs); }
+
+  /* Both answers look the same: declining is as easy as accepting */
+  .actions { display: flex; gap: var(--space-m); }
+  button {
+    padding: var(--space-3xs) 0; border: 0; background: none; cursor: pointer;
+    font: inherit; font-weight: 500; letter-spacing: var(--tracking); text-transform: uppercase; color: var(--ink);
+  }
+
+  @media (max-width: 599px) {
+    .cookies { left: var(--space-s); right: var(--space-s); bottom: var(--space-s); max-width: none; }
+  }
+</style>

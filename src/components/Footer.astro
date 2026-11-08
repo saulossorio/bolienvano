@@ -1,6 +1,7 @@
 ---
 // Footer: one quiet line: social links and credits. No email address in the page
 // (spam bots harvest it); people write through the contact form.
+// "Cookies" reopens the cookie notice (CookieNotice.astro); it shows only with JavaScript.
 import { t } from '../content/index.js';
 import { socials } from '../data/socials.js';
 
@@ -18,7 +19,10 @@ const year = new Date().getFullYear();
           </li>
         ))}
       </ul>
-      <p class="credits">© {year} {t.site.name}</p>
+      <p class="credits">
+        <button class="cookies-link" type="button" hidden data-cookies-open>{t.cookies.settings}</button>
+        © {year} {t.site.name}
+      </p>
     </div>
   </div>
 </footer>
@@ -35,6 +39,8 @@ const year = new Date().getFullYear();
   .socials a { color: var(--ink); text-decoration: none; }
   .socials a:hover { text-decoration: underline; }
 
-  .credits { margin: 0; }
+  .credits { display: flex; gap: var(--space-m); margin: 0; }
+  .cookies-link { padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
+  .cookies-link:hover { color: var(--ink); text-decoration: underline; }
   .credits a:hover { text-decoration: underline; }
 </style>
