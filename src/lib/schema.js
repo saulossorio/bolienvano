@@ -79,7 +79,7 @@ export function exhibitionSchema(exhibition, site, imageUrl) {
     description: text.summary,
     startDate: exhibition.date,
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    location: { '@type': 'Place', name: text.venue, address: text.venue },
+    location: { '@type': 'Place', name: text.venue, address: { '@type': 'PostalAddress', addressLocality: text.city, addressCountry: text.country } },
     organizer: { '@id': artistId(site) },
     workFeatured: (exhibition.works ?? []).map((slug) => ({ '@id': `${url(`gallery/${slug}`, site)}#artwork` })),
   };

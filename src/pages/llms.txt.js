@@ -37,7 +37,7 @@ export function GET({ site }) {
     '',
     ...exhibitions.map((e) => {
       const x = exhibitionTexts[e.slug];
-      return `- [${x.title}](${url(`exhibitions/${e.slug}`)}): opened ${e.date}, ${x.venue}. ${x.summary}`;
+      return `- [${x.title}](${url(`exhibitions/${e.slug}`)}): opened ${e.date} at ${x.venue}, ${x.city}, ${x.country}. ${x.summary}`;
     }),
     '',
     '## Profiles',

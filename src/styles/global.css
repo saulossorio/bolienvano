@@ -125,6 +125,11 @@ main > .section:last-child { padding-bottom: 0; }
    width. Numbers are never set in Syne, whose figures are too decorative. */
 .numeral { font-family: var(--sans); font-weight: 400; letter-spacing: 0; font-variant-numeric: tabular-nums; }
 
+/* Where something took place: the venue, then city and country on a line of their own
+   in the secondary color. <span class="place"><span>Venue</span><span class="city">City, Country</span></span> */
+.place { display: flex; flex-direction: column; }
+.place .city { color: var(--muted); }
+
 /* Small uppercase line above a heading */
 .eyebrow {
   display: block;

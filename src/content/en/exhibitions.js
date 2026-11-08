@@ -1,10 +1,14 @@
 // Exhibition texts in English, by slug (see src/data/exhibitions.js).
+//   venue    the place (museum, gallery, cultural center); city and country apart,
+//            so pages can show the venue on one line and the city on the next
 //   summary  short text for the exhibitions list
 //   body     paragraphs of the exhibition page; <em> and <br> are allowed
 export default {
   'cor-ne-edito': {
     title: 'Cor ne edito',
-    venue: 'Cultural Center Casa Melchor Pinto, Santa Cruz de la Sierra, Bolivia',
+    venue: 'Cultural Center Casa Melchor Pinto',
+    city: 'Santa Cruz de la Sierra',
+    country: 'Bolivia',
     summary: '"Do not consume the heart" is the phrase that inspires this art exhibition: twelve watercolor portraits of women exploring various nuances of human anguish.',
     body: [
       '"Do not consume the heart" is the phrase that inspires this art exhibition, where we explore various nuances of human anguish through the unique expression of twelve watercolor portraits of women. These artworks become intimate portraits that reveal the subtleties and complexities of this emotion, inviting the viewer to immerse themselves in its depth, capturing the fragility and ephemeral beauty that lie within it.',
@@ -16,7 +20,9 @@ export default {
 
   'hiperconciencia': {
     title: 'Hiperconciencia',
-    venue: 'Contemporary Art Museum, Santa Cruz de la Sierra, Bolivia',
+    venue: 'Contemporary Art Museum',
+    city: 'Santa Cruz de la Sierra',
+    country: 'Bolivia',
     summary: 'The exhibition, made up of works done in nanking ink on Canson paper, presents us with female figures portrayed in black and white, portrayed with pensive expressions and a certain degree of melancholy. The main theme deals with altered perceptions of reality from the perspective of hidden emotions, often mistakenly considered as something negative.',
     body: [
       'On August 4, the inauguration of the art exhibition entitled "Hiperconciencia" was held. The exhibition, made up of works done in nanking ink on Canson paper, presents us with female figures portrayed in black and white, portrayed with pensive expressions and a certain degree of melancholy. The main theme deals with altered perceptions of reality from the perspective of hidden emotions, often mistakenly considered as something negative. The works are registered in a blockchain and have integrated chips that allow the visitor quick access to their respective technical information, as well as their certificates of authenticity.',
@@ -30,7 +36,9 @@ export default {
 
   'introspeccion': {
     title: 'Introspección',
-    venue: 'Picasso Gallery Garten Shopping, Joinville, Brazil',
+    venue: 'Picasso Gallery Garten Shopping',
+    city: 'Joinville',
+    country: 'Brazil',
     summary: 'In Introspección the works present opaque colors and empty backgrounds. With the frequent use of black, occupying large portions of the canvas, the artist seeks to materialize anguishes and anxieties that remain present or that rush the person, limiting his ability to see reality beyond his four walls.',
     body: [
       "The Art Gallery of Garten Shopping receives the exhibition <em>Introspección</em> by the bolivian artist Andy Ossorio. This is the artist's first solo exhibition in Brazil. The exhibition opened on July 31, 2021, and could be visited until August 31.",

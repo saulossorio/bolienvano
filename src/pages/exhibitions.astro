@@ -32,7 +32,7 @@ import { formatDate } from '../lib/dates.js';
             <div class="text">
               <p class="eyebrow"><time datetime={e.date}>{formatDate(e.date)}</time></p>
               <h2><a href={pageUrl(`exhibitions/${e.slug}`)}>{text.title}</a></h2>
-              <p class="venue">{text.venue}</p>
+              <p class="venue place"><span>{text.venue}</span><span class="city">{text.city}, {text.country}</span></p>
               <p class="summary">{text.summary}</p>
               <span class="more" aria-hidden="true">{t.exhibitions.read}</span>
             </div>
@@ -65,7 +65,7 @@ import { formatDate } from '../lib/dates.js';
   h2 a { text-decoration: none; }
   h2 a::after { content: ''; position: absolute; inset: 0; }
   .row:hover h2 a { text-decoration: underline; text-decoration-thickness: 1px; }
-  .venue { font-size: var(--text-sm); color: var(--muted); }
+  .venue { font-size: var(--text-sm); }
   .summary { max-width: 46ch; }
 
   @media (max-width: 767px) {

@@ -14,18 +14,22 @@ import { artistId } from '../lib/schema.js';
 // Picture shown when the page is shared: a work, not a portrait
 const shareImage = artworkImages('invisible')[0].src;
 
+// The venue, then its city and country, on lines of their own under an entry (.place)
+const place = ({ venue, city, country }) =>
+  venue ? `<span class="place"><span>${venue}</span><span class="city">${city}, ${country}</span></span>` : '';
+
 const sections = [
   {
     title: t.about.solo,
     rows: exhibitions.map((e) => ({
       year: e.date.slice(0, 4),
-      html: `<em>${exhibitionTexts[e.slug].title}</em>, ${exhibitionTexts[e.slug].venue}`,
+      html: `<em>${exhibitionTexts[e.slug].title}</em>` + place(exhibitionTexts[e.slug]),
       href: pageUrl(`exhibitions/${e.slug}`),
     })),
   },
   {
     title: t.about.projects,
-    rows: projects.map((p) => ({ year: p.year, html: p.text, href: p.link && pageUrl(p.link) })),
+    rows: projects.map((p) => ({ year: p.year, html: p.text + place(p), href: p.link && pageUrl(p.link) })),
   },
 ].filter((s) => s.rows.length);
 ---
@@ -83,7 +87,8 @@ const sections = [
     font-size: var(--text-sm); line-height: 1.5;
   }
   .year { color: var(--muted); font-variant-numeric: tabular-nums; }
-  .cv a { text-decoration: none; }
+  .cv a { display: block; text-decoration: none; }
+  .cv .place { margin-top: var(--space-3xs); }
   .cv a:hover { text-decoration: underline; text-underline-offset: .2em; }
 
 </style>
