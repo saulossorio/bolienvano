@@ -90,8 +90,9 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
       <div class="families">
         <div>
           <span class="eyebrow">Display · <code>--display</code></span>
-          <p class="specimen display">Syne</p>
-          <p class="use">The name, titles and big numbers. Made by Bonjour Monde for Synesthésie, an art centre near Paris.</p>
+          <p class="specimen display">Syne <span class="weight">400 · titles</span></p>
+          <p class="specimen display bold">Andy S. <span class="weight">600 · the name in the top bar</span></p>
+          <p class="use">The name, titles and big numbers. Syne grows wider as it gets bolder, so the name looks different from the titles. Made by Bonjour Monde for Synesthésie, an art centre near Paris.</p>
         </div>
         <div>
           <span class="eyebrow">Text · <code>--sans</code></span>
@@ -274,6 +275,8 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
   .families { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-l); }
   .specimen { margin: 0 0 var(--space-2xs); font-size: var(--text-3xl); line-height: 1.1; }
   .display { font-family: var(--display); }
+  .bold { font-weight: 600; letter-spacing: -.01em; }
+  .weight { font-family: var(--sans); font-size: var(--text-xs); font-weight: 400; letter-spacing: normal; color: var(--muted); }
   .sans { font-family: var(--sans); }
   .type-row { display: grid; grid-template-columns: minmax(0, 1fr) 18rem; align-items: baseline; gap: var(--space-m); }
   .sample { font-family: var(--display); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
