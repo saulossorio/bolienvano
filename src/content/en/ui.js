@@ -120,7 +120,7 @@ export default {
       {
         title: 'Cookies',
         paragraphs: [
-          'Only if you accept, this site uses Google Analytics to count visits and see which pages are read. It sets two cookies, <em>_ga</em> and <em>_ga_SSX1X19GRH</em>, which last up to two years. Google receives your visit without your name or email. There is no advertising and nothing is sold or shared.',
+          'Only if you accept, this site uses Google Analytics to count visits and see which pages are read. Its cookies last up to two years. Google receives your visit without your name or email. There is no advertising and nothing is sold or shared.',
           'If you decline, no analytics cookies are set and the cookies set before are removed.',
         ],
         change: true,
