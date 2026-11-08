@@ -7,9 +7,9 @@
 
 :root {
   /* Colors: light (the gallery wall) and dark (the same room with the lights down).
-     The page follows the visitor's system setting until they use the switch in the
-     header; then data-theme on <html> (set in Base.astro) fixes one of the two. */
-  color-scheme: light dark;
+     The page is light until the visitor picks dark with the switch in the header;
+     data-theme on <html> (set in Base.astro) keeps that choice. */
+  color-scheme: light;
   --wall:      light-dark(#f9f8f6, #0f0e0d);   /* page background; a bit lighter (darker) than meant, because
                                                  --grain over it averages to the wall in the artwork photos,
                                                  #f2f1ef (and #171615 in dark mode) */
@@ -80,7 +80,6 @@
 @media (max-width: 767px) { :root { --bar: 4rem; } }
 :root[data-theme='light'] { color-scheme: light; }
 :root[data-theme='dark']  { color-scheme: dark; --blend: normal; --edge-fade: 0%; --sheet-shadow: 0 8px 24px -6px rgb(0 0 0 / 50%); --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.045 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); }
-@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) { --blend: normal; --edge-fade: 0%; --sheet-shadow: 0 8px 24px -6px rgb(0 0 0 / 50%); --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0.045 0 0 0 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); } }
 
 *, *::before, *::after { box-sizing: border-box; }
 

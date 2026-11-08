@@ -43,8 +43,8 @@ const GTM_ID = 'GTM-5J63MXV';
   <link rel="icon" type="image/png" href={assetUrl('favicon.png')} />
   <link rel="apple-touch-icon" href={assetUrl('webclip.webp')} />
 
-  {/* Light or dark, if the visitor chose one with the switch in the header (else the
-      system setting decides, see global.css). Then the image fade-in (see global.css):
+  {/* Light or dark, if the visitor chose one with the switch in the header (else light,
+      see global.css). Then the image fade-in (see global.css):
       mark each image once it has loaded or failed. Runs in <head> so the colors are
       right before the first paint and the listener is in place before the first image. */}
   <script is:inline>
