@@ -31,7 +31,11 @@ import { t } from '../content/index.js';
       // Declining after accepting: remove the analytics cookies already set
       if (value === 'denied') {
         document.cookie.split('; ').map((c) => c.split('=')[0]).filter((name) => name.startsWith('_ga'))
-          .forEach((name) => { document.cookie = `${name}=; max-age=0; path=/; domain=.${location.hostname.replace(/^www\./, '')}`; });
+          .forEach((name) => {
+            // GA sets them on the main domain; clear that one and the current host too
+            document.cookie = `${name}=; max-age=0; path=/; domain=.${location.hostname.replace(/^www\./, '')}`;
+            document.cookie = `${name}=; max-age=0; path=/`;
+          });
       }
       note.hidden = true;
     });
