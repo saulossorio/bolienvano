@@ -86,7 +86,7 @@ const active = current === 'nft' ? 'gallery' : current;
 
   .logo {
     font-family: var(--display);
-    font-size: var(--text-lg); font-weight: 600; line-height: 1; letter-spacing: -.01em;
+    font-size: var(--text-lg); font-weight: 400; line-height: 1; letter-spacing: -.01em;   /* Syne widens as it gets bolder; 400 keeps the titles' proportions */
     text-decoration: none;
   }
 
@@ -154,7 +154,7 @@ const active = current === 'nft' ? 'gallery' : current;
     /* Same name as in the bar behind, so nothing jumps when the menu opens */
     .menu-top .logo {
       padding: 0;
-      font-family: var(--display); font-size: var(--text-lg); font-weight: 600;
+      font-family: var(--display); font-size: var(--text-lg); font-weight: 400;
       letter-spacing: -.01em; text-transform: none;
     }
     .menu-top .logo::after { display: none; }
