@@ -37,6 +37,24 @@ jobs:
           args: --offline --include-fragments --root-dir "${{ github.workspace }}/dist" --no-progress "dist/**/*.html"
           fail: true
 
+      # The contact form handler: valid PHP, and its spam rules answer as expected.
+      # The runner has no mail server, so a message that passes every rule ends in 500.
+      - name: Check contact.php
+        run: |
+          php -l public/contact.php
+          php -S 127.0.0.1:8080 -t public >/dev/null 2>&1 &
+          sleep 1
+          post() { curl -s -o /dev/null -w '%{http_code}' -H 'X-Requested-With: fetch' "$@" http://127.0.0.1:8080/contact.php; }
+          ok='-d email=a@example.com -d name=Maria -d message=Hello+there'
+          check() { got=$1; want=$2; echo "$3: $got"; [ "$got" = "$want" ]; }
+          check "$(curl -s -o /dev/null -w '%{http_code}' -H 'X-Requested-With: fetch' http://127.0.0.1:8080/contact.php)" 405 'GET'
+          check "$(post $ok)" 400 'no elapsed (not sent from the page)'
+          check "$(post $ok -d elapsed=10 -d website=x)" 200 'trap field filled'
+          check "$(post $ok -d elapsed=1)" 200 'too fast'
+          check "$(post -d email=a@example.com -d name=NARETGR292825NEHTYHYHTR -d message=MEKYUJTYJ292825MAERWETT -d elapsed=10)" 200 'gibberish'
+          for i in 1 2 3 4 5; do check "$(post $ok -d elapsed=10)" 500 "real message $i"; done
+          check "$(post $ok -d elapsed=10)" 429 'sixth in an hour'
+
       - uses: actions/upload-artifact@v7
         with:
           name: site

@@ -100,6 +100,7 @@ export default {
     sending: 'Sending…',
     done: 'Thank you. Your message has been sent and I will reply soon.',
     fail: 'The message could not be sent. Please try again in a moment.',
+    noscript: 'Sending needs JavaScript turned on in your browser.',
   },
 
   // Cookie notice: analytics only run after the visitor agrees

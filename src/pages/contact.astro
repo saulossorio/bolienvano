@@ -2,8 +2,9 @@
 // Contact form (sent by contact.php on the server). Built only from the site's shared
 // patterns: .eyebrow labels, .input fields, the reason to write as .choice options,
 // one .button. The design system page shows each of them.
-// Without JavaScript the form posts normally; with it, it sends in the background
-// and shows the thank-you or error message in place.
+// It sends in the background and shows the thank-you or error message in place.
+// Sending needs JavaScript: the script adds how long the visitor spent on the page,
+// and contact.php refuses posts without it (bots post straight to the PHP file).
 // Coming from an artwork (?subject=Title (year)), "Buy a work" is picked and the
 // work is named above the message.
 import Base from '../layouts/Base.astro';
@@ -51,6 +52,9 @@ const c = t.contact;
           <textarea class="input" id="message" name="message" maxlength="5000" rows="5" required></textarea>
         </div>
 
+        <input type="hidden" name="elapsed" />
+        <noscript><p class="fail">{c.noscript}</p></noscript>
+
         {/* Spam trap: hidden from people, bots fill it in and get ignored */}
         <div class="trap" aria-hidden="true">
           <label for="website">Website</label>
@@ -76,6 +80,7 @@ const c = t.contact;
     const done = document.querySelector('.done');
     const fail = document.querySelector('.fail');
     const label = button.textContent;
+    const opened = performance.now();
 
     // Coming back from contact.php after a submit without JavaScript
     const params = new URLSearchParams(location.search);
@@ -97,6 +102,8 @@ const c = t.contact;
       button.disabled = true;
       button.textContent = button.dataset.sending;
       fail.hidden = true;
+      // Seconds on the page: contact.php ignores forms sent faster than a person can type
+      form.elements.elapsed.value = String(Math.round((performance.now() - opened) / 1000));
       try {
         const response = await fetch(form.action, {
           method: 'POST',
