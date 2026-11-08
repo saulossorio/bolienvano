@@ -10,7 +10,7 @@ import Base from '../layouts/Base.astro';
 import { t, artworkTitles } from '../content/index.js';
 import { artworks } from '../data/artworks.js';
 import { pageUrl } from '../lib/urls.js';
-import { artworkImages } from '../lib/images.js';
+import { artworkImages, isSheet } from '../lib/images.js';
 
 // The works that can appear on the home page. They should all be photos of the
 // work alone (not on a wall), so the page always looks the same.
@@ -29,7 +29,7 @@ const works = slugs
 
   <div class="home container">
     {works.map((w, i) => (
-      <figure class:list={['work', { 'is-shown': i === 0 }]} data-work>
+      <figure class:list={['work', { 'is-shown': i === 0, sheet: isSheet(w) }]} data-work>
         <a href={pageUrl(`gallery/${w.slug}`)}>
           <Picture
             src={w.src}
@@ -90,6 +90,9 @@ const works = slugs
     mask-composite: intersect;
     animation: appear var(--slow) var(--ease) both;
   }
+  /* A watercolor: the whole sheet as it is, white, crisp edges, lifted off the wall */
+  .work.sheet :global(img) { mix-blend-mode: normal; mask-image: none; box-shadow: var(--sheet-shadow); }
+
   /* The work fades in and settles, the label follows a moment later */
   @keyframes appear { from { opacity: 0; transform: scale(1.015); } }
   .label {

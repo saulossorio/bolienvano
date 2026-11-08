@@ -6,13 +6,13 @@
 import { Picture } from 'astro:assets';
 import { t, artworkTitles } from '../content/index.js';
 import { pageUrl } from '../lib/urls.js';
-import { image } from '../lib/images.js';
+import { image, isSheet } from '../lib/images.js';
 
 const { artwork, eager = false, priority = false } = Astro.props;
 const title = artworkTitles[artwork.slug];
 ---
 <a class="card" href={pageUrl(`gallery/${artwork.slug}`)} data-status={artwork.status}>
-  <div class="frame">
+  <div class:list={['frame', { sheet: isSheet(artwork) }]}>
     <Picture
       src={image('artworks', `${artwork.slug}_mockup.jpg`)}
       alt={title}
@@ -44,6 +44,9 @@ const title = artworkTitles[artwork.slug];
     transition: transform var(--slow) var(--ease);
   }
   .card:hover .frame :global(img) { transform: scale(1.03); }
+  /* A watercolor: the whole sheet, white, a little inside the frame so its shadow shows */
+  .frame.sheet { padding: var(--space-m); }
+  .frame.sheet :global(img) { mix-blend-mode: normal; box-shadow: var(--sheet-shadow); }
 
   .caption { padding-top: var(--space-s); }
   .title { margin: 0 0 var(--space-3xs); font-size: var(--text-xl); }

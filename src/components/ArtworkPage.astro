@@ -10,7 +10,7 @@ import { t, artworkTitles, exhibitionTexts } from '../content/index.js';
 import { artworks } from '../data/artworks.js';
 import { exhibitions } from '../data/exhibitions.js';
 import { pageUrl } from '../lib/urls.js';
-import { artworkImages, largeUrl, shareUrl } from '../lib/images.js';
+import { artworkImages, largeUrl, shareUrl, isSheet } from '../lib/images.js';
 import { artworkSchema } from '../lib/schema.js';
 
 const { artwork } = Astro.props;
@@ -43,7 +43,7 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
   <div class="container">
     <article class="work">
       <div class="images">
-        <a class="zoomable view" href={view.large} data-zoom="work" data-caption={view.alt}>
+        <a class:list={['zoomable view', { sheet: isSheet(artwork) }]} href={view.large} data-zoom="work" data-caption={view.alt}>
           <Picture
             src={view.src}
             alt={view.alt}
@@ -128,6 +128,9 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
     max-height: calc(100svh - var(--bar) - var(--space-l) * 2); object-fit: contain;
     mix-blend-mode: var(--blend);   /* white photo backgrounds turn wall-colored */
   }
+  /* A watercolor: the whole sheet, white, with room around it for its shadow */
+  .view.sheet { padding: var(--space-l); }
+  .view.sheet :global(img) { mix-blend-mode: normal; box-shadow: var(--sheet-shadow); }
   .details { display: grid; grid-template-columns: 1fr 1fr; gap: inherit; }
   .details :global(img) { aspect-ratio: 1; object-fit: cover; }
 

@@ -11,6 +11,10 @@ export function image(folder, name) {
 }
 
 // The three images of an artwork, in page order
+// Watercolors are photographed as the whole sheet, margin included (the size on the
+// label is the sheet's). They are shown as paper on the wall: white, with --sheet-shadow.
+export const isSheet = (artwork) => artwork.medium === 'watercolor';
+
 export function artworkImages(slug) {
   return ['mockup', 'zoom1', 'zoom2'].map((kind) => ({
     kind,
