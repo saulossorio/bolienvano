@@ -166,7 +166,7 @@ const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAI
   // ---- Pointer: drag, pinch, swipe, (double) click -----------------------
 
   const pointers = new Map();
-  let start = null;         // gesture start: positions, scale, offset
+  let start = null;         // gesture start: pointer (px, py, d), and the image's scale and offset (x, y)
   let moved = false;
   let lastTap = 0;
   let onImage = false;      // the gesture started on the image, not on the dark area
@@ -182,7 +182,7 @@ const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAI
 
   function begin() {
     const p = pointers.size === 2 ? mid() : [...pointers.values()][0];
-    start = { ...p, scale, x, y };
+    start = { px: p.x, py: p.y, d: p.d, scale, x, y };
   }
 
   stage.addEventListener('pointerdown', (e) => {
@@ -201,17 +201,17 @@ const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAI
     if (pointers.size === 2) {
       // Pinch: zoom around the middle of the two fingers, and follow it
       const m = mid();
-      const c = local(start);
+      const c = local({ x: start.px, y: start.py });
       scale = start.scale; x = start.x; y = start.y;
       zoomTo(start.scale * (m.d / start.d), c.x, c.y, false);
-      x += m.x - start.x; y += m.y - start.y;
+      x += m.x - start.px; y += m.y - start.py;
       render(false);
       moved = true;
       return;
     }
 
     const p = [...pointers.values()][0];
-    const dx = p.x - start.x, dy = p.y - start.y;
+    const dx = p.x - start.px, dy = p.y - start.py;
     if (Math.abs(dx) + Math.abs(dy) > 6) moved = true;
     if (scale > 1) {
       x = start.x + dx; y = start.y + dy;
@@ -230,7 +230,7 @@ const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAI
     if (pointers.size === 1) { begin(); return; }   // pinch ended, one finger left
     if (pointers.size) return;
 
-    const dx = p.x - start.x;
+    const dx = p.x - start.px;
     if (scale === 1 && moved) {
       // Swipe to the next or previous image
       if (Math.abs(dx) > 60 && items.length > 1) show(index + (dx < 0 ? 1 : -1));
