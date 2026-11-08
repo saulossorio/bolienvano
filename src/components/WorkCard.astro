@@ -4,14 +4,14 @@
 // Props: artwork (from src/data/artworks.js), eager (load the image first),
 //        priority (the page's main image: fetched first, shown without fade)
 import { Picture } from 'astro:assets';
-import { t, artworkTitles } from '../content/index.js';
-import { pageUrl } from '../lib/urls.js';
+import { useTexts } from '../content/index.js';
 import { image, isSheet } from '../lib/images.js';
+const { t, artworkTitles, url } = useTexts(Astro);
 
 const { artwork, eager = false, priority = false } = Astro.props;
 const title = artworkTitles[artwork.slug];
 ---
-<a class="card" href={pageUrl(`gallery/${artwork.slug}`)} data-status={artwork.status}>
+<a class="card" href={url(`gallery/${artwork.slug}`)} data-status={artwork.status}>
   <div class:list={['frame', { sheet: isSheet(artwork) }]}>
     <Picture
       src={image('artworks', `${artwork.slug}_mockup.jpg`)}

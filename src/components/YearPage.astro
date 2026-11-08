@@ -2,9 +2,9 @@
 import Base from '../layouts/Base.astro';
 import WorkGrid from './WorkGrid.astro';
 import YearNav from './YearNav.astro';
-import { t } from '../content/index.js';
+import { useTexts } from '../content/index.js';
 import { artworks } from '../data/artworks.js';
-import { pageUrl } from '../lib/urls.js';
+const { t, url } = useTexts(Astro);
 
 const { year } = Astro.props;
 const items = artworks.filter((a) => a.year === year);
@@ -12,7 +12,7 @@ const items = artworks.filter((a) => a.year === year);
 <Base title={String(year)} description={`${t.gallery.yearCover} ${year} — ${t.gallery.description}`} path={`gallery/${year}`} current="gallery">
   <div class="container">
     <header class="intro">
-      <a class="eyebrow back" href={pageUrl('gallery')}>← {t.gallery.title}</a>
+      <a class="eyebrow back" href={url('gallery')}>← {t.gallery.title}</a>
       <h1 class="numeral">{year}</h1>
       <YearNav current={year} />
     </header>

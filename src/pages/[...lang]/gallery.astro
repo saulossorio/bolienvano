@@ -2,11 +2,15 @@
 // Works: every artwork on one page, grouped by year, newest first.
 // A bar under the header stays visible while scrolling: jump to a year, or show
 // only the works for sale ("Available only", also opened by gallery.html#available).
-import Base from '../layouts/Base.astro';
-import WorkGrid from '../components/WorkGrid.astro';
-import YearNav from '../components/YearNav.astro';
-import { t } from '../content/index.js';
-import { artworks, years } from '../data/artworks.js';
+import Base from '../../layouts/Base.astro';
+import WorkGrid from '../../components/WorkGrid.astro';
+import YearNav from '../../components/YearNav.astro';
+import { useTexts } from '../../content/index.js';
+import { artworks, years } from '../../data/artworks.js';
+import { langParams } from '../../lib/urls.js';
+const { t } = useTexts(Astro);
+
+export const getStaticPaths = () => langParams().map((params) => ({ params }));
 
 const availableCount = artworks.filter((a) => a.status === 'available').length;
 ---

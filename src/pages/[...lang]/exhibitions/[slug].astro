@@ -4,19 +4,19 @@
 // photos) — closed by default so they never interrupt the reading. A link to #works
 // opens that section. Every photo opens the viewer.
 import { Picture } from 'astro:assets';
-import Base from '../../layouts/Base.astro';
-import Viewer from '../../components/Viewer.astro';
-import WorkGrid from '../../components/WorkGrid.astro';
-import { t, exhibitionTexts } from '../../content/index.js';
-import { exhibitions } from '../../data/exhibitions.js';
-import { artworks } from '../../data/artworks.js';
-import { pageUrl } from '../../lib/urls.js';
-import { image, largeUrl, shareUrl } from '../../lib/images.js';
-import { exhibitionSchema } from '../../lib/schema.js';
-import { formatDate } from '../../lib/dates.js';
+import Base from '../../../layouts/Base.astro';
+import Viewer from '../../../components/Viewer.astro';
+import WorkGrid from '../../../components/WorkGrid.astro';
+import { useTexts } from '../../../content/index.js';
+import { exhibitions } from '../../../data/exhibitions.js';
+import { artworks } from '../../../data/artworks.js';
+import { image, largeUrl, shareUrl } from '../../../lib/images.js';
+import { exhibitionSchema } from '../../../lib/schema.js';
+import { langParams } from '../../../lib/urls.js';
+const { t, exhibitionTexts, date, url, lang } = useTexts(Astro);
 
 export function getStaticPaths() {
-  return exhibitions.map((exhibition) => ({ params: { slug: exhibition.slug }, props: { exhibition } }));
+  return langParams().flatMap(({ lang }) => exhibitions.map((exhibition) => ({ params: { lang, slug: exhibition.slug }, props: { exhibition } })));
 }
 
 const { exhibition } = Astro.props;
@@ -28,16 +28,16 @@ const photos = await Promise.all(
   }),
 );
 const [first] = photos;
-const schema = [exhibitionSchema(exhibition, Astro.site, await shareUrl(first.src, Astro.site))];
+const schema = [exhibitionSchema(exhibition, Astro.site, await shareUrl(first.src, Astro.site), lang)];
 const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug === slug));
 ---
 <Base title={text.title} description={text.summary} path={`exhibitions/${exhibition.slug}`} current="exhibitions" image={first.src} schema={schema}>
   <div class="container">
     <header class="intro">
-      <a class="eyebrow back" href={pageUrl('exhibitions')}>← {t.exhibitions.title}</a>
+      <a class="eyebrow back" href={url('exhibitions')}>← {t.exhibitions.title}</a>
       <h1>{text.title}</h1>
       <p class="facts">
-        <time datetime={exhibition.date}>{formatDate(exhibition.date)}</time>
+        <time datetime={exhibition.date}>{date(exhibition.date)}</time>
         <span class="place"><span>{text.venue}</span><span class="city">{text.city}, {text.country}</span></span>
       </p>
     </header>
@@ -66,7 +66,7 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
         <div class="fold-body">
           <WorkGrid items={works} />
           {exhibition.nft && (
-            <p class="nft">{t.exhibitions.nftAlso}: <a href={pageUrl('gallery/hiperconciente')}>{t.nft.title}</a></p>
+            <p class="nft">{t.exhibitions.nftAlso}: <a href={url('gallery/hiperconciente')}>{t.nft.title}</a></p>
           )}
         </div>
       </details>

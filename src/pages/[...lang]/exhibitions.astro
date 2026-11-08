@@ -1,12 +1,14 @@
 ---
 // List of exhibitions, newest first. The whole row links to the exhibition page.
 import { Picture } from 'astro:assets';
-import Base from '../layouts/Base.astro';
-import { t, exhibitionTexts } from '../content/index.js';
-import { exhibitions } from '../data/exhibitions.js';
-import { pageUrl } from '../lib/urls.js';
-import { image, artworkImages } from '../lib/images.js';
-import { formatDate } from '../lib/dates.js';
+import Base from '../../layouts/Base.astro';
+import { useTexts } from '../../content/index.js';
+import { exhibitions } from '../../data/exhibitions.js';
+import { image, artworkImages } from '../../lib/images.js';
+import { langParams } from '../../lib/urls.js';
+const { t, exhibitionTexts, date, url } = useTexts(Astro);
+
+export const getStaticPaths = () => langParams().map((params) => ({ params }));
 ---
 <Base title={t.exhibitions.title} description={t.exhibitions.description} path="exhibitions" current="exhibitions">
   <div class="container">
@@ -26,12 +28,12 @@ import { formatDate } from '../lib/dates.js';
               fallbackFormat="webp"
               widths={[500, 800, 1100]}
               sizes="(max-width: 767px) 92vw, 50vw"
-              class:list={['cover', { work: e.coverWork }]}
+              class:list={['cover', { work: e.coverWork || e.coverWhole }]}
               loading={i === 0 ? 'eager' : 'lazy'}
             />
             <div class="text">
-              <p class="eyebrow"><time datetime={e.date}>{formatDate(e.date)}</time></p>
-              <h2><a href={pageUrl(`exhibitions/${e.slug}`)}>{text.title}</a></h2>
+              <p class="eyebrow"><time datetime={e.date}>{date(e.date)}</time></p>
+              <h2><a href={url(`exhibitions/${e.slug}`)}>{text.title}</a></h2>
               <p class="venue place"><span>{text.venue}</span><span class="city">{text.city}, {text.country}</span></p>
               <p class="summary">{text.summary}</p>
               <span class="more" aria-hidden="true">{t.exhibitions.read}</span>
@@ -57,7 +59,7 @@ import { formatDate } from '../lib/dates.js';
   }
   .row :global(.cover) { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: opacity var(--fast) var(--ease); }
   .row:hover :global(.cover) { opacity: .85; }
-  /* An artwork as cover is shown whole, on the wall color, never cropped */
+  /* An artwork (or a banner) as cover is shown whole, on the wall color, never cropped */
   .row :global(.cover.work) { object-fit: contain; mix-blend-mode: var(--blend); }
 
   .text h2 { margin-bottom: var(--space-2xs); }

@@ -7,23 +7,24 @@
 // Internal: not in the menu or the sitemap, hidden from search engines.
 import { getImage } from 'astro:assets';
 import QRCode from 'qrcode';
-import Base from '../../layouts/Base.astro';
-import { t, artworkTitles } from '../../content/index.js';
-import { artworks } from '../../data/artworks.js';
-import { pageUrl } from '../../lib/urls.js';
-import { artworkImages } from '../../lib/images.js';
+import Base from '../../../layouts/Base.astro';
+import { useTexts } from '../../../content/index.js';
+import { artworks } from '../../../data/artworks.js';
+import { artworkImages } from '../../../lib/images.js';
+import { langParams } from '../../../lib/urls.js';
+const { t, artworkTitles, url } = useTexts(Astro);
 
 export function getStaticPaths() {
-  return artworks.map((artwork) => ({ params: { slug: artwork.slug }, props: { artwork } }));
+  return langParams().flatMap(({ lang }) => artworks.map((artwork) => ({ params: { lang, slug: artwork.slug }, props: { artwork } })));
 }
 
 const { artwork } = Astro.props;
 const c = t.certificate;
 const title = artworkTitles[artwork.slug];
 const path = `certificate/${artwork.slug}`;
-const url = new URL(pageUrl(path), Astro.site);
+const link = new URL(url(path), Astro.site);
 const photo = await getImage({ src: artworkImages(artwork.slug)[0].src, width: 1200, format: 'webp', quality: 85 });
-const qr = await QRCode.toString(url.href, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#1d1c1aff', light: '#0000' } });
+const qr = await QRCode.toString(link.href, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#1d1c1aff', light: '#0000' } });
 const statement = c.statement.replace('{title}', `<em>${title}</em>`);
 ---
 <Base title={`${c.title}, ${title}`} path={path} noindex>
@@ -60,7 +61,7 @@ const statement = c.statement.replace('{title}', `<em>${title}</em>`);
 
       <footer class="foot">
         <div class="qr" set:html={qr} />
-        <p>{c.verify}<br /><span class="url">{url.host}{url.pathname}</span><br /><span class="note">{c.note}</span></p>
+        <p>{c.verify}<br /><span class="url">{link.host}{link.pathname}</span><br /><span class="note">{c.note}</span></p>
       </footer>
     </article>
 

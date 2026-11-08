@@ -81,6 +81,19 @@ Exception: `src/pages/invitacion.astro` keeps its own sizes (it reproduces the p
 form (and the artwork, when the visitor came from one) in the email subject. It needs PHP,
 so it works on Hostinger but not on the GitHub Pages preview.
 
+## Languages
+
+The site is in English, Spanish and Portuguese. English keeps the addresses of the old
+site (`/about.html`); the others live under `/es/` and `/pt/`. Every page in
+`src/pages/[...lang]/` is built once per language; pages and components get their texts
+with `useTexts(Astro)` from `src/content/index.js`, which reads the language from the
+address. Texts live in `src/content/<en|es|pt>/` with the same keys, and the build stops
+if one is missing. The header has an EN · ES · PT switch; on a first visit to an English
+page, a browser that prefers Spanish or Portuguese goes to that language once (never the
+other way, so search engines see each language as it is). Each page lists its other
+languages for search engines (hreflang), and so does the sitemap. The invitation, the
+design system, llms.txt and the 404 page exist only once.
+
 ## Certificates of authenticity
 
 Every artwork has its certificate at `certificate/<slug>.html`

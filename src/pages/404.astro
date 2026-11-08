@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import { t } from '../content/index.js';
 import { pageUrl } from '../lib/urls.js';
 ---
-<Base title={t.notFound.title} noindex>
+<Base title={t.notFound.title} noindex translated={false}>
   <section class="section">
     <div class="container message">
       <h1 class="visually-hidden">{t.notFound.title}</h1>

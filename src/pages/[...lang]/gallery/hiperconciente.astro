@@ -3,11 +3,14 @@
 // videos. The videos load only when the visitor presses play, so the page stays
 // light; without JavaScript the play button opens the video on Vimeo.
 import { Picture } from 'astro:assets';
-import Base from '../../layouts/Base.astro';
-import Viewer from '../../components/Viewer.astro';
-import { t } from '../../content/index.js';
-import { pageUrl } from '../../lib/urls.js';
-import { image, largeUrl } from '../../lib/images.js';
+import Base from '../../../layouts/Base.astro';
+import Viewer from '../../../components/Viewer.astro';
+import { useTexts } from '../../../content/index.js';
+import { image, largeUrl } from '../../../lib/images.js';
+import { langParams } from '../../../lib/urls.js';
+const { t, url } = useTexts(Astro);
+
+export const getStaticPaths = () => langParams().map((params) => ({ params }));
 
 const painting = image('artworks', 'hiperconciente_mockup.jpg');
 const large = await largeUrl(painting);
@@ -36,7 +39,7 @@ const videos = [
       </a>
 
       <div class="label">
-        <a class="eyebrow back" href={pageUrl('gallery')}>← {t.gallery.title}</a>
+        <a class="eyebrow back" href={url('gallery')}>← {t.gallery.title}</a>
         <h1>{t.nft.title}</h1>
         <dl class="facts">
           <div><dt>{t.artwork.year}</dt><dd>{t.nft.year}</dd></div>

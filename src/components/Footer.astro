@@ -2,9 +2,9 @@
 // Footer: one quiet line: social links and credits. No email address in the page
 // (spam bots harvest it); people write through the contact form.
 // "Privacy" explains the cookies and the contact form, and lets visitors change their cookie choice.
-import { t } from '../content/index.js';
+import { useTexts } from '../content/index.js';
 import { socials } from '../data/socials.js';
-import { pageUrl } from '../lib/urls.js';
+const { t, url } = useTexts(Astro);
 
 const year = new Date().getFullYear();
 ---
@@ -21,7 +21,7 @@ const year = new Date().getFullYear();
         ))}
       </ul>
       <p class="credits">
-        <a href={pageUrl('privacy')}>{t.nav.privacy}</a>
+        <a href={url('privacy')}>{t.nav.privacy}</a>
         © {year} {t.site.name}
       </p>
     </div>

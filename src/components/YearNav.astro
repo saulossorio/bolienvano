@@ -1,9 +1,9 @@
 ---
 // Row of year links. On the works page they jump down the page; elsewhere they
 // open the year page. Props: current (year being shown, optional), anchors (bool)
-import { t } from '../content/index.js';
+import { useTexts } from '../content/index.js';
 import { years } from '../data/artworks.js';
-import { pageUrl } from '../lib/urls.js';
+const { t, url } = useTexts(Astro);
 
 const { current, anchors = false } = Astro.props;
 ---
@@ -11,7 +11,7 @@ const { current, anchors = false } = Astro.props;
   {years.map(({ year }) => (
     <a
       class="line-link"
-      href={anchors ? `#y${year}` : pageUrl(`gallery/${year}`)}
+      href={anchors ? `#y${year}` : url(`gallery/${year}`)}
       aria-current={year === current ? 'page' : undefined}
     >{year}</a>
   ))}

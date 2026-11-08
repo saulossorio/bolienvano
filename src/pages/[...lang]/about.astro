@@ -3,13 +3,16 @@
 // biography in the third person, then the CV as dated lists.
 // No portrait: the works represent the artist. One reading column.
 // Solo exhibitions come from src/data/exhibitions.js, the rest from src/data/cv.js.
-import Base from '../layouts/Base.astro';
-import { t, exhibitionTexts } from '../content/index.js';
-import { exhibitions } from '../data/exhibitions.js';
-import { projects } from '../data/cv.js';
-import { pageUrl } from '../lib/urls.js';
-import { artworkImages } from '../lib/images.js';
-import { artistId } from '../lib/schema.js';
+import Base from '../../layouts/Base.astro';
+import { useTexts } from '../../content/index.js';
+import { exhibitions } from '../../data/exhibitions.js';
+import { projects } from '../../data/cv.js';
+import { artworkImages } from '../../lib/images.js';
+import { artistId } from '../../lib/schema.js';
+import { langParams } from '../../lib/urls.js';
+const { t, exhibitionTexts, url, lang } = useTexts(Astro);
+
+export const getStaticPaths = () => langParams().map((params) => ({ params }));
 
 // Picture shown when the page is shared: a work, not a portrait
 const shareImage = artworkImages('invisible')[0].src;
@@ -24,12 +27,15 @@ const sections = [
     rows: exhibitions.map((e) => ({
       year: e.date.slice(0, 4),
       html: `<em>${exhibitionTexts[e.slug].title}</em>` + place(exhibitionTexts[e.slug]),
-      href: pageUrl(`exhibitions/${e.slug}`),
+      href: url(`exhibitions/${e.slug}`),
     })),
   },
   {
     title: t.about.projects,
-    rows: projects.map((p) => ({ year: p.year, html: p.text + place(p), href: p.link && pageUrl(p.link) })),
+    rows: projects.map((p) => {
+      const inLang = (v) => (typeof v === 'object' ? v[lang] : v);
+      return { year: p.year, html: inLang(p.text) + place({ venue: inLang(p.venue), city: p.city, country: inLang(p.country) }), href: p.link && url(p.link) };
+    }),
   },
 ].filter((s) => s.rows.length);
 ---

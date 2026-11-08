@@ -6,12 +6,12 @@ import { Picture } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Viewer from './Viewer.astro';
 import Availability from './Availability.astro';
-import { t, artworkTitles, exhibitionTexts } from '../content/index.js';
+import { useTexts } from '../content/index.js';
 import { artworks } from '../data/artworks.js';
 import { exhibitions } from '../data/exhibitions.js';
-import { pageUrl } from '../lib/urls.js';
 import { artworkImages, largeUrl, shareUrl, isSheet } from '../lib/images.js';
 import { artworkSchema } from '../lib/schema.js';
+const { t, artworkTitles, exhibitionTexts, url, lang } = useTexts(Astro);
 
 const { artwork } = Astro.props;
 const title = artworkTitles[artwork.slug];
@@ -30,7 +30,7 @@ const shownIn = exhibitions.filter((e) => e.works?.includes(artwork.slug));
 const index = artworks.findIndex((a) => a.slug === artwork.slug);
 const prev = artworks[index - 1];
 const next = artworks[index + 1];
-const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astro.site))];
+const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astro.site), lang)];
 ---
 <Base
   title={title}
@@ -80,14 +80,14 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
       </div>
 
       <div class="label">
-        <a class="eyebrow back" href={pageUrl(`gallery/${artwork.year}`)}>← {t.artwork.back} {artwork.year}</a>
+        <a class="eyebrow back" href={url(`gallery/${artwork.year}`)}>← {t.artwork.back} {artwork.year}</a>
         <h1>{title}</h1>
         <dl class="facts">
           <div><dt>{t.artwork.year}</dt><dd>{artwork.year}</dd></div>
           <div><dt>{t.artwork.technique}</dt><dd>{medium}</dd></div>
           <div><dt>{t.artwork.size}</dt><dd>{artwork.size}</dd></div>
           {shownIn.map((e) => (
-            <div><dt>{t.exhibitions.exhibitedIn}</dt><dd><a href={`${pageUrl(`exhibitions/${e.slug}`)}#works`}>{exhibitionTexts[e.slug].title}</a>, {e.date.slice(0, 4)}</dd></div>
+            <div><dt>{t.exhibitions.exhibitedIn}</dt><dd><a href={`${url(`exhibitions/${e.slug}`)}#works`}>{exhibitionTexts[e.slug].title}</a>, {e.date.slice(0, 4)}</dd></div>
           ))}
         </dl>
         <Availability artwork={artwork} title={title} />
@@ -96,13 +96,13 @@ const schema = [artworkSchema(artwork, Astro.site, await shareUrl(view.src, Astr
 
     <nav class="pager" aria-label={t.gallery.title}>
       {prev ? (
-        <a class="prev" href={pageUrl(`gallery/${prev.slug}`)}>
+        <a class="prev" href={url(`gallery/${prev.slug}`)}>
           <span class="eyebrow">← {t.artwork.previous}</span>
           <span class="name">{artworkTitles[prev.slug]}</span>
         </a>
       ) : <span />}
       {next && (
-        <a class="next" href={pageUrl(`gallery/${next.slug}`)}>
+        <a class="next" href={url(`gallery/${next.slug}`)}>
           <span class="eyebrow">{t.artwork.next} →</span>
           <span class="name">{artworkTitles[next.slug]}</span>
         </a>

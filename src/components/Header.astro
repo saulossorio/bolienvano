@@ -5,28 +5,31 @@
 // closes it). It fades in and the links rise one after another.
 // The round button next to the links switches between light and dark; it only
 // shows with JavaScript, since it needs it to work.
-import { t } from '../content/index.js';
-import { pageUrl } from '../lib/urls.js';
+// EN · ES · PT after the links: the same page in each language (from Base.astro);
+// choosing one is remembered, so the first-visit redirect never overrides it.
+import { useTexts } from '../content/index.js';
+const { t, url } = useTexts(Astro);
 
-const { current } = Astro.props;
+const { current, alternates = [] } = Astro.props;
+const names = { en: 'English', es: 'Español', pt: 'Português' };
 
 const links = [
-  { id: 'gallery',     href: pageUrl('gallery'),     label: t.nav.gallery },
-  { id: 'exhibitions', href: pageUrl('exhibitions'), label: t.nav.exhibitions },
-  { id: 'about',       href: pageUrl('about'),       label: t.nav.about },
-  { id: 'contact',     href: pageUrl('contact'),     label: t.nav.contact },
+  { id: 'gallery',     href: url('gallery'),     label: t.nav.gallery },
+  { id: 'exhibitions', href: url('exhibitions'), label: t.nav.exhibitions },
+  { id: 'about',       href: url('about'),       label: t.nav.about },
+  { id: 'contact',     href: url('contact'),     label: t.nav.contact },
 ];
 // The NFT page belongs to the works
 const active = current === 'nft' ? 'gallery' : current;
 ---
 <header class="navbar">
   <div class="bar container">
-    <a class="logo" href={pageUrl('')} aria-current={current === 'home' ? 'page' : undefined}>{t.site.name}</a>
+    <a class="logo" href={url('')} aria-current={current === 'home' ? 'page' : undefined}>{t.site.name}</a>
 
     <div class="right">
     <nav id="menu" class="menu" popover aria-label={t.nav.menu}>
       <div class="menu-top">
-        <a class="logo" href={pageUrl('')}>{t.site.name}</a>
+        <a class="logo" href={url('')}>{t.site.name}</a>
         <button class="close" type="button" popovertarget="menu" popovertargetaction="hide" aria-label={t.nav.close}>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
@@ -37,6 +40,14 @@ const active = current === 'nft' ? 'gallery' : current;
           <a class="line-link" href={l.href} aria-current={l.id === active ? 'page' : undefined} style={`--i: ${i}`}>{l.label}</a>
         ))}
       </div>
+      {alternates.length > 0 && (
+        <div class="langs" role="group" aria-label={t.nav.language} style={`--i: ${links.length}`}>
+          {alternates.map((a) => (
+            <a class="line-link" href={a.href} hreflang={a.lang} lang={a.lang} title={names[a.lang]}
+               aria-current={a.lang === t.lang ? 'true' : undefined} data-lang={a.lang}>{a.lang}</a>
+          ))}
+        </div>
+      )}
     </nav>
 
     <button class="theme" type="button" aria-label={t.nav.theme} aria-pressed="false" data-theme-toggle>
@@ -67,6 +78,11 @@ const active = current === 'nft' ? 'gallery' : current;
     try { localStorage.setItem('theme', theme); } catch {}
   });
   sync();
+
+  // Language switch: remember the choice (see the redirect in Base.astro)
+  document.querySelectorAll('[data-lang]').forEach((a) => a.addEventListener('click', () => {
+    try { localStorage.setItem('lang', a.dataset.lang); } catch {}
+  }));
 </script>
 
 <style>
@@ -115,6 +131,12 @@ const active = current === 'nft' ? 'gallery' : current;
   .theme[aria-pressed='true'] svg { transform: rotate(180deg); }
   .theme:hover { color: var(--muted); }
   .links { display: contents; }
+
+  /* Languages: same small uppercase as the links, quieter, the current one in ink */
+  .langs { display: flex; gap: var(--space-s); margin-left: calc(var(--space-s) - var(--space-l) / 2); padding-left: var(--space-m); border-left: 1px solid var(--line); }
+  .langs a { color: var(--muted); }
+  .langs a[aria-current] { color: var(--ink); }
+  .langs a:hover { color: var(--ink); }
 
   @media (max-width: 767px) {
     .logo { font-size: var(--text-lg); }
@@ -194,6 +216,15 @@ const active = current === 'nft' ? 'gallery' : current;
     @starting-style { .menu:popover-open .links a { opacity: 0; transform: translateY(1.25rem); } }
     .links a::after { display: none; }
     .links a[aria-current='page'] { color: var(--muted); }
+
+    /* Languages: a small row at the bottom of the menu, rising after the links */
+    .langs {
+      margin: 0; padding: var(--space-s) 0 0; border-left: 0; border-top: 1px solid var(--line); gap: var(--space-m);
+      opacity: 0; transition: opacity var(--fast) var(--ease);
+    }
+    .menu:popover-open .langs { opacity: 1; transition-duration: var(--slow); transition-delay: calc(var(--i) * 70ms + 100ms); }
+    @starting-style { .menu:popover-open .langs { opacity: 0; } }
+    .langs a { font-size: var(--text-xs); }
 
   }
 </style>

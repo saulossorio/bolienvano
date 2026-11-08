@@ -4,6 +4,8 @@
 //   date     opening day, YYYY-MM-DD
 //   cover    image shown in the exhibitions list (src/assets/exhibitions/), or
 //   coverWork  an artwork slug instead, for shows without installation photos
+//   coverWhole true to show the cover whole on the wall color instead of cropping it
+//              (a poster or banner with text)
 //   photos   photos of the exhibition, in order
 //   works    artworks shown in it (slugs from src/data/artworks.js); their pages link back
 //   nft      true if the NFT Hiperconciente was part of it
@@ -12,8 +14,9 @@ export const exhibitions = [
   {
     slug: 'cor-ne-edito',
     date: '2023-06-22',
-    coverWork: 'luchas',   // no installation photos of this show: one of its works
-    photos: ['cor-ne-edito1.jpg', 'cor-ne-edito3.jpg'],
+    cover: 'cor-ne-edito-banner.jpg',   // the exhibition banner
+    coverWhole: true,
+    photos: ['cor-ne-edito-banner.jpg', 'cor-ne-edito1.jpg', 'cor-ne-edito3.jpg'],
     works: ['humana', 'paciencia', 'ultimo-recurso', 'incertidumbre', 'nadie', 'luchas',
             'cavilaciones-matutinas', 'espera', 'invisible', 'cargando-un-fantasma', 'pesada', 'crisis'],
   },

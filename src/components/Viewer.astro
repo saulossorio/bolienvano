@@ -8,7 +8,8 @@
 //   Mouse     click or double-click to zoom in/out, wheel to zoom, drag to move
 //   Touch     pinch to zoom, double-tap to zoom in/out, drag to move, swipe to change image
 //   Keyboard  ← → change image, + − zoom, 0 fit, arrows move when zoomed, Esc closes
-import { t } from '../content/index.js';
+import { useTexts } from '../content/index.js';
+const { t } = useTexts(Astro);
 
 // Empty image until one is opened
 const BLANK = 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==';

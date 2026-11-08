@@ -4,12 +4,12 @@
 //   ask        price on request, button to ask
 //   sold       sold, link to the works still available
 // The enquiry opens the contact form about buying this work, with its title shown.
-import { t } from '../content/index.js';
-import { pageUrl } from '../lib/urls.js';
+import { useTexts } from '../content/index.js';
+const { t, url } = useTexts(Astro);
 
 const { artwork, title } = Astro.props;
 const subject = `${title} (${artwork.year})`;
-const enquire = `${pageUrl('contact')}?subject=${encodeURIComponent(subject)}`;
+const enquire = `${url('contact')}?subject=${encodeURIComponent(subject)}`;
 ---
 <div class="availability">
   <p class:list={['status', artwork.status]}>
@@ -19,7 +19,7 @@ const enquire = `${pageUrl('contact')}?subject=${encodeURIComponent(subject)}`;
   {artwork.status === 'available' && <p class="price">{t.artwork.price} {artwork.price}</p>}
 
   {artwork.status === 'sold'
-    ? <a class="more" href={`${pageUrl('gallery')}#available`}>{t.artwork.seeAvailable}</a>
+    ? <a class="more" href={`${url('gallery')}#available`}>{t.artwork.seeAvailable}</a>
     : <a class="button" href={enquire}>{t.artwork[artwork.status]}</a>}
 </div>
 

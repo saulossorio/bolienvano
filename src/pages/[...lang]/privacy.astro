@@ -2,8 +2,12 @@
 // Privacy: what the site keeps about visitors (cookies, browser storage, the
 // contact form). Texts in src/content/en/ui.js. The button under Cookies opens
 // the cookie notice (CookieNotice.astro) to change the choice; it needs JavaScript.
-import Base from '../layouts/Base.astro';
-import { t } from '../content/index.js';
+import Base from '../../layouts/Base.astro';
+import { useTexts } from '../../content/index.js';
+import { langParams } from '../../lib/urls.js';
+const { t } = useTexts(Astro);
+
+export const getStaticPaths = () => langParams().map((params) => ({ params }));
 
 const p = t.privacy;
 ---

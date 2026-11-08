@@ -17,6 +17,7 @@ export default {
     menu: 'Menu',
     close: 'Close menu',
     theme: 'Dark mode',
+    language: 'Language',
   },
 
   // Techniques used in src/data/artworks.js
@@ -128,7 +129,7 @@ export default {
       {
         title: 'Stored in your browser',
         paragraphs: [
-          'The site remembers, only in your browser, your cookie choice, whether you chose light or dark mode and which work the home page showed last. None of this is sent anywhere.',
+          'The site remembers, only in your browser, your cookie choice, your language, whether you chose light or dark mode and which work the home page showed last. None of this is sent anywhere.',
         ],
       },
       {

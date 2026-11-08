@@ -4,11 +4,11 @@
 // Base.astro) and only use them after "Accept". The choice is remembered; the
 // Privacy page explains it and has a button that opens the note again.
 // Without JavaScript nothing shows, and no analytics run either.
-import { t } from '../content/index.js';
-import { pageUrl } from '../lib/urls.js';
+import { useTexts } from '../content/index.js';
+const { t, url } = useTexts(Astro);
 ---
 <aside class="cookies" aria-label={t.cookies.label} hidden data-cookies>
-  <p>{t.cookies.text} <a href={pageUrl('privacy')}>{t.cookies.more}</a></p>
+  <p>{t.cookies.text} <a href={url('privacy')}>{t.cookies.more}</a></p>
   <div class="actions">
     <button class="line-link" type="button" data-consent="granted">{t.cookies.accept}</button>
     <button class="line-link" type="button" data-consent="denied">{t.cookies.decline}</button>

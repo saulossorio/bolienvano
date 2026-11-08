@@ -8,27 +8,34 @@
 //   image        social sharing image (an imported asset), optional
 //   noindex      true for pages search engines should skip
 //   schema       structured data items for this page (see src/lib/schema.js), optional
+//   translated   false for pages that exist only in English (no language switch)
 import '@fontsource-variable/syne';
 import '@fontsource-variable/familjen-grotesk';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import CookieNotice from '../components/CookieNotice.astro';
-import { t } from '../content/index.js';
-import { pageUrl, assetUrl } from '../lib/urls.js';
+import { useTexts } from '../content/index.js';
+import { assetUrl, pageUrl, languages, defaultLang } from '../lib/urls.js';
 import { siteGraph } from '../lib/schema.js';
 import { shareUrl } from '../lib/images.js';
+const { t, url, lang } = useTexts(Astro);
 
-const { title, description = t.site.description, path = '', current, image, schema = [] } = Astro.props;
+const { title, description = t.site.description, path = '', current, image, schema = [], translated = true } = Astro.props;
 
 // The GitHub Pages preview is hidden from search engines and sends no analytics
 const preview = import.meta.env.PUBLIC_PREVIEW === '1';
 const noindex = Astro.props.noindex || preview;
 
 const fullTitle = title ? `${title} | ${t.site.name}` : t.site.name;
-const canonical = new URL(pageUrl(path), Astro.site);
+const canonical = new URL(url(path), Astro.site);
 const ogImage = image && await shareUrl(image, Astro.site);
-const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': [...siteGraph(Astro.site), ...schema] });
+const jsonLd = JSON.stringify({ '@context': 'https://schema.org', '@graph': [...siteGraph(Astro.site, lang), ...schema] });
+
+// The same page in every language: for the switch in the header, for search engines
+// (hreflang) and for the first-visit redirect below
+const alternates = translated ? languages.map((l) => ({ lang: l, href: pageUrl(path, l) })) : [];
+const hrefs = Object.fromEntries(alternates.map((a) => [a.lang, a.href]));
 const GTM_ID = 'GTM-5J63MXV';
 ---
 <!doctype html>
@@ -39,6 +46,29 @@ const GTM_ID = 'GTM-5J63MXV';
   <title>{fullTitle}</title>
   <meta name="description" content={description} />
   {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+
+  {!noindex && alternates.map((a) => <link rel="alternate" hreflang={a.lang} href={new URL(a.href, Astro.site)} />)}
+  {!noindex && translated && <link rel="alternate" hreflang="x-default" href={new URL(pageUrl(path), Astro.site)} />}
+
+  {/* First visit only: someone whose browser prefers Spanish or Portuguese and arrives
+      at an English page goes to the same page in their language. Their language is
+      remembered, and choosing another one in the header replaces it, so it happens once.
+      Spanish and Portuguese pages never redirect, so search engines (which read in
+      English) see every language as it is. */}
+  {translated && lang === defaultLang && <script is:inline define:vars={{ hrefs }}>
+    try {
+      if (!localStorage.getItem('lang')) {
+        var prefs = navigator.languages || [navigator.language];
+        var pick = 'en';
+        for (var i = 0; i < prefs.length; i++) {
+          var p = String(prefs[i]).slice(0, 2).toLowerCase();
+          if (hrefs[p]) { pick = p; break; }
+        }
+        localStorage.setItem('lang', pick);
+        if (pick !== 'en') location.replace(hrefs[pick] + location.search + location.hash);
+      }
+    } catch (e) {}
+  </script>}
 
   <link rel="icon" type="image/png" href={assetUrl('favicon.png')} />
   <link rel="apple-touch-icon" href={assetUrl('webclip.webp')} />
@@ -111,7 +141,7 @@ const GTM_ID = 'GTM-5J63MXV';
   )}
 
   <a class="skip-link" href="#content">{t.a11y.skip}</a>
-  <Header current={current} />
+  <Header current={current} alternates={alternates} />
   <main id="content">
     <slot />
   </main>
