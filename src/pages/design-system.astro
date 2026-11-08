@@ -1,0 +1,333 @@
+---
+// Design system reference: every token and shared pattern of the site, drawn with
+// the site's own CSS, so this page is always what the site really uses.
+// Internal page: not in the menu or the sitemap, hidden from search engines, and
+// its texts stay here in English instead of src/content/.
+// The value next to each token is read from global.css by the script below.
+import Base from '../layouts/Base.astro';
+import WorkCard from '../components/WorkCard.astro';
+import Availability from '../components/Availability.astro';
+import { artworks } from '../data/artworks.js';
+import { artworkTitles } from '../content/index.js';
+
+const colors = [
+  ['--wall', 'Page background, the wall in the artwork photos'],
+  ['--paper', 'Cards, the cookie notice'],
+  ['--ink', 'Text, buttons, picked options'],
+  ['--muted', 'Secondary text, labels'],
+  ['--line', 'Separators, field lines, outlines'],
+  ['--available', 'Green dot of available works'],
+  ['--accent', 'Form errors only'],
+  ['--night', 'Image viewer and video players (same in both modes)'],
+];
+
+const sizes = [
+  ['--text-4xl', 'h1, mobile menu'],
+  ['--text-3xl', 'h2, artwork title'],
+  ['--text-2xl', 'List titles, section folds'],
+  ['--text-xl', 'Card titles, h3'],
+  ['--text-lg', 'Logo, lead lines'],
+  ['--text-md', 'Reading text, intros, fields'],
+  ['--text-base', 'Body'],
+  ['--text-sm', 'Captions, buttons, options'],
+  ['--text-xs', 'Labels, nav, eyebrows'],
+];
+
+const spaces = ['--space-3xs', '--space-2xs', '--space-xs', '--space-s', '--space-m', '--space-l', '--space-xl', '--space-2xl', '--space'];
+
+const layout = [
+  ['--container', 'Widest page width'],
+  ['--gutter', 'Side margins, grow with the screen'],
+  ['--bar', 'Height of the top bar (4rem on phones)'],
+  ['--toolbar', 'Height of the year bar on the works page'],
+  ['--target', 'Smallest tap area: icon buttons, options'],
+  ['--space-row', 'From a list line to its text'],
+];
+
+const motion = [
+  ['--ease', 'The one easing of every transition'],
+  ['--fast', 'Hovers, colors, small moves'],
+  ['--slow', 'Image fade-in, zoom, menu'],
+];
+
+const artwork = (status) => artworks.find((a) => a.status === status);
+const examples = ['available', 'ask', 'sold'].map(artwork);
+---
+<Base title="Design system" path="design-system" noindex>
+  <div class="container ds">
+    <header class="intro">
+      <span class="eyebrow">bolienvano.com</span>
+      <h1>Design system</h1>
+      <p class="lead">The site is the gallery wall: a warm grey background, texts that read like museum labels and nothing that competes with the paintings. Every value is a token in <code>src/styles/global.css</code>; components only use <code>var(--…)</code>. Use the switch in the top bar to see the dark mode.</p>
+      <nav class="toc" aria-label="Sections">
+        <a class="line-link" href="#colors">Colors</a>
+        <a class="line-link" href="#type">Type</a>
+        <a class="line-link" href="#space">Spacing</a>
+        <a class="line-link" href="#layout">Layout</a>
+        <a class="line-link" href="#motion">Motion</a>
+        <a class="line-link" href="#patterns">Patterns</a>
+        <a class="line-link" href="#components">Components</a>
+      </nav>
+    </header>
+
+    <section id="colors">
+      <div class="section-head"><h2>Colors</h2></div>
+      <p class="note">Each color has a light and a dark value; the page follows the visitor's system until they use the switch.</p>
+      <ul class="swatches">
+        {colors.map(([token, use]) => (
+          <li>
+            <span class="swatch" style={`background: var(${token})`}></span>
+            <code>{token}</code>
+            <span class="value" data-token={token}></span>
+            <span class="use">{use}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="type">
+      <div class="section-head"><h2>Type</h2></div>
+      <div class="families">
+        <div>
+          <span class="eyebrow">Display · <code>--display</code></span>
+          <p class="specimen display">Syne</p>
+          <p class="use">The name, titles and big numbers. Made by Bonjour Monde for Synesthésie, an art centre near Paris.</p>
+        </div>
+        <div>
+          <span class="eyebrow">Text · <code>--sans</code></span>
+          <p class="specimen sans">Familjen Grotesk</p>
+          <p class="use">Everything you read: body, labels, buttons, fields.</p>
+        </div>
+      </div>
+
+      <h3 class="eyebrow sub">Scale</h3>
+      <ul class="rows">
+        {sizes.map(([token, use]) => (
+          <li class="type-row">
+            <span class="sample" style={`font-size: var(${token})`}>Andy S.</span>
+            <span class="meta"><code>{token}</code><span class="value" data-token={token}></span><span class="use">{use}</span></span>
+          </li>
+        ))}
+      </ul>
+      <p class="note">The large steps grow with the screen: <code>clamp(min, fluid, max)</code>. Every small uppercase text uses <code>--tracking</code> (<span data-token="--tracking"></span>).</p>
+    </section>
+
+    <section id="space">
+      <div class="section-head"><h2>Spacing</h2></div>
+      <p class="note">Every margin, padding and gap is one of these. Small steps are fixed; large ones grow with the screen. <code>--space</code> separates page sections.</p>
+      <ul class="rows">
+        {spaces.map((token) => (
+          <li class="space-row">
+            <code>{token}</code>
+            <span class="bar-wrap"><span class="space-bar" style={`width: var(${token})`}></span></span>
+            <span class="value" data-token={token}></span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="layout">
+      <div class="section-head"><h2>Layout</h2></div>
+      <ul class="rows">
+        {layout.map(([token, use]) => (
+          <li class="token-row"><code>{token}</code><span class="value" data-token={token}></span><span class="use">{use}</span></li>
+        ))}
+      </ul>
+    </section>
+
+    <section id="motion">
+      <div class="section-head"><h2>Motion</h2></div>
+      <ul class="rows">
+        {motion.map(([token, use]) => (
+          <li class="token-row"><code>{token}</code><span class="value" data-token={token}></span><span class="use">{use}</span></li>
+        ))}
+      </ul>
+      <div class="motion-demo">
+        <span class="dot-move" aria-hidden="true"></span>
+        <span class="use">Hover this box: <code>--fast</code> with <code>--ease</code>. Reduced motion turns every animation off.</span>
+      </div>
+    </section>
+
+    <section id="patterns">
+      <div class="section-head"><h2>Patterns</h2></div>
+      <p class="note">Shared classes in <code>global.css</code>. A new page should be built from these before adding anything.</p>
+
+      <div class="patterns">
+        <div class="pattern">
+          <div class="demo"><span class="eyebrow">Selected works</span></div>
+          <code>.eyebrow</code>
+          <p class="use">Small uppercase label above a heading, or the label of a form field.</p>
+        </div>
+
+        <div class="pattern">
+          <div class="demo links-demo">
+            <a class="line-link" href="#patterns">2023</a>
+            <a class="line-link" href="#patterns" aria-current="true">2022</a>
+            <a class="line-link" href="#patterns">2021</a>
+          </div>
+          <code>.line-link</code>
+          <p class="use">Quiet text link: menu, years, filters. A thin line grows under it on hover and stays under the current one.</p>
+        </div>
+
+        <div class="pattern">
+          <div class="demo row-demo">
+            <a class="button" href="#patterns">Enquire about this work</a>
+            <span class="button" aria-disabled="true">Unavailable</span>
+          </div>
+          <code>.button</code>
+          <p class="use">The one action of a page. Solid ink, outlined on hover; <code>aria-disabled</code> when it cannot be used.</p>
+        </div>
+
+        <div class="pattern">
+          <div class="demo row-demo">
+            <label class="choice"><input type="radio" name="ds-choice" checked /> Buy a work</label>
+            <label class="choice"><input type="radio" name="ds-choice" /> Commission</label>
+            <label class="choice"><input type="radio" name="ds-choice" /> Press</label>
+          </div>
+          <code>.choice</code>
+          <p class="use">One option of a small set in a form. Same square as the button: outlined, solid ink when picked.</p>
+        </div>
+
+        <div class="pattern">
+          <div class="demo"><a class="more" href="#patterns">All works</a></div>
+          <code>.more</code>
+          <p class="use">Text link with an arrow that moves on hover.</p>
+        </div>
+
+        <div class="pattern">
+          <div class="demo">
+            <label class="eyebrow" for="ds-field">Email</label>
+            <input class="field" id="ds-field" type="email" placeholder="name@example.com" />
+          </div>
+          <code>Form field</code>
+          <p class="use">A single <code>--line</code> under the text, ink when focused. No boxes.</p>
+        </div>
+
+        <div class="pattern wide">
+          <div class="demo"><div class="section-head"><h2>2023</h2><a class="more" href="#patterns">All works</a></div></div>
+          <code>.section-head</code>
+          <p class="use">Section heading with a line under it and an optional link on the right.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="components">
+      <div class="section-head"><h2>Components</h2></div>
+      <p class="note">Built from the tokens and patterns above, in <code>src/components/</code>.</p>
+
+      <h3 class="eyebrow sub">Work card · <code>WorkCard.astro</code></h3>
+      <p class="use">One artwork in a grid, whole and never cropped, with a caption like a museum label. Available, price on request, sold:</p>
+      <ul class="cards">
+        {examples.map((a) => <li><WorkCard artwork={a} /></li>)}
+      </ul>
+
+      <h3 class="eyebrow sub">Availability · <code>Availability.astro</code></h3>
+      <p class="use">What a visitor can do about a work, on its page. A green dot means available (a red dot means sold in galleries).</p>
+      <div class="availability-row">
+        {examples.map((a) => <div><Availability artwork={a} title={artworkTitles[a.slug]} /></div>)}
+      </div>
+
+      <h3 class="eyebrow sub">Also</h3>
+      <ul class="rows also">
+        <li class="token-row"><code>Header.astro</code><span class="use">Name on the left, four links and the light/dark switch on the right; a full-screen menu on phones.</span></li>
+        <li class="token-row"><code>Footer.astro</code><span class="use">One quiet line: socials, Privacy, ©.</span></li>
+        <li class="token-row"><code>Viewer.astro</code><span class="use">Full-screen image viewer on <code>--night</code>, with zoom.</span></li>
+        <li class="token-row"><code>CookieNotice.astro</code><span class="use">Small note in the bottom corner on <code>--paper</code>; Accept and Decline look the same.</span></li>
+        <li class="token-row"><code>YearNav.astro</code><span class="use">The year bar of the works page, built with <code>.line-link</code>.</span></li>
+      </ul>
+    </section>
+  </div>
+</Base>
+
+<script>
+  // Show the value written in global.css next to each token
+  const root = getComputedStyle(document.documentElement);
+  document.querySelectorAll('[data-token]').forEach((el) => {
+    el.textContent = root.getPropertyValue(el.dataset.token).trim();
+  });
+</script>
+
+<style>
+  .ds { padding-block: var(--space-xl) 0; }
+  .intro h1 { margin-bottom: var(--space-m); }
+  .lead { max-width: 44rem; font-size: var(--text-md); color: var(--muted); }
+  .toc { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-m); margin-top: var(--space-l); }
+  .toc a { padding-block: var(--space-2xs); font-size: var(--text-xs); font-weight: 500; letter-spacing: var(--tracking); text-transform: uppercase; }
+
+  section { padding-top: var(--space-xl); scroll-margin-top: var(--bar); }
+  .note { max-width: 44rem; color: var(--muted); }
+  .use { font-size: var(--text-sm); color: var(--muted); }
+  .value { font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9em; color: var(--ink); }
+  .sub { margin-top: var(--space-l); }
+
+  ul { margin: 0; padding: 0; list-style: none; }
+  .rows { border-top: 1px solid var(--line); }
+  .rows > li { padding-block: var(--space-s); border-bottom: 1px solid var(--line); }
+
+  /* Colors */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: var(--space-m); margin-top: var(--space-m); }
+  .swatches li { display: flex; flex-direction: column; gap: var(--space-3xs); }
+  .swatch { aspect-ratio: 3 / 2; margin-bottom: var(--space-2xs); border: 1px solid var(--line); }
+
+  /* Type */
+  .families { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-l); }
+  .specimen { margin: 0 0 var(--space-2xs); font-size: var(--text-3xl); line-height: 1.1; }
+  .display { font-family: var(--display); }
+  .sans { font-family: var(--sans); }
+  .type-row { display: grid; grid-template-columns: minmax(0, 1fr) 18rem; align-items: baseline; gap: var(--space-m); }
+  .sample { font-family: var(--display); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .meta { display: flex; flex-direction: column; gap: var(--space-3xs); }
+
+  /* Spacing, layout, motion */
+  .space-row { display: grid; grid-template-columns: 8rem minmax(0, 1fr) 14rem; align-items: center; gap: var(--space-m); }
+  .bar-wrap { display: block; }
+  .space-bar { display: block; height: var(--space-s); background: var(--ink); }
+  .token-row { display: grid; grid-template-columns: 12rem 14rem minmax(0, 1fr); align-items: baseline; gap: var(--space-m); }
+  .also .token-row { grid-template-columns: 12rem minmax(0, 1fr); }
+
+  .motion-demo { display: flex; align-items: center; gap: var(--space-m); margin-top: var(--space-m); }
+  .dot-move {
+    position: relative; flex: none; width: calc(var(--target) * 3); height: var(--target);
+    border: 1px solid var(--line);
+  }
+  .dot-move::after {
+    content: ''; position: absolute; top: 50%; left: var(--space-2xs);
+    width: var(--space-s); height: var(--space-s); margin-top: calc(var(--space-s) / -2);
+    background: var(--ink); transition: transform var(--fast) var(--ease);
+  }
+  .dot-move:hover::after { transform: translateX(calc(var(--target) * 3 - var(--space-s) - var(--space-xs))); }
+
+  /* Patterns */
+  .patterns { display: grid; grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); gap: var(--space-l) var(--space-m); margin-top: var(--space-m); }
+  .pattern { display: flex; flex-direction: column; gap: var(--space-2xs); }
+  .pattern.wide { grid-column: 1 / -1; }
+  .pattern .use { margin: 0; }
+  .demo {
+    display: flex; flex-direction: column; justify-content: center; min-height: calc(var(--target) * 3);
+    margin-bottom: var(--space-2xs); padding: var(--space-m); border: 1px solid var(--line);
+  }
+  .demo .eyebrow { margin: 0; }
+  .demo label.eyebrow { margin-bottom: var(--space-2xs); }
+  .demo .section-head { margin: 0; }
+  .links-demo, .row-demo { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: var(--space-2xs) var(--space-m); }
+  .links-demo a { padding-block: var(--space-2xs); font-size: var(--text-xs); font-weight: 500; letter-spacing: var(--tracking); text-transform: uppercase; }
+  .row-demo { gap: var(--space-2xs); }
+  .field {
+    display: block; width: 100%; padding: var(--space-2xs) 0;
+    border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent;
+    font: inherit; font-size: var(--text-md); color: var(--ink);
+  }
+  .field:focus { outline: none; border-bottom-color: var(--ink); }
+
+  /* Components */
+  .cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-m); margin-top: var(--space-m); }
+  .availability-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-m); margin-top: var(--space-m); }
+
+  @media (max-width: 767px) {
+    .families, .cards, .availability-row { grid-template-columns: 1fr; }
+    .type-row, .token-row { grid-template-columns: 1fr; gap: var(--space-3xs); }
+    .space-row { grid-template-columns: 7rem minmax(0, 1fr); }
+    .space-row .value { grid-column: 1 / -1; }
+  }
+</style>
