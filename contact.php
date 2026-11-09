@@ -9,6 +9,10 @@
 // bot posting straight to this file is refused. Posts that look like a bot (trap
 // field filled, sent in under 3 seconds, gibberish) get a normal "sent" answer but
 // no email, so the bot learns nothing.
+//
+// Confirmation: once the message is sent, the visitor gets a short automatic email
+// in the language of the page. It never repeats their name or message, so nobody
+// can use the form to send their own text to someone else's address.
 
 const RECIPIENT  = 'bolienvano@gmail.com';
 const FROM       = 'bolienvano.com <no-reply@bolienvano.com>';
@@ -98,4 +102,19 @@ $headers = [
 // Encoded so accented titles arrive intact in the subject line
 $subject = mb_encode_mimeheader("Contact | $topic" . ($work !== '' ? " | $work" : ''), 'UTF-8');
 $sent = mail(RECIPIENT, $subject, $body, $headers);
+
+if ($sent) {
+    $confirmations = [
+        'en' => ['Your message to Andy Ossorio', "Hello,\n\nThank you for writing. Your message reached me and I will reply soon, usually within a few days.\n\nAndy Ossorio\nhttps://bolienvano.com\n\nThis is an automatic message: this address was used in the contact form of bolienvano.com."],
+        'es' => ['Tu mensaje a Andy Ossorio', "Hola:\n\nGracias por escribir. Recibí tu mensaje y te responderé pronto, normalmente en pocos días.\n\nAndy Ossorio\nhttps://bolienvano.com/es/\n\nEste es un mensaje automático: esta dirección se usó en el formulario de contacto de bolienvano.com."],
+        'pt' => ['Sua mensagem para Andy Ossorio', "Olá,\n\nObrigado por escrever. Recebi sua mensagem e responderei em breve, normalmente em poucos dias.\n\nAndy Ossorio\nhttps://bolienvano.com/pt/\n\nEsta é uma mensagem automática: este endereço foi usado no formulário de contato de bolienvano.com."],
+    ];
+    [$confirmSubject, $confirmBody] = $confirmations[(string) ($_POST['lang'] ?? '')] ?? $confirmations['en'];
+    mail($email, mb_encode_mimeheader($confirmSubject, 'UTF-8'), $confirmBody, [
+        'From'         => FROM,
+        'Reply-To'     => RECIPIENT,   // a reply to the confirmation reaches the artist
+        'Content-Type' => 'text/plain; charset=utf-8',
+    ]);
+}
+
 finish($sent ? 200 : 500, $isFetch);
