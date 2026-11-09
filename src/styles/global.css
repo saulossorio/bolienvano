@@ -195,7 +195,8 @@ main > .section:last-child { padding-bottom: 0; }
   font: inherit; font-size: var(--text-md); color: var(--ink);
 }
 .input:focus { outline: none; border-bottom-color: var(--ink); }
-textarea.input { resize: vertical; }
+/* A textarea starts small and grows with what is typed, where the browser can */
+textarea.input { resize: vertical; field-sizing: content; min-height: calc(2lh + var(--space-2xs) * 2); max-height: 60vh; }
 
 /* Choice: one option of a small set, a radio or checkbox inside a <label class="choice">.
    The same square and type as .button, but quiet: a thin outline until picked, then
