@@ -1,6 +1,9 @@
 # bolienvano.com
 
-Website of the artist Andy Ossorio Static site built with [Astro](https://astro.build).
+Website of the artist Andy Ossorio. Static site built with [Astro](https://astro.build).
+
+**Agents (and people) changing this repo: read `AGENTS.md` first** — what may be changed,
+what must be asked, and what never to do.
 
 ## Branches and publishing
 
@@ -18,18 +21,18 @@ Website of the artist Andy Ossorio Static site built with [Astro](https://astro.
 | What | Where |
 |---|---|
 | Artworks (year, technique, size, price, availability, order) | `src/data/artworks.js` |
-| Artwork titles | `src/content/en/artworks.js` |
+| Artwork titles | `src/content/<lang>/artworks.js` |
 | Exhibitions (date, photos) | `src/data/exhibitions.js` |
-| Exhibition texts | `src/content/en/exhibitions.js` |
-| Everything else you read on the site | `src/content/en/ui.js` |
+| Exhibition texts | `src/content/<lang>/exhibitions.js` |
+| Everything else you read on the site | `src/content/<lang>/ui.js` |
 | Images (originals) | `src/assets/` |
 
 Texts are separated by language in `src/content/<language>/`. If a title or an image is
 missing, the build stops and says which one.
 
 **Add an artwork:** put `<slug>_mockup.jpg`, `<slug>_zoom1.jpg` and `<slug>_zoom2.jpg` in
-`src/assets/artworks/`, add a line to `src/data/artworks.js` and its title to
-`src/content/en/artworks.js`. The year page, the artwork page and the sitemap update by themselves.
+`src/assets/artworks/`, add a line to `src/data/artworks.js` (with a new random `coa` number) and its title to
+`src/content/en|es|pt/artworks.js`. The year page, the artwork page and the sitemap update by themselves.
 
 ## Run it locally
 
@@ -45,14 +48,15 @@ npm run build    # final site in dist/
 
 | Path | What |
 |---|---|
-| `src/pages/` | One file per address (`about.astro` → `about.html`) |
+| `src/pages/[...lang]/` | One file per address, built in each language (`about.astro` → `about.html`, `es/about.html`, `pt/about.html`) |
+| `src/pages/` | Pages that exist once: 404, design system, invitation, sitemap, llms.txt |
 | `src/components/` | Header, footer, gallery tile, year and artwork pages |
 | `src/layouts/Base.astro` | Shared `<head>`: SEO, analytics (GTM), fonts |
 | `src/styles/global.css` | Design tokens (colors, type, spacing, motion) and shared styles |
 | `src/lib/schema.js` | Structured data for search engines and AI (artist, artworks, exhibitions) |
 | `src/pages/llms.txt.js` | `/llms.txt`: plain-text summary of the site for AI assistants |
 | `public/` | Copied as-is: `contact.php`, `.htaccess`, icons, exhibition PDFs |
-| `legacy/` | Old Webflow site, reference only. Deleted before v2 goes live |
+| `legacy/` | Old Webflow site, reference only (delete only when Don Andy says so) |
 
 ## Design system
 
@@ -61,8 +65,8 @@ only use `var(--…)`, never raw sizes. Change a token and the whole site follow
 
 | Tokens | Use |
 |---|---|
-| `--wall` `--paper` `--ink` `--muted` `--line` `--available` `--accent` `--night` | Colors (`--accent` only for form errors, `--night` behind the image viewer and videos) |
-| `--display` `--sans` | Syne for titles, Familjen Grotesk for text |
+| `--wall` `--paper` `--ink` `--prose` `--muted` `--line` `--available` `--accent` `--night` | Colors (`--prose` for long texts, `--accent` only for form errors, `--night` behind the image viewer and videos) |
+| `--display` `--sans` `--text` | Syne for titles (weight 400), Familjen Grotesk for the interface, Inter for long texts |
 | `--text-xs` … `--text-4xl` | Type scale; the large steps grow with the screen |
 | `--tracking` | Letter spacing of every small uppercase text |
 | `--space-3xs` … `--space-2xl`, `--space` | Spacing scale; `--space` separates page sections |
@@ -71,7 +75,7 @@ only use `var(--…)`, never raw sizes. Change a token and the whole site follow
 | `--bar` `--toolbar` `--target` | Height of the top bar and of the works year bar; smallest tap area |
 | `--ease` `--fast` `--slow` | The one easing and two speeds of every transition |
 
-Shared patterns in `global.css`: `.eyebrow` (small uppercase label), `.line-link` (quiet link with a thin line under it), `.button`, `.input` (form field: a single line under the text), `.choice` (one option of a small set in a form: outlined, solid ink when picked), `.more`, `.section-head`, `.numeral` (a heading that is a number: plain figures in the reading type, never Syne), `.place` (a venue, then city and country on their own line).
+Shared patterns in `global.css`: `.eyebrow` (small uppercase label), `.line-link` (quiet link with a thin line under it), `.button` (and `.button.outline`, lighter), `.input` (form field: a single line under the text), `.choice` (one option of a small set in a form: outlined, solid ink when picked), `.more`, `.section-head`, `.numeral` (a heading that is a number: plain figures in the reading type, never Syne), `.place` (a venue, then city and country on their own line).
 
 Exception: `src/pages/invitacion.astro` keeps its own sizes (it reproduces the printed card).
 
@@ -89,7 +93,7 @@ The site is in English, Spanish and Portuguese. English keeps the addresses of t
 site (`/about.html`); the others live under `/es/` and `/pt/`. Every page in
 `src/pages/[...lang]/` is built once per language; pages and components get their texts
 with `useTexts(Astro)` from `src/content/index.js`, which reads the language from the
-address. Texts live in `src/content/<en|es|pt>/` with the same keys, and the build stops
+address. Texts live in `src/content/<lang>/` with the same keys, and the build stops
 if one is missing. The header has an EN · ES · PT switch; on a first visit to an English
 page, a browser that prefers Spanish or Portuguese goes to that language once (never the
 other way, so search engines see each language as it is). Each page lists its other
