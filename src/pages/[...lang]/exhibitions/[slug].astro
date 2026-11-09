@@ -106,7 +106,7 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
   .back:hover { color: var(--ink); }
   .intro h1 { margin-bottom: var(--space-s); }
   /* The date, then the venue with its city under it */
-  .facts { display: flex; flex-direction: column; gap: var(--space-s); margin: 0; color: var(--muted); }
+  .facts { display: flex; flex-direction: column; gap: var(--space-2xs); margin: 0; color: var(--muted); }
   .facts .place > span:first-child { color: var(--ink); }
 
   /* Collapsible sections: fixed names, a plus that turns into a minus, smooth open */
@@ -139,7 +139,7 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
   .hero :global(img) { max-height: calc(100svh - var(--bar) - var(--space-l)); object-fit: cover; }
 
   /* Text in a comfortable reading width */
-  .body { max-width: 42rem; padding-top: var(--space-xl); font-size: var(--text-md); line-height: 1.75; }
+  .body { max-width: 42rem; padding-top: var(--space-xl); font-size: var(--text-md); line-height: 1.75; color: var(--prose); }
   .body p:first-child { font-size: var(--text-lg); line-height: 1.6; }
 
   .nft { margin: var(--space-xl) 0 0; color: var(--muted); }

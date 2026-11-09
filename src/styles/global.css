@@ -15,6 +15,7 @@
                                                  #f2f1ef (and #171615 in dark mode) */
   --paper:     light-dark(#fbfaf8, #1f1e1c);   /* cards, form fields */
   --ink:       light-dark(#1d1c1a, #ebe8e3);   /* text */
+  --prose:     light-dark(#45423e, #cdc9c2);   /* long reading text (biography, exhibition texts): softer than --ink */
   --muted:     light-dark(#6b6863, #a29e97);   /* secondary text (4.9:1 and 6.9:1 on --wall) */
   --line:      light-dark(#dcd9d3, #353330);   /* separators */
   --accent:    light-dark(#8a2b1d, #e0907d);   /* form errors only */

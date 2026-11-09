@@ -2,9 +2,13 @@
 // Footer: one quiet line: social links and credits. No email address in the page
 // (spam bots harvest it); people write through the contact form.
 // "Privacy" explains the cookies and the contact form, and lets visitors change their cookie choice.
+// EN · ES · PT next to it: the same page in each language (from Base.astro); on phones
+// they are in the menu instead (Header.astro).
 import { useTexts } from '../content/index.js';
 import { socials } from '../data/socials.js';
 const { t, url } = useTexts(Astro);
+const { alternates = [] } = Astro.props;
+const names = { en: 'English', es: 'Español', pt: 'Português' };
 
 const year = new Date().getFullYear();
 ---
@@ -21,6 +25,14 @@ const year = new Date().getFullYear();
         ))}
       </ul>
       <p class="credits">
+        {alternates.length > 0 && (
+          <span class="langs" role="group" aria-label={t.nav.language}>
+            {alternates.map((a) => (
+              <a href={a.href} hreflang={a.lang} lang={a.lang} title={names[a.lang]}
+                 aria-current={a.lang === t.lang ? 'true' : undefined} data-lang={a.lang}>{a.lang}</a>
+            ))}
+          </span>
+        )}
         <a href={url('privacy')}>{t.nav.privacy}</a>
         © {year} {t.site.name}
       </p>
@@ -44,4 +56,17 @@ const year = new Date().getFullYear();
   .credits a { text-decoration: none; }
   .credits a:hover { color: var(--ink); }
   .credits a:hover { text-decoration: underline; }
+
+  /* Languages: EN ES PT, the current one in ink; on phones they are in the menu */
+  .langs { display: flex; gap: var(--space-xs); text-transform: uppercase; letter-spacing: var(--tracking); }
+  .langs a[aria-current] { color: var(--ink); }
+  @media (max-width: 767px) { .langs { display: none; } }
 </style>
+
+<script>
+  // Language switch (here and in the phone menu): remember the choice, so the
+  // first-visit redirect in Base.astro never overrides it
+  document.querySelectorAll('[data-lang]').forEach((a) => a.addEventListener('click', () => {
+    try { localStorage.setItem('lang', a.dataset.lang); } catch {}
+  }));
+</script>

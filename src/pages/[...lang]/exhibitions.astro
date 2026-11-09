@@ -68,7 +68,7 @@ export const getStaticPaths = () => langParams().map((params) => ({ params }));
   h2 a::after { content: ''; position: absolute; inset: 0; }
   .row:hover h2 a { text-decoration: underline; text-decoration-thickness: 1px; }
   .venue { font-size: var(--text-sm); }
-  .summary { max-width: 46ch; }
+  .summary { max-width: 46ch; color: var(--prose); }
 
   @media (max-width: 767px) {
     .row { grid-template-columns: 1fr; }
