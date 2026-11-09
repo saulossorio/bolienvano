@@ -105,9 +105,19 @@ const works = (exhibition.works ?? []).map((slug) => artworks.find((a) => a.slug
   .back { text-decoration: none; }
   .back:hover { color: var(--ink); }
   .intro h1 { margin-bottom: var(--space-s); }
-  /* The date, then the venue with its city under it */
-  .facts { display: flex; flex-direction: column; gap: var(--space-2xs); margin: 0; color: var(--muted); }
+  /* One line: date, venue, city, each apart (a thin line between them); on phones,
+     where they do not fit, one under the other, close together */
+  .facts { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-3xs) 0; margin: 0; color: var(--muted); }
+  .facts .place { display: contents; }
+  .facts > *, .facts .place > span { display: inline-flex; align-items: baseline; }
+  .facts > * + *::before, .facts .place > span + span::before {
+    content: ''; align-self: center; width: 1px; height: .9em; margin-inline: var(--space-s); background: var(--line);
+  }
   .facts .place > span:first-child { color: var(--ink); }
+  @media (max-width: 599px) {
+    .facts { flex-direction: column; align-items: flex-start; gap: var(--space-3xs); }
+    .facts > * + *::before, .facts .place > span + span::before { display: none; }
+  }
 
   /* Collapsible sections: fixed names, a plus that turns into a minus, smooth open */
   .fold { border-bottom: 1px solid var(--line); interpolate-size: allow-keywords; scroll-margin-top: var(--bar); }
