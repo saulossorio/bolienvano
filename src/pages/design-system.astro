@@ -28,8 +28,7 @@ const sizes = [
   ['--text-2xl', 'List titles, section folds'],
   ['--text-xl', 'Card titles, h3'],
   ['--text-lg', 'Logo, lead lines'],
-  ['--text-read', 'Long texts in the reading serif'],
-  ['--text-md', 'Intros, short texts, fields'],
+  ['--text-md', 'Reading text, intros, fields'],
   ['--text-base', 'Body'],
   ['--text-sm', 'Captions, buttons, options'],
   ['--text-xs', 'Labels, nav, eyebrows'],
@@ -96,14 +95,9 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
           <p class="use">The name and the titles, always at weight 400: Syne grows wider as it gets bolder and would look stretched. Made by Bonjour Monde for Synesthésie, an art centre near Paris.</p>
         </div>
         <div>
-          <span class="eyebrow">Interface · <code>--sans</code></span>
+          <span class="eyebrow">Text · <code>--sans</code></span>
           <p class="specimen sans">Familjen Grotesk</p>
-          <p class="use">Menu, labels, captions, buttons, fields and short texts.</p>
-        </div>
-        <div>
-          <span class="eyebrow">Reading · <code>--serif</code></span>
-          <p class="specimen serif">Source Serif 4</p>
-          <p class="use">Long texts: biography, exhibition texts and summaries, the NFT text, privacy. Always in <code>--prose</code>, the softer text color. Made by Adobe for reading on screens.</p>
+          <p class="use">Everything you read: body, labels, buttons, fields.</p>
         </div>
       </div>
 
@@ -320,11 +314,10 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
   .swatch { aspect-ratio: 3 / 2; margin-bottom: var(--space-2xs); border: 1px solid var(--line); }
 
   /* Type */
-  .families { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-l); }
+  .families { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-l); }
   .specimen { margin: 0 0 var(--space-2xs); font-size: var(--text-3xl); line-height: 1.1; }
   .display { font-family: var(--display); }
   .sans { font-family: var(--sans); }
-  .serif { font-family: var(--serif); }
   .type-row { display: grid; grid-template-columns: minmax(0, 1fr) 18rem; align-items: baseline; gap: var(--space-m); }
   .sample { font-family: var(--display); line-height: 1.1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .meta { display: flex; flex-direction: column; gap: var(--space-3xs); }
