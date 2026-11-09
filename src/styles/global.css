@@ -36,16 +36,20 @@
 
   /* Type */
   /* Syne: made by Bonjour Monde for Synesthésie, an art centre near Paris.
-     Used for the name, titles and big numbers. Familjen Grotesk for reading. */
+     Used for the name, titles and big numbers. Familjen Grotesk for the interface:
+     menu, labels, captions, forms. Source Serif 4 (Adobe, drawn for reading on
+     screens) for long texts: biography, exhibition texts, privacy. */
   --display: 'Syne Variable', 'Familjen Grotesk Variable', system-ui, sans-serif;
   --sans:    'Familjen Grotesk Variable', system-ui, sans-serif;
+  --serif:   'Source Serif 4 Variable', Georgia, serif;
 
   /* Type scale: every font size on the site is one of these.
      The large steps grow with the screen (min, fluid, max). */
   --text-xs:   .8125rem;                      /* labels, nav, eyebrows */
   --text-sm:   .9375rem;                      /* captions, venues, buttons */
   --text-base: 1rem;                          /* body */
-  --text-md:   1.125rem;                      /* reading text, intros */
+  --text-md:   1.125rem;                      /* intros, short texts */
+  --text-read: 1.25rem;                       /* long texts in --serif (its letters are smaller) */
   --text-lg:   1.375rem;                      /* logo, lead lines */
   --text-xl:   1.5rem;                        /* card titles, h3 */
   --text-2xl:  clamp(1.75rem, 3.5vw, 2.5rem); /* list titles, section folds */
