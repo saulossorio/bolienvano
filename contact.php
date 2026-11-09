@@ -3,7 +3,7 @@
 // Sends the message to the artist by email.
 // Answers 200 when sent, 400 for invalid data, 429 when one address sends too
 // often, 500 if the mail server fails. Without JavaScript the browser is sent
-// back to contact.html?sent=1 or ?error=1.
+// back to the contact page in its language (lang field), with ?sent=1 or ?error=1.
 //
 // Spam: the form page adds "elapsed" (seconds spent on it) with JavaScript, so a
 // bot posting straight to this file is refused. Posts that look like a bot (trap
@@ -23,7 +23,9 @@ function finish(int $status, bool $isFetch): void {
         header('Content-Type: text/plain; charset=utf-8');
         echo $status === 200 ? 'OK' : 'Error';
     } else {
-        header('Location: contact.html?' . ($status === 200 ? 'sent=1' : 'error=1'), true, 303);
+        $lang = $_POST['lang'] ?? '';
+        $page = in_array($lang, ['es', 'pt'], true) ? "$lang/contact.html" : 'contact.html';
+        header("Location: $page?" . ($status === 200 ? 'sent=1' : 'error=1'), true, 303);
     }
     exit;
 }
