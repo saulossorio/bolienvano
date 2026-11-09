@@ -36,9 +36,13 @@
 
   /* Type */
   /* Syne: made by Bonjour Monde for Synesthésie, an art centre near Paris.
-     Used for the name, titles and big numbers. Familjen Grotesk for reading. */
+     Used for the name, titles and big numbers. Familjen Grotesk for the interface
+     (menu, labels, captions, forms). Inter for long texts: a neutral sans in the
+     line of Helvetica, drawn for screens and the most used on design and artist
+     sites today. */
   --display: 'Syne Variable', 'Familjen Grotesk Variable', system-ui, sans-serif;
   --sans:    'Familjen Grotesk Variable', system-ui, sans-serif;
+  --text:    'Inter Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   /* Type scale: every font size on the site is one of these.
      The large steps grow with the screen (min, fluid, max). */
