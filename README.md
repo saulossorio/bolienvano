@@ -78,7 +78,9 @@ Exception: `src/pages/invitacion.astro` keeps its own sizes (it reproduces the p
 ## Contact form
 
 `public/contact.php` sends the form to bolienvano@gmail.com, with the reason picked in the
-form (and the artwork, when the visitor came from one) in the email subject. It needs PHP,
+form (and the artwork, when the visitor came from one) in the email subject. The visitor then
+gets a short automatic confirmation in the language of the page (it never repeats their
+name or message, so the form cannot be used to send text to someone else's address). It needs PHP,
 so it works on Hostinger but not on the GitHub Pages preview.
 
 ## Languages

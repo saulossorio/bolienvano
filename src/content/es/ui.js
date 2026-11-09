@@ -99,7 +99,7 @@ export default {
     privacy: 'Tus datos solo se usan para responderte.',
     submit: 'Enviar mensaje',
     sending: 'Enviando…',
-    done: 'Gracias. Tu mensaje fue enviado y te responderé pronto.',
+    done: 'Gracias. Tu mensaje fue enviado y te responderé pronto. Te llegará una confirmación a tu correo.',
     fail: 'No se pudo enviar el mensaje. Vuelve a intentarlo en un momento.',
     noscript: 'Para enviar, el navegador necesita tener JavaScript activado.',
   },
@@ -135,7 +135,7 @@ export default {
       {
         title: 'Formulario de contacto',
         paragraphs: [
-          'Tu nombre, tu correo y tu mensaje se envían por correo electrónico al artista y solo se usan para responderte. No se agregan a ninguna lista ni se comparten.',
+          'Tu nombre, tu correo y tu mensaje se envían por correo electrónico al artista y solo se usan para responderte; tu correo recibe además una confirmación automática. No se agregan a ninguna lista ni se comparten.',
         ],
       },
       {

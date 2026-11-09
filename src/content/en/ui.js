@@ -99,7 +99,7 @@ export default {
     privacy: 'Your details are only used to reply to you.',
     submit: 'Send message',
     sending: 'Sending…',
-    done: 'Thank you. Your message has been sent and I will reply soon.',
+    done: 'Thank you. Your message has been sent and I will reply soon. A confirmation is on its way to your email.',
     fail: 'The message could not be sent. Please try again in a moment.',
     noscript: 'Sending needs JavaScript turned on in your browser.',
   },
@@ -135,7 +135,7 @@ export default {
       {
         title: 'Contact form',
         paragraphs: [
-          'Your name, email and message are sent by email to the artist and used only to reply to you. They are not added to any list and not shared.',
+          'Your name, email and message are sent by email to the artist and used only to reply to you; your email also gets an automatic confirmation. They are not added to any list and not shared.',
         ],
       },
       {
