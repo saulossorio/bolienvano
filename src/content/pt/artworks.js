@@ -45,5 +45,5 @@ export default {
   'joven-y-viejo': 'Jovem e velho',
 
   'inspired': 'Inspirado',
-  'cuadrito': 'Quadrinho',
+  'cuadrito': 'Cuadrito',
 };
