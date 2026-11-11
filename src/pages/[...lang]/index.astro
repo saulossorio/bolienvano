@@ -109,9 +109,9 @@ const works = slugs
   /* Small link to all the works, the same size as the label */
   .all { margin-top: var(--space-l); animation: rise var(--slow) var(--ease) .4s both; }
 
-  /* Phones: the work sits near the top and uses the full width */
+  /* Phones: the work uses the full width, still centered in the screen */
   @media (max-width: 767px) {
-    .home { justify-content: flex-start; min-height: 0; padding-block: var(--space-l) var(--space-xl); }
+    .home { padding-block: var(--space-l); }
     .work :global(img) { width: 100%; max-height: none; }
   }
 </style>
