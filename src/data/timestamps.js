@@ -17,6 +17,6 @@
 export const timestamps = {
   'AO-2019-ARE3': [
     { file: 'AO-2019-ARE3',   kind: 'authorship', stamped: '2026-11-12', block: 975519, date: '2026-11-12' },
-    { file: 'AO-2019-ARE3-1', kind: 'sale',       stamped: '2026-11-12', block: null, date: null },
+    { file: 'AO-2019-ARE3-1', kind: 'sale',       stamped: '2026-11-12', block: 975519, date: '2026-11-12' },
   ],
 };
