@@ -39,6 +39,7 @@ const records = (timestamps[artwork.coa] ?? []).map((r, i) => {
   return {
     ...r,
     title: r.kind === 'sale' ? c.sale.replace('{n}', i) : c.authorship,
+    summary: r.kind === 'sale' ? c.soldPrivate : c.authored,
     text: text.toString(),
     hash: createHash('sha256').update(text).digest('hex'),
     record: assetUrl(`certificate/proof/${r.file}.txt`),
@@ -47,6 +48,7 @@ const records = (timestamps[artwork.coa] ?? []).map((r, i) => {
 });
 const proof = records[0];
 const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} · ${date(r.date)}` : c.pending;
+const when = (r) => r.block ? date(r.date) : `${date(r.stamped)} (${c.pending})`;
 ---
 <Base title={`${c.title}, ${title}`} path={path} noindex>
   <div class="container page">
@@ -84,7 +86,7 @@ const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} 
         <div class="qr" set:html={qr} />
         <p>
           {c.verify}<br /><span class="url">{link.host}{link.pathname}</span><br />
-          {proof && <><span class="chain">{c.chain} · {status(proof)} · SHA-256 <span class="hash">{proof.hash}</span></span><br /></>}
+          {proof && <><span class="chain">{c.chain} · {status(proof)}</span><br /></>}
           <span class="note">{c.note}</span>
         </p>
       </footer>
@@ -93,6 +95,12 @@ const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} 
     {proof && (
       <section class="check" aria-labelledby="check">
         <h2 id="check" class="eyebrow">{c.checkTitle}</h2>
+        <ul class="summary">
+          {records.map((r) => <li><span aria-hidden="true">✓</span> {r.summary} · {when(r)}</li>)}
+        </ul>
+        <details>
+        <summary>{c.howTo}</summary>
+        <div class="how">
         <p>{c.checkIntro}</p>
         <ol>{c.checkSteps.map((step) => <li set:html={step} />)}</ol>
         {records.some((r) => r.kind === 'sale') && <p>{c.ownerNote}</p>}
@@ -107,6 +115,8 @@ const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} 
             </p>
           </div>
         ))}
+        </div>
+        </details>
       </section>
     )}
 
@@ -163,12 +173,14 @@ const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} 
   .qr :global(svg) { display: block; width: 100%; height: auto; }
   .foot p { margin: 0; font-size: var(--text-xs); line-height: 1.6; color: var(--muted); }
   .url { color: var(--ink); overflow-wrap: anywhere; }
-  .hash { overflow-wrap: anywhere; }
 
   /* How to check the blockchain record: on screen only, under the sheet */
   .check { width: min(100%, 210mm); display: grid; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--muted); }
   .check h2 { margin: 0; color: var(--ink); }
-  .check p, .check ol { margin: 0; }
+  .check p, .check ol, .summary { margin: 0; }
+  .summary { list-style: none; padding: 0; display: grid; gap: var(--space-3xs); color: var(--ink); }
+  details summary { cursor: pointer; width: fit-content; margin-top: var(--space-2xs); font-weight: 500; color: var(--ink); }
+  .how { display: grid; gap: var(--space-2xs); margin-top: var(--space-s); }
   .entry { display: grid; gap: var(--space-2xs); margin-top: var(--space-s); }
   .entry h3 { margin: 0; font-family: var(--sans); font-size: var(--text-sm); font-weight: 500; color: var(--ink); }
   .entry h3 span { font-weight: 400; color: var(--muted); }

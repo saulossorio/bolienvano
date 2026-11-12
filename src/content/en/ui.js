@@ -171,7 +171,7 @@ export default {
     chain: 'Registered on the Bitcoin blockchain',
     block: 'block',
     pending: 'confirmation pending',
-    checkTitle: 'Check the blockchain record',
+    checkTitle: 'Blockchain record',
     checkIntro: 'The records below (the authorship of this work and each of its sales) were registered on the Bitcoin blockchain with OpenTimestamps. Anyone can check it without trusting this website:',
     checkSteps: [
       'Download the record (.txt) and its proof (.ots).',
@@ -182,6 +182,9 @@ export default {
     proof: 'Proof (.ots)',
     explorer: 'See the block',
     authorship: 'Authorship',
+    authored: 'Authorship registered on Bitcoin',
+    soldPrivate: 'Sold to a private collector',
+    howTo: 'How to verify it',
     sale: 'Sale {n}',
     ownerNote: 'The owner’s name is never public: each sale record holds only the fingerprint (SHA-256) of the owner’s name and a secret code, which the owner keeps with the paper certificate. With both, the owner can prove the record is theirs.',
   },

@@ -171,7 +171,7 @@ export default {
     chain: 'Registrado en la blockchain de Bitcoin',
     block: 'bloque',
     pending: 'confirmación pendiente',
-    checkTitle: 'Verifica el registro en blockchain',
+    checkTitle: 'Registro en blockchain',
     checkIntro: 'Los registros de abajo (la autoría de esta obra y cada una de sus ventas) se registraron en la blockchain de Bitcoin con OpenTimestamps. Cualquiera puede comprobarlo sin confiar en este sitio:',
     checkSteps: [
       'Descarga el registro (.txt) y su prueba (.ots).',
@@ -182,6 +182,9 @@ export default {
     proof: 'Prueba (.ots)',
     explorer: 'Ver el bloque',
     authorship: 'Autoría',
+    authored: 'Autoría registrada en Bitcoin',
+    soldPrivate: 'Vendida a un coleccionista privado',
+    howTo: 'Cómo verificarlo',
     sale: 'Venta {n}',
     ownerNote: 'El nombre del propietario nunca es público: cada registro de venta guarda solo la huella (SHA-256) de su nombre y de un código secreto, que el propietario conserva junto al certificado en papel. Con ambos puede demostrar que el registro es suyo.',
   },
