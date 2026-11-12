@@ -108,6 +108,9 @@ museum labels. Full reference: `/design-system.html` (internal page) and README,
 - **Never change or reuse a certificate number** (`coa` in `src/data/artworks.js`). New works
   get `AO-<year>-` plus 4 random characters from `ABCDEFGHJKMNPQRSTUVWXYZ23456789`, unique.
   They are random so they reveal nothing about how many works exist; never sequential.
+- **Never edit or delete the blockchain records** in `public/certificate/proof/` (`<coa>.txt`
+  and `<coa>.ots`): a single changed letter makes the proof fail. If a work's details change,
+  ask Don Andy before registering it again.
 - Never weaken the contact form's spam protection (the `elapsed` field, the trap field,
   gibberish filter, 5 per hour per IP).
 - Never send test messages through the live form without saying so (each one reaches Don

@@ -167,6 +167,20 @@ export default {
     verify: 'Verifique este certificado em',
     print: 'Imprimir ou salvar como PDF',
     note: 'Válido somente com a assinatura manuscrita do artista.',
+    // Registro na blockchain do Bitcoin (só certificados em src/data/timestamps.js)
+    chain: 'Registrado na blockchain do Bitcoin',
+    block: 'bloco',
+    pending: 'confirmação pendente',
+    checkTitle: 'Verifique o registro na blockchain',
+    checkIntro: 'Os dados desta obra, como estão escritos no registro abaixo, foram registrados na blockchain do Bitcoin com OpenTimestamps. Qualquer pessoa pode conferir sem confiar neste site:',
+    checkSteps: [
+      'Baixe o registro (.txt) e sua prova (.ots).',
+      'Arraste os dois arquivos para <strong>opentimestamps.org</strong>, ou confira com a ferramenta oficial <strong>ots verify</strong>.',
+      'Você verá a data em que o Bitcoin confirma que o registro existia. Se uma única letra do registro mudasse, a verificação falha.',
+    ],
+    record: 'Registro (.txt)',
+    proof: 'Prova (.ots)',
+    explorer: 'Ver o bloco',
   },
 
   nft: {
