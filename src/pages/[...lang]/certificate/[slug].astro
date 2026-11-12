@@ -63,7 +63,8 @@ const records = (timestamps[artwork.coa] ?? []).map((r) => {
 });
 const proof = records[0];
 const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} · ${date(r.date)}` : c.pending;
-const when = (r) => r.block ? `${c.chain} · ${date(r.date)}` : `${c.chain} · ${c.pending}`;
+// Before checking: the block, with a link to it on the best known explorer
+const blockLink = (height) => `https://www.blockchain.com/explorer/blocks/btc/${height}`;
 // Texts the checker writes, in this language
 const checkTexts = { locale: t.locale, verifying: c.verifying, verified: c.verified, block: c.block, confirmedBy: c.confirmedBy, mismatch: c.mismatch, offline: c.offline, again: c.verifyNow, newTab: t.a11y.newTab };
 ---
@@ -116,11 +117,15 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verified: c.verif
         {records.map((r) => (
           <div class="said" data-entry data-record={r.record} data-ots={r.ots}>
             <p><strong>{r.title}.</strong> <span set:html={r.words} /></p>
-            <p class="result" data-result>{when(r)}</p>
+            <p class="result" data-result>
+              {c.chain} · {r.block
+                ? <>{date(r.date)} · {c.block} {r.block.toLocaleString(t.locale)}, <a class="line-link" href={blockLink(r.block)} target="_blank" rel="noopener">{c.viewOn} Blockchain.com<span class="visually-hidden"> ({t.a11y.newTab})</span></a></>
+                : c.pending}
+            </p>
           </div>
         ))}
         <div class="verify" hidden data-verify-box>
-          <button class="button outline" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
+          <button class="more check-now" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
           <p>{c.verifyIntro}</p>
         </div>
         <details>
@@ -241,7 +246,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verified: c.verif
   .url { color: var(--ink); overflow-wrap: anywhere; }
 
   /* How to check the blockchain record: on screen only, under the sheet */
-  .check { width: min(100%, 210mm); display: grid; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--muted); }
+  .check { min-width: 0; width: min(100%, 210mm); display: grid; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--muted); }
   .check h2 { margin: 0; color: var(--ink); }
   .check p, .check ol { margin: 0; }
   .said { display: grid; gap: var(--space-3xs); padding-block: var(--space-xs); border-bottom: 1px solid var(--line); }
@@ -251,14 +256,17 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verified: c.verif
   .result.good { color: var(--ink); }
   .result.bad { color: var(--accent); }
   .result .by { color: var(--muted); }
-  .verify { display: grid; justify-items: start; gap: var(--space-2xs); margin-top: var(--space-s); }
+  .verify { display: grid; justify-items: start; gap: var(--space-3xs); margin-top: var(--space-s); }
+  .check-now { padding: 0; border: 0; background: none; color: var(--ink); font-family: inherit; cursor: pointer; }
+  .check-now::after { margin-left: .35em; }
+  .check-now:disabled { color: var(--muted); cursor: default; }
   .verify[hidden] { display: none; }
   details summary { cursor: pointer; width: fit-content; margin-top: var(--space-2xs); font-weight: 500; color: var(--ink); }
   .how { display: grid; gap: var(--space-2xs); margin-top: var(--space-s); }
   .entry { display: grid; gap: var(--space-2xs); margin-top: var(--space-s); }
   .entry h3 { margin: 0; font-family: var(--sans); font-size: var(--text-sm); font-weight: 500; color: var(--ink); }
   .entry h3 span { font-weight: 400; color: var(--muted); }
-  .record { margin: 0; padding: var(--space-s); border: 1px solid var(--line); font: inherit; font-size: var(--text-xs); line-height: 1.6; color: var(--ink); white-space: pre-wrap; }
+  .record { overflow-wrap: anywhere; margin: 0; padding: var(--space-s); border: 1px solid var(--line); font: inherit; font-size: var(--text-xs); line-height: 1.6; color: var(--ink); white-space: pre-wrap; }
   .check ol { padding-left: 1.2em; display: grid; gap: var(--space-3xs); }
   .files { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-m); color: var(--ink); }
 
