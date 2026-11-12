@@ -5,7 +5,8 @@
 // saved as PDF from the print dialog) it is one A4 page, signed by hand.
 // The QR code leads back to this page, so anyone holding the paper can check it.
 // When the certificate is registered on the Bitcoin blockchain (src/data/timestamps.js),
-// the sheet says so in one line and, below it, the page explains how to check the proof.
+// the sheet says so in one line and, below it, the page shows every record (authorship,
+// then each sale) and explains how to check them.
 // Internal: not in the menu or the sitemap, hidden from search engines.
 import { getImage } from 'astro:assets';
 import QRCode from 'qrcode';
@@ -32,16 +33,20 @@ const photo = await getImage({ src: artworkImages(artwork.slug)[0].src, width: 1
 const qr = await QRCode.toString(link.href, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#1d1c1aff', light: '#0000' } });
 const statement = c.statement.replace('{title}', `<em>${title}</em>`);
 
-// Blockchain record: the SHA-256 of the registered text, and links to it and its proof
-const stamp = timestamps[artwork.coa];
-const recordText = stamp && readFileSync(`public/certificate/proof/${artwork.coa}.txt`);
-const proof = stamp && {
-  ...stamp,
-  text: recordText.toString(),
-  hash: createHash('sha256').update(recordText).digest('hex'),
-  record: assetUrl(`certificate/proof/${artwork.coa}.txt`),
-  ots: assetUrl(`certificate/proof/${artwork.coa}.ots`),
-};
+// Blockchain records: each registered text, its SHA-256, and links to it and its proof
+const records = (timestamps[artwork.coa] ?? []).map((r, i) => {
+  const text = readFileSync(`public/certificate/proof/${r.file}.txt`);
+  return {
+    ...r,
+    title: r.kind === 'sale' ? c.sale.replace('{n}', i) : c.authorship,
+    text: text.toString(),
+    hash: createHash('sha256').update(text).digest('hex'),
+    record: assetUrl(`certificate/proof/${r.file}.txt`),
+    ots: assetUrl(`certificate/proof/${r.file}.ots`),
+  };
+});
+const proof = records[0];
+const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} · ${date(r.date)}` : c.pending;
 ---
 <Base title={`${c.title}, ${title}`} path={path} noindex>
   <div class="container page">
@@ -79,7 +84,7 @@ const proof = stamp && {
         <div class="qr" set:html={qr} />
         <p>
           {c.verify}<br /><span class="url">{link.host}{link.pathname}</span><br />
-          {proof && <><span class="chain">{c.chain} · {proof.block ? <>{c.block} <span class="numeral">{proof.block.toLocaleString(t.locale)}</span> · {date(proof.date)}</> : c.pending} · SHA-256 <span class="hash">{proof.hash}</span></span><br /></>}
+          {proof && <><span class="chain">{c.chain} · {status(proof)} · SHA-256 <span class="hash">{proof.hash}</span></span><br /></>}
           <span class="note">{c.note}</span>
         </p>
       </footer>
@@ -89,14 +94,19 @@ const proof = stamp && {
       <section class="check" aria-labelledby="check">
         <h2 id="check" class="eyebrow">{c.checkTitle}</h2>
         <p>{c.checkIntro}</p>
-        <pre class="record">{proof.text}</pre>
         <ol>{c.checkSteps.map((step) => <li set:html={step} />)}</ol>
-        <p class="files">
-          <a class="line-link" href={proof.record} download>{c.record}</a>
-          <a class="line-link" href={proof.ots} download>{c.proof}</a>
-          <a class="line-link" href="https://opentimestamps.org" target="_blank" rel="noopener">opentimestamps.org<span class="visually-hidden"> ({t.a11y.newTab})</span></a>
-          {proof.block && <a class="line-link" href={`https://mempool.space/block/${proof.block}`} target="_blank" rel="noopener">{c.explorer}<span class="visually-hidden"> ({t.a11y.newTab})</span></a>}
-        </p>
+        {records.some((r) => r.kind === 'sale') && <p>{c.ownerNote}</p>}
+        {records.map((r) => (
+          <div class="entry">
+            <h3>{r.title} <span>· {status(r)}</span></h3>
+            <pre class="record">{r.text}</pre>
+            <p class="files">
+              <a class="line-link" href={r.record} download>{c.record}</a>
+              <a class="line-link" href={r.ots} download>{c.proof}</a>
+              {r.block && <a class="line-link" href={`https://mempool.space/block/${r.block}`} target="_blank" rel="noopener">{c.explorer}<span class="visually-hidden"> ({t.a11y.newTab})</span></a>}
+            </p>
+          </div>
+        ))}
       </section>
     )}
 
@@ -159,9 +169,12 @@ const proof = stamp && {
   .check { width: min(100%, 210mm); display: grid; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--muted); }
   .check h2 { margin: 0; color: var(--ink); }
   .check p, .check ol { margin: 0; }
-  .record { margin: var(--space-2xs) 0; padding: var(--space-s); border: 1px solid var(--line); font: inherit; font-size: var(--text-xs); line-height: 1.6; color: var(--ink); white-space: pre-wrap; }
+  .entry { display: grid; gap: var(--space-2xs); margin-top: var(--space-s); }
+  .entry h3 { margin: 0; font-family: var(--sans); font-size: var(--text-sm); font-weight: 500; color: var(--ink); }
+  .entry h3 span { font-weight: 400; color: var(--muted); }
+  .record { margin: 0; padding: var(--space-s); border: 1px solid var(--line); font: inherit; font-size: var(--text-xs); line-height: 1.6; color: var(--ink); white-space: pre-wrap; }
   .check ol { padding-left: 1.2em; display: grid; gap: var(--space-3xs); }
-  .files { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-m); margin-top: var(--space-2xs) !important; color: var(--ink); }
+  .files { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-m); color: var(--ink); }
 
   /* Phone: no fixed paper shape, everything in one column */
   @media (max-width: 599px) {

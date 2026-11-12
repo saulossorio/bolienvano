@@ -111,9 +111,11 @@ or the sitemap, hidden from search engines.
 
 **Bitcoin blockchain record (test with Cuadrito).** A certificate can be registered on the
 Bitcoin blockchain with [OpenTimestamps](https://opentimestamps.org):
-`public/certificate/proof/<coa>.txt` is the registered record (never edit it: a single
-changed letter breaks the proof) and `<coa>.ots` its proof; `src/data/timestamps.js` lists
-the registered numbers with their Bitcoin block. The certificate then shows one line with
+`public/certificate/proof/<coa>.txt` is the authorship record and `<coa>-<n>.txt` the n-th
+sale (never edit them: a single changed letter breaks the proof), each with its `.ots` proof;
+`src/data/timestamps.js` lists them with their Bitcoin block. A sale record names no one: it
+holds the SHA-256 of the owner's record (`Owner: <name>` and `Code: <secret>`), which only
+Don Andy and the owner keep, never in this repo. The certificate then shows one line with
 the block and the record's SHA-256, and, on screen only, how anyone can check it.
 To register one: `ots stamp <coa>.txt`, then a few hours later `ots upgrade <coa>.txt.ots`
 and fill in `block` and `date`.

@@ -172,7 +172,7 @@ export default {
     block: 'bloco',
     pending: 'confirmação pendente',
     checkTitle: 'Verifique o registro na blockchain',
-    checkIntro: 'Os dados desta obra, como estão escritos no registro abaixo, foram registrados na blockchain do Bitcoin com OpenTimestamps. Qualquer pessoa pode conferir sem confiar neste site:',
+    checkIntro: 'Os registros abaixo (a autoria desta obra e cada uma de suas vendas) foram registrados na blockchain do Bitcoin com OpenTimestamps. Qualquer pessoa pode conferir sem confiar neste site:',
     checkSteps: [
       'Baixe o registro (.txt) e sua prova (.ots).',
       'Arraste os dois arquivos para <strong>opentimestamps.org</strong>, ou confira com a ferramenta oficial <strong>ots verify</strong>.',
@@ -181,6 +181,9 @@ export default {
     record: 'Registro (.txt)',
     proof: 'Prova (.ots)',
     explorer: 'Ver o bloco',
+    authorship: 'Autoria',
+    sale: 'Venda {n}',
+    ownerNote: 'O nome do proprietário nunca é público: cada registro de venda guarda apenas a impressão digital (SHA-256) do seu nome e de um código secreto, que o proprietário guarda junto com o certificado em papel. Com os dois, ele pode provar que o registro é seu.',
   },
 
   nft: {
