@@ -162,6 +162,7 @@ export default {
     unique: 'Original único, 1/1',
     statement: 'Certifico que {title} es una obra original y única, concebida y realizada enteramente por mi mano, y que no existe otra versión de ella. El artista conserva los derechos de autor y de reproducción de la obra; la propiedad de la obra física pasa a su comprador.',
     owner: 'Emitido a',
+    ownerCode: 'Código del propietario',
     date: 'Fecha',
     signature: 'Firma',
     verify: 'Verifica este certificado en',

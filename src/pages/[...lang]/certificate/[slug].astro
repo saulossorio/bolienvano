@@ -77,7 +77,8 @@ const when = (r) => r.block ? date(r.date) : `${date(r.stamped)} (${c.pending})`
       <p class="statement" set:html={statement} />
 
       <div class="sign">
-        <div class="field"><span class="line" /><span class="eyebrow">{c.owner}</span></div>
+        <div class="field wide"><span class="line" /><span class="eyebrow">{c.owner}</span></div>
+        <div class="field"><span class="line" /><span class="eyebrow">{c.ownerCode}</span></div>
         <div class="field"><span class="line" /><span class="eyebrow">{c.date}</span></div>
         <div class="field wide"><span class="line" /><span class="eyebrow">{c.signature}, {t.site.name}</span></div>
       </div>
@@ -161,7 +162,8 @@ const when = (r) => r.block ? date(r.date) : `${date(r.stamped)} (${c.pending})`
 
   .statement { margin: 0; font-size: var(--text-sm); line-height: 1.7; }
 
-  /* Lines to fill in by hand, pushed to the bottom of the sheet */
+  /* Lines to fill in by hand, pushed to the bottom of the sheet. The owner code is the
+     secret code of the sale record on the blockchain (src/data/timestamps.js) */
   .sign { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 9mm 8mm; }
   .field { display: grid; gap: 1.5mm; }
   .field.wide { grid-column: 1 / -1; }

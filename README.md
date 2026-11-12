@@ -115,7 +115,8 @@ Bitcoin blockchain with [OpenTimestamps](https://opentimestamps.org):
 sale (never edit them: a single changed letter breaks the proof), each with its `.ots` proof;
 `src/data/timestamps.js` lists them with their Bitcoin block. A sale record names no one: it
 holds the SHA-256 of the owner's record (`Owner: <name>` and `Code: <secret>`), which only
-Don Andy and the owner keep, never in this repo. The certificate then shows one line with
+Don Andy and the owner keep, never in this repo. The secret code is written by hand on the
+paper certificate, in the "Owner code" line. The certificate then shows one line with
 the block and the record's SHA-256, and, on screen only, how anyone can check it.
 To register one: `ots stamp <coa>.txt`, then a few hours later `ots upgrade <coa>.txt.ots`
 and fill in `block` and `date`.

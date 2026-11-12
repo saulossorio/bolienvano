@@ -162,6 +162,7 @@ export default {
     unique: 'Unique original, 1/1',
     statement: 'I certify that {title} is an original, unique work, conceived and made entirely by my own hand, and that no other version of it exists. The artist keeps the copyright and the right to reproduce the work; ownership of the physical work passes to its buyer.',
     owner: 'Issued to',
+    ownerCode: 'Owner code',
     date: 'Date',
     signature: 'Signature',
     verify: 'Verify this certificate at',
