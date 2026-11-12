@@ -186,7 +186,7 @@ export default {
     authored: 'Autoria registrada no Bitcoin',
     soldPrivate: 'Vendida a um colecionador particular',
     howTo: 'Como verificar',
-    sale: 'Venda {n}',
+    sale: 'Mudança de propriedade',
     ownerNote: 'O nome do proprietário nunca é público: cada registro de venda guarda apenas a impressão digital (SHA-256) do seu nome e de um código secreto, que o proprietário guarda junto com o certificado em papel. Com os dois, ele pode provar que o registro é seu.',
   },
 

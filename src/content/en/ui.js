@@ -186,7 +186,7 @@ export default {
     authored: 'Authorship registered on Bitcoin',
     soldPrivate: 'Sold to a private collector',
     howTo: 'How to verify it',
-    sale: 'Sale {n}',
+    sale: 'Change of ownership',
     ownerNote: 'The owner’s name is never public: each sale record holds only the fingerprint (SHA-256) of the owner’s name and a secret code, which the owner keeps with the paper certificate. With both, the owner can prove the record is theirs.',
   },
 

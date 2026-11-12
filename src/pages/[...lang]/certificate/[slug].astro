@@ -34,11 +34,11 @@ const qr = await QRCode.toString(link.href, { type: 'svg', margin: 0, errorCorre
 const statement = c.statement.replace('{title}', `<em>${title}</em>`);
 
 // Blockchain records: each registered text, its SHA-256, and links to it and its proof
-const records = (timestamps[artwork.coa] ?? []).map((r, i) => {
+const records = (timestamps[artwork.coa] ?? []).map((r) => {
   const text = readFileSync(`public/certificate/proof/${r.file}.txt`);
   return {
     ...r,
-    title: r.kind === 'sale' ? c.sale.replace('{n}', i) : c.authorship,
+    title: r.kind === 'sale' ? c.sale : c.authorship,
     summary: r.kind === 'sale' ? c.soldPrivate : c.authored,
     text: text.toString(),
     hash: createHash('sha256').update(text).digest('hex'),
