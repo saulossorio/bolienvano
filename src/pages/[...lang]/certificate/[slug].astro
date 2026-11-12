@@ -5,15 +5,16 @@
 // saved as PDF from the print dialog) it is one A4 page, signed by hand.
 // The QR code leads back to this page, so anyone holding the paper can check it.
 // When the certificate is registered on the Bitcoin blockchain (src/data/timestamps.js),
-// the sheet says so in one line and, below it, the page shows every record (authorship,
-// then each sale) and explains how to check them.
+// the sheet says so in one line and, below it, the page says in words what each record
+// holds (authorship, then each change of ownership) and checks them against Bitcoin in the
+// visitor's browser (src/lib/ots.js). The files and manual steps stay folded for experts.
 // Internal: not in the menu or the sitemap, hidden from search engines.
 import { getImage } from 'astro:assets';
 import QRCode from 'qrcode';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import Base from '../../../layouts/Base.astro';
-import { useTexts } from '../../../content/index.js';
+import { useTexts, texts } from '../../../content/index.js';
 import { artworks } from '../../../data/artworks.js';
 import { timestamps } from '../../../data/timestamps.js';
 import { artworkImages } from '../../../lib/images.js';
@@ -33,14 +34,28 @@ const photo = await getImage({ src: artworkImages(artwork.slug)[0].src, width: 1
 const qr = await QRCode.toString(link.href, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#1d1c1aff', light: '#0000' } });
 const statement = c.statement.replace('{title}', `<em>${title}</em>`);
 
-// Blockchain records: each registered text, its SHA-256, and links to it and its proof
+// Blockchain records: each registered text, what it says in words, its SHA-256, and links
+// to it and its proof. The build stops if an authorship record and the artwork data differ.
+const english = texts('en').t;
+const field = (text, name) => text.match(new RegExp(`^${name}: (.*)$`, 'm'))?.[1];
 const records = (timestamps[artwork.coa] ?? []).map((r) => {
   const text = readFileSync(`public/certificate/proof/${r.file}.txt`);
+  const fields = text.toString();
+  if (r.kind === 'authorship') {
+    const expected = { Certificate: artwork.coa, Year: String(artwork.year), Medium: english.media[artwork.medium], Size: artwork.size };
+    for (const [name, value] of Object.entries(expected)) {
+      if (field(fields, name) !== value) throw new Error(`${r.file}.txt: ${name} is "${field(fields, name)}", the artwork says "${value}"`);
+    }
+  }
+  const words = r.kind === 'sale'
+    ? c.saleWords.replace('{from}', field(fields, 'From')).replace('{date}', date(field(fields, 'Date')))
+    : c.authorshipWords.replace('{artist}', field(fields, 'Artist')).replace('{title}', `<em>${title}</em>`)
+        .replace('{details}', [artwork.year, t.media[artwork.medium].toLowerCase(), artwork.size, c.unique.split(',')[0].toLowerCase()].join(', ')).replace('{coa}', `<span class="coa">${artwork.coa}</span>`);
   return {
     ...r,
     title: r.kind === 'sale' ? c.sale : c.authorship,
-    summary: r.kind === 'sale' ? c.soldPrivate : c.authored,
-    text: text.toString(),
+    words,
+    text: fields,
     hash: createHash('sha256').update(text).digest('hex'),
     record: assetUrl(`certificate/proof/${r.file}.txt`),
     ots: assetUrl(`certificate/proof/${r.file}.ots`),
@@ -48,7 +63,9 @@ const records = (timestamps[artwork.coa] ?? []).map((r) => {
 });
 const proof = records[0];
 const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} · ${date(r.date)}` : c.pending;
-const when = (r) => r.block ? date(r.date) : `${date(r.stamped)} (${c.pending})`;
+const when = (r) => r.block ? `${c.chain} · ${date(r.date)}` : `${c.chain} · ${c.pending}`;
+// Texts the checker writes, in this language
+const checkTexts = { locale: t.locale, verifying: c.verifying, verified: c.verified, block: c.block, confirmedBy: c.confirmedBy, mismatch: c.mismatch, offline: c.offline, again: c.verifyNow, newTab: t.a11y.newTab };
 ---
 <Base title={`${c.title}, ${title}`} path={path} noindex>
   <div class="container page">
@@ -96,9 +113,16 @@ const when = (r) => r.block ? date(r.date) : `${date(r.stamped)} (${c.pending})`
     {proof && (
       <section class="check" aria-labelledby="check">
         <h2 id="check" class="eyebrow">{c.checkTitle}</h2>
-        <ul class="summary">
-          {records.map((r) => <li><span aria-hidden="true">✓</span> {r.summary} · {when(r)}</li>)}
-        </ul>
+        {records.map((r) => (
+          <div class="said" data-entry data-record={r.record} data-ots={r.ots}>
+            <p><strong>{r.title}.</strong> <span set:html={r.words} /></p>
+            <p class="result" data-result>{when(r)}</p>
+          </div>
+        ))}
+        <div class="verify" hidden data-verify-box>
+          <button class="button outline" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
+          <p>{c.verifyIntro}</p>
+        </div>
         <details>
         <summary>{c.howTo}</summary>
         <div class="how">
@@ -112,7 +136,6 @@ const when = (r) => r.block ? date(r.date) : `${date(r.stamped)} (${c.pending})`
             <p class="files">
               <a class="line-link" href={r.record} download>{c.record}</a>
               <a class="line-link" href={r.ots} download>{c.proof}</a>
-              {r.block && <a class="line-link" href={`https://mempool.space/block/${r.block}`} target="_blank" rel="noopener">{c.explorer}<span class="visually-hidden"> ({t.a11y.newTab})</span></a>}
             </p>
           </div>
         ))}
@@ -126,10 +149,51 @@ const when = (r) => r.block ? date(r.date) : `${date(r.stamped)} (${c.pending})`
 </Base>
 
 <script>
+  import { readProof, explorers } from '../../../lib/ots.js';
+
   // The print button needs JavaScript, so it only shows when it works
   const button = document.querySelector('[data-print]');
   button.hidden = false;
   button.addEventListener('click', () => print());
+
+  // "Verify now": every record is checked against Bitcoin, in this browser
+  const verify = document.querySelector('[data-verify]');
+  if (verify) {
+    document.querySelector('[data-verify-box]').hidden = false;
+    const x = JSON.parse(verify.dataset.texts);
+    const blocks = {};   // each block is asked once, even if several records share it
+    const ask = (height) => blocks[height] ??= Promise.allSettled(explorers.map((e) => e.get(height)));
+    const when = (time) => new Intl.DateTimeFormat(x.locale, { dateStyle: 'long', timeStyle: 'short', timeZone: 'UTC' }).format(time * 1000) + ' UTC';
+    const linkTo = (e, hash) => `<a class="line-link" href="${e.link(hash)}" target="_blank" rel="noopener">${e.name}<span class="visually-hidden"> (${x.newTab})</span></a>`;
+
+    async function check(entry) {
+      const result = entry.querySelector('[data-result]');
+      result.className = 'result';
+      result.textContent = x.verifying;
+      try {
+        const [record, ots] = await Promise.all([entry.dataset.record, entry.dataset.ots].map(async (u) => new Uint8Array(await (await fetch(u, { cache: 'no-store' })).arrayBuffer())));
+        const found = await readProof(record, ots);
+        const block = found?.[0];
+        if (!block) { result.className = 'result bad'; result.textContent = x.mismatch; return; }
+        const answers = await ask(block.height);
+        const agree = answers.map((a, k) => a.status === 'fulfilled' && a.value.root === block.root ? { e: explorers[k], ...a.value } : null).filter(Boolean);
+        const disagree = answers.some((a) => a.status === 'fulfilled' && a.value.root !== block.root);
+        if (disagree) { result.className = 'result bad'; result.textContent = x.mismatch; return; }
+        if (!agree.length) { result.className = 'result bad'; result.textContent = x.offline; return; }
+        result.className = 'result good';
+        result.innerHTML = `<span aria-hidden="true">✓</span> ${x.verified.replace('{date}', when(agree[0].time))} · ${x.block} ${block.height.toLocaleString(x.locale)}<br><span class="by">${x.confirmedBy} ${agree.map((a) => linkTo(a.e, a.hash)).join(' · ')}</span>`;
+      } catch {
+        result.className = 'result bad';
+        result.textContent = x.offline;
+      }
+    }
+
+    verify.addEventListener('click', async () => {
+      verify.disabled = true;
+      await Promise.all([...document.querySelectorAll('[data-entry]')].map(check));
+      verify.disabled = false;
+    });
+  }
 </script>
 
 <style>
@@ -179,8 +243,16 @@ const when = (r) => r.block ? date(r.date) : `${date(r.stamped)} (${c.pending})`
   /* How to check the blockchain record: on screen only, under the sheet */
   .check { width: min(100%, 210mm); display: grid; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--muted); }
   .check h2 { margin: 0; color: var(--ink); }
-  .check p, .check ol, .summary { margin: 0; }
-  .summary { list-style: none; padding: 0; display: grid; gap: var(--space-3xs); color: var(--ink); }
+  .check p, .check ol { margin: 0; }
+  .said { display: grid; gap: var(--space-3xs); padding-block: var(--space-xs); border-bottom: 1px solid var(--line); }
+  .said p:first-child { color: var(--ink); }
+  .said strong { font-weight: 500; }
+  .said :global(.coa) { white-space: nowrap; }
+  .result.good { color: var(--ink); }
+  .result.bad { color: var(--accent); }
+  .result .by { color: var(--muted); }
+  .verify { display: grid; justify-items: start; gap: var(--space-2xs); margin-top: var(--space-s); }
+  .verify[hidden] { display: none; }
   details summary { cursor: pointer; width: fit-content; margin-top: var(--space-2xs); font-weight: 500; color: var(--ink); }
   .how { display: grid; gap: var(--space-2xs); margin-top: var(--space-s); }
   .entry { display: grid; gap: var(--space-2xs); margin-top: var(--space-s); }
