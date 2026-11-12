@@ -118,8 +118,8 @@ holds the SHA-256 of the owner's record (`Owner: <name>` and `Code: <secret>`), 
 Don Andy and the owner keep, never in this repo. The secret code is written by hand on the
 paper certificate, in the "Owner code" line. The certificate then shows one line with
 the Bitcoin block and, on screen only, what each record says in words and a "Verify now"
-button: the visitor's browser follows the proof up to the block and asks three independent
-explorers (Blockstream, Mempool, BlockCypher) whether that block holds it (`src/lib/ots.js`).
+button: the visitor's browser follows the proof up to the block and asks four independent
+explorers (Blockchain.com, Blockstream, Mempool, BlockCypher) whether that block holds it (`src/lib/ots.js`).
 The files and manual steps (opentimestamps.org) stay folded under "How to verify it". The
 build stops if an authorship record and the artwork data differ.
 To register one: `ots stamp <coa>.txt`, then a few hours later `ots upgrade <coa>.txt.ots`

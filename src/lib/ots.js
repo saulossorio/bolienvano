@@ -1,6 +1,6 @@
 // Checks a certificate's blockchain record in the visitor's browser, without trusting this
 // website: it reads the OpenTimestamps proof (.ots), follows its SHA-256 steps from the
-// record's text up to a Bitcoin block, and asks three independent block explorers whether
+// record's text up to a Bitcoin block, and asks four independent block explorers whether
 // that block really holds the result (its merkle root).
 //
 // Only what the proofs in public/certificate/proof/ use is read: append, prepend, SHA-256,
@@ -49,7 +49,7 @@ export async function readProof(record, ots) {
   return blocks;
 }
 
-// Three independent sources for a block: its hash, merkle root and time (seconds)
+// Four independent sources for a block: its hash, merkle root and time (seconds)
 const json = async (u) => { const r = await fetch(u); if (!r.ok) throw new Error(r.status); return r.json(); };
 const text = async (u) => { const r = await fetch(u); if (!r.ok) throw new Error(r.status); return r.text(); };
 const esplora = (api) => async (height) => {
@@ -58,6 +58,11 @@ const esplora = (api) => async (height) => {
   return { hash, root: b.merkle_root, time: b.timestamp };
 };
 export const explorers = [
+  {
+    name: 'Blockchain.com',
+    get: async (height) => { const [b] = await json(`https://api.blockchain.info/haskoin-store/btc/block/height/${height}?notx=true`); return { hash: b.hash, root: b.merkle, time: b.time }; },
+    link: (hash) => `https://www.blockchain.com/explorer/blocks/btc/${hash}`,
+  },
   { name: 'Blockstream', get: esplora('https://blockstream.info/api'), link: (hash) => `https://blockstream.info/block/${hash}` },
   { name: 'Mempool', get: esplora('https://mempool.space/api'), link: (hash) => `https://mempool.space/block/${hash}` },
   {

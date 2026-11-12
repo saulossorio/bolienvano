@@ -186,7 +186,7 @@ export default {
     authorshipWords: '{artist} declara la autoría de {title} ({details}), certificado {coa}.',
     saleWords: 'El {date}, {from} transfirió la obra a una colección privada.',
     verifyNow: 'Verificar ahora',
-    verifyIntro: 'Tu navegador comprueba estos registros directamente contra la blockchain de Bitcoin, a través de tres fuentes independientes.',
+    verifyIntro: 'Tu navegador comprueba estos registros directamente contra la blockchain de Bitcoin, a través de cuatro fuentes independientes.',
     verifying: 'Comprobando en la blockchain de Bitcoin…',
     verified: 'Registrado en la blockchain de Bitcoin el {date}',
     confirmedBy: 'Confirmado por',
