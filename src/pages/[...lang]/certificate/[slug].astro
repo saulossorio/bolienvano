@@ -114,6 +114,11 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
     {proof && (
       <section class="check" aria-labelledby="check">
         <h2 id="check" class="eyebrow">{c.checkTitle}</h2>
+        <p class="lead">{c.chainIntro}</p>
+        <p class="verify" hidden data-verify-box>
+          <button class="more check-now" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
+          <span>{c.verifyIntro}</span>
+        </p>
         {records.map((r) => (
           <div class="said" data-entry data-record={r.record} data-ots={r.ots}>
             <p><strong>{r.title}.</strong> <span set:html={r.words} /></p>
@@ -124,10 +129,6 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
             </p>
           </div>
         ))}
-        <div class="verify" hidden data-verify-box>
-          <button class="more check-now" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
-          <p>{c.verifyIntro}</p>
-        </div>
         <details>
         <summary>{c.howTo}</summary>
         <div class="how">
@@ -136,7 +137,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
         {records.some((r) => r.kind === 'sale') && <p>{c.ownerNote}</p>}
         {records.map((r) => (
           <div class="entry">
-            <h3>{r.title} <span>· {status(r)}</span></h3>
+            <h3>{r.title}</h3>
             <pre class="record">{r.text}</pre>
             <p class="files">
               <a class="line-link" href={r.record} download>{c.record}</a>
@@ -270,7 +271,8 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .result :global(strong) { font-weight: 500; color: var(--available); }
   .result.bad { color: var(--accent); }
   .result :global(.by) { color: var(--muted); }
-  .verify { display: grid; justify-items: start; gap: var(--space-3xs); margin-top: var(--space-s); }
+  .lead { color: var(--ink); }
+  .verify { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-3xs) var(--space-s); margin-bottom: var(--space-2xs) !important; }
   .check-now { padding: 0; border: 0; background: none; color: var(--ink); font-family: inherit; cursor: pointer; }
   .check-now::after { margin-left: .35em; }
   .check-now:disabled { color: var(--muted); cursor: default; }
