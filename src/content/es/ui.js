@@ -183,30 +183,19 @@ export default {
     offline: 'No se pudo consultar Bitcoin. Vuelve a intentarlo en un momento.',
     sale: 'Colección privada',
     // Questions and answers under the certificate (only if it is registered on Bitcoin).
-    // In the texts: {coa} {date} {time} {block} {sources} are filled in by the page; an item
-    // can have aSale (used instead of a when the work has a recorded sale), only: 'sale' and
-    // needs: 'block' (shown only when there is a sale / a confirmed block); id: 'check' and
-    // 'independent' get the check button and the downloads under their answer.
+    // In the texts: {coa} {date} {time} {block} {sources} are filled in by the page. An item can
+    // have aSale (used instead of a when the work has a recorded sale) and needs: 'block' (shown
+    // only once Bitcoin has confirmed); id: 'check' and 'independent' get the check button and
+    // the downloads under their answer.
     faq: {
       title: 'Preguntas frecuentes',
-      groups: [
-        { title: 'Verificar este certificado', items: [
-          { q: '¿Cómo sé que este certificado es auténtico?', a: 'Compara tres cosas: la firma manuscrita del artista, el número {coa} (debe coincidir con el de esta página, a la que lleva el QR) y el registro en Bitcoin, que puedes comprobar aquí mismo.' },
-          { id: 'check', q: '¿Cómo compruebo el registro en Bitcoin?', a: 'Pulsa Comprobar y tu navegador consultará cuatro fuentes independientes ({sources}) para confirmar que el registro existe y no se alteró.' },
-          { id: 'independent', q: '¿Puedo comprobarlo sin usar esta página?', a: 'Sí, y es la forma más segura. Descarga el registro y su prueba, y súbelos a <a class="line-link" href="https://opentimestamps.org" target="_blank" rel="noopener">opentimestamps.org</a>.' },
-          { q: '¿El registro en Bitcoin prueba que la obra es auténtica?', a: 'No. Prueba que estos datos existían el {date} y que nadie los ha cambiado desde entonces. La autenticidad te la garantiza la firma del artista; el registro añade una fecha que nadie puede alterar.' },
-        ] },
-        { title: 'La blockchain', items: [
-          { q: '¿Qué es una blockchain?', a: 'Es una base de datos que nadie controla. En lugar de estar guardada en el servidor de una empresa, la misma copia vive en miles de computadoras. Cada dato nuevo se añade al final y lo anterior no se puede tocar: nadie puede corregirla a su favor, ni siquiera quien escribió en ella.' },
-          { q: '¿Por qué Bitcoin?', a: 'Es la blockchain más antigua, de 2009, y la que más computadoras vigilan. Cuanta más gente la vigila, más difícil es alterarla.' },
-          { q: '¿Qué es el bloque {block}?', a: 'Bitcoin anota todo en páginas llamadas bloques y cierra una nueva cada diez minutos, más o menos. El bloque {block} se cerró el {date} a las {time} UTC, y en él quedó anotado el registro de esta obra.', needs: 'block' },
-          { q: '¿Qué quedó registrado de esta obra?', a: 'Su autoría: artista, título, año, técnica, medidas y número de certificado. Bitcoin no guarda esos datos, sino su huella digital: un código único que cambia por completo si alguien modifica una sola letra.', aSale: 'Dos cosas: su autoría (artista, título, año, técnica, medidas y número de certificado) y su paso a una colección privada. Bitcoin no guarda esos datos, sino su huella digital: un código único que cambia por completo si alguien modifica una sola letra.' },
-          { q: '¿Aparece el nombre del propietario?', a: 'No. Solo queda la huella de su nombre, junto con un código personal que el artista escribe a mano en el certificado. Con ese código, el propietario puede demostrar que el registro es suyo sin que su nombre sea público.', only: 'sale' },
-        ] },
-        { title: 'El certificado', items: [
-          { q: '¿Por qué solo vale con la firma manuscrita?', a: 'Cualquiera puede imprimir esta página, así que el certificado es únicamente el ejemplar firmado a mano por el artista.' },
-          { q: '¿Qué significa «Original único, 1/1»?', a: 'Que esta obra no tiene copias, ediciones ni reproducciones firmadas.' },
-        ] },
+      items: [
+        { q: '¿Cómo sé que este certificado es auténtico?', a: 'Compara tres cosas: la firma manuscrita del artista (sin ella, esta página impresa no vale), el número {coa} (debe coincidir con el de esta página, a la que lleva el QR) y el registro en Bitcoin, que puedes comprobar aquí mismo. El registro no sustituye a la firma: solo prueba que estos datos existían el {date} y que nadie los ha cambiado desde entonces.' },
+        { id: 'check', q: '¿Cómo compruebo el registro en Bitcoin?', a: 'Pulsa Comprobar y tu navegador consultará cuatro fuentes independientes ({sources}) para confirmar que el registro existe y no se alteró.' },
+        { id: 'independent', q: '¿Puedo comprobarlo sin usar esta página?', a: 'Sí, y es la forma más segura. Descarga el registro y su prueba, y súbelos a <a class="line-link" href="https://opentimestamps.org" target="_blank" rel="noopener">opentimestamps.org</a>.' },
+        { q: '¿Qué es una blockchain?', a: 'Es una base de datos que nadie controla. En lugar de estar guardada en el servidor de una empresa, la misma copia vive en miles de computadoras. Cada dato nuevo se añade al final y lo anterior no se puede tocar: nadie puede corregirla a su favor, ni siquiera quien escribió en ella. Bitcoin, de 2009, es la más antigua y la que más computadoras vigilan.' },
+        { q: '¿Qué es el bloque {block}?', a: 'Bitcoin anota todo en páginas llamadas bloques y cierra una nueva cada diez minutos, más o menos. El bloque {block} se cerró el {date} a las {time} UTC, y en él quedó anotado el registro de esta obra.', needs: 'block' },
+        { q: '¿Qué quedó registrado de esta obra?', a: 'Su autoría: artista, título, año, técnica, medidas y número de certificado. Bitcoin no guarda esos datos, sino su huella digital: un código único que cambia por completo si alguien modifica una sola letra.', aSale: 'Dos cosas: su autoría (artista, título, año, técnica, medidas y número de certificado) y su paso a una colección privada. Bitcoin no guarda esos datos, sino su huella digital: un código único que cambia por completo si alguien modifica una sola letra. El nombre del propietario no aparece: solo queda la huella de su nombre, junto con un código personal que el artista escribe a mano en el certificado y con el que el propietario puede demostrar que el registro es suyo.' },
       ],
     },
   },

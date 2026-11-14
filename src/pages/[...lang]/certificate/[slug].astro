@@ -67,12 +67,9 @@ const data = proof && {
   '{sources}': new Intl.ListFormat(t.locale, { type: 'conjunction' }).format(explorers.map((e) => e.name)),
 };
 const fill = (text) => Object.entries(data).reduce((out, [key, value]) => out.replaceAll(key, value), text);
-const faq = proof && c.faq.groups.map((group) => ({
-  title: group.title,
-  items: group.items
-    .filter((i) => (i.only !== 'sale' || hasSale) && (i.needs !== 'block' || proof.block))
-    .map((i) => ({ ...i, q: fill(i.q), a: fill(hasSale && i.aSale ? i.aSale : i.a) })),
-}));
+const faq = proof && c.faq.items
+  .filter((i) => i.needs !== 'block' || proof.block)
+  .map((i) => ({ ...i, q: fill(i.q), a: fill(hasSale && i.aSale ? i.aSale : i.a) }));
 // Texts the checker writes, in this language
 const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.verifiedTitle, block: c.block, confirmedBy: c.confirmedBy, mismatch: c.mismatch, offline: c.offline, newTab: t.a11y.newTab };
 ---
@@ -119,13 +116,13 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
       </footer>
     </article>
 
+    <button class="button outline print" type="button" hidden data-print>{c.print}</button>
+
     {proof && (
       <section class="faq" aria-labelledby="faq">
         <h2 id="faq" class="eyebrow">{c.faq.title}</h2>
-        {faq.map((group) => (
-          <div class="group">
-            <h3 class="eyebrow">{group.title}</h3>
-            {group.items.map((i) => (
+        <div class="items">
+          {faq.map((i) => (
               <details>
                 <summary>{i.q}</summary>
                 <div class="answer">
@@ -156,13 +153,11 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
                   )}
                 </div>
               </details>
-            ))}
-          </div>
-        ))}
+          ))}
+        </div>
       </section>
     )}
 
-    <button class="button outline print" type="button" hidden data-print>{c.print}</button>
   </div>
 </Base>
 
@@ -264,8 +259,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
      white card: it would look like part of the sheet. */
   .faq { min-width: 0; width: min(100%, 210mm); display: grid; gap: var(--space-m); font-size: var(--text-sm); color: var(--muted); }
   .faq > h2 { margin: 0; color: var(--ink); }
-  .group { display: grid; }
-  .group > h3 { margin: 0 0 var(--space-3xs); }
+  .items { display: grid; }
   details { border-bottom: 1px solid var(--line); }
   summary {
     display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-s);
@@ -276,12 +270,13 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   summary::after { content: '+'; flex: none; color: var(--muted); transition: transform var(--fast) var(--ease); }
   summary:hover { color: var(--muted); }
   details[open] summary::after { transform: rotate(45deg); }
-  .answer { display: grid; gap: var(--space-xs); justify-items: start; padding-bottom: var(--space-s); animation: unfold var(--fast) var(--ease) both; }
+  .answer { display: grid; gap: var(--space-xs); padding-bottom: var(--space-s); animation: unfold var(--fast) var(--ease) both; }
   @keyframes unfold { from { opacity: 0; transform: translateY(-.25rem); } }
-  .answer p { margin: 0; max-width: 62ch; }
+  .answer p { margin: 0; }
   .answer :global(.nowrap) { white-space: nowrap; }
   .answer :global(a) { color: var(--ink); }
   .verify[hidden], .entry[hidden] { display: none; }
+  .verify { justify-self: start; }
   .check-now { padding: 0; border: 0; background: none; color: var(--ink); font-family: inherit; cursor: pointer; }
   .check-now::after { margin-left: .35em; }
   .check-now:disabled { color: var(--muted); cursor: default; }

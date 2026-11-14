@@ -247,9 +247,8 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
       </div>
 
       <h3 class="eyebrow sub">Questions and answers · <code>pages/certificate/[slug].astro</code></h3>
-      <p class="use">Under a certificate: questions in the reader's own words, grouped under an <code>.eyebrow</code>. Each one is a <code>details</code> row with a thin <code>--line</code> rule and a + that turns into ×; its answer opens with a short fade and says the answer first, then the context. A confirmation is a soft <code>--available</code> green note with a small check, never a white card. Texts are in <code>src/content/&lt;language&gt;/ui.js</code> (<code>certificate.faq</code>).</p>
+      <p class="use">Under a certificate: a few questions in the reader's own words. Each one is a <code>details</code> row with a thin <code>--line</code> rule and a + that turns into ×; its answer opens with a short fade and says the answer first, then the context. A confirmation is a soft <code>--available</code> green note with a small check, never a white card. Texts are in <code>src/content/&lt;language&gt;/ui.js</code> (<code>certificate.faq</code>).</p>
       <div class="faq-demo">
-        <h4 class="eyebrow">Verifying this certificate</h4>
         <details open>
           <summary>How do I know this certificate is authentic?</summary>
           <p>Compare three things: the artist's handwritten signature, the number, and the Bitcoin record.</p>
@@ -320,7 +319,6 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
   .note { max-width: 44rem; color: var(--muted); }
   .use { font-size: var(--text-sm); color: var(--muted); }
   .faq-demo { max-width: 40rem; }
-  .faq-demo h4 { margin: 0 0 var(--space-3xs); }
   .faq-demo details { border-bottom: 1px solid var(--line); }
   .faq-demo summary { display: flex; justify-content: space-between; gap: var(--space-s); padding-block: var(--space-xs); cursor: pointer; list-style: none; font-size: var(--text-sm); font-weight: 500; color: var(--ink); }
   .faq-demo summary::-webkit-details-marker { display: none; }
