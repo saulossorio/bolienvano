@@ -57,19 +57,10 @@ const records = (timestamps[artwork.coa] ?? []).map((r) => {
 });
 const proof = records[0];
 const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} · ${date(r.date)}` : c.pending;
-// The questions, with this work's data filled in
-const hasSale = records.some((r) => r.kind === 'sale');
-const data = proof && {
-  '{coa}': `<span class="nowrap">${artwork.coa}</span>`,
-  '{date}': date(proof.block ? proof.date : proof.stamped),
-  '{time}': proof.time,
-  '{block}': proof.block?.toLocaleString(t.locale),
-  '{sources}': new Intl.ListFormat(t.locale, { type: 'conjunction' }).format(explorers.map((e) => e.name)),
-};
-const fill = (text) => Object.entries(data).reduce((out, [key, value]) => out.replaceAll(key, value), text);
-const faq = proof && c.faq.items
-  .filter((i) => i.only !== 'sale' || hasSale)
-  .map((i) => ({ ...i, q: fill(i.q), a: fill(hasSale && i.aSale ? i.aSale : i.a), a2: i.a2 && fill(i.a2) }));
+// The questions are the same for every certificate; only the block explorers are filled in
+const sources = new Intl.ListFormat(t.locale, { type: 'conjunction' }).format(explorers.map((e) => e.name));
+const fill = (text) => text.replaceAll('{sources}', sources);
+const faq = proof && c.faq.items.map((i) => ({ ...i, a: fill(i.a), steps: i.steps?.map(fill) }));
 // Texts the checker writes, in this language
 const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.verifiedTitle, block: c.block, confirmedBy: c.confirmedBy, mismatch: c.mismatch, offline: c.offline, newTab: t.a11y.newTab };
 ---
@@ -123,12 +114,14 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
         <h2 id="faq" class="eyebrow">{c.faq.title}</h2>
         <div class="items">
           {faq.map((i) => (
-              <details>
-                <summary>{i.q}</summary>
-                <div class="answer">
-                  <p set:html={i.a} />
-                  {i.id === 'verify' && (
-                    <>
+            <details id={i.id && `faq-${i.id}`}>
+              <summary>{i.q}</summary>
+              <div class="answer">
+                <div class="text" set:html={i.a} />
+                {i.id === 'verify' && (
+                  <ul class="ways">
+                    <li>
+                      <span set:html={i.steps[0]} />
                       <p class="verify" hidden data-verify-box>
                         <button class="more check-now" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
                       </p>
@@ -138,7 +131,9 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
                           <div class="result" data-result aria-live="polite"></div>
                         </div>
                       ))}
-                      <p set:html={i.a2} />
+                    </li>
+                    <li>
+                      <span set:html={i.steps[1]} />
                       <ul class="files">
                         {records.map((r) => (
                           <li>
@@ -148,10 +143,11 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
                           </li>
                         ))}
                       </ul>
-                    </>
-                  )}
-                </div>
-              </details>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </details>
           ))}
         </div>
       </section>
@@ -173,6 +169,16 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   const button = document.querySelector('[data-print]');
   button.hidden = false;
   button.addEventListener('click', () => print());
+
+  // The link in the first answer opens the question about verifying the record
+  document.querySelectorAll('a[href="#faq-verify"]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const target = document.getElementById('faq-verify');
+      if (!target.open) target.querySelector('summary').click();
+      target.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'start' });
+    });
+  });
 
   // The questions open and close smoothly: the answer's height and opacity are animated
   document.querySelectorAll('.faq details').forEach((item) => {
@@ -301,9 +307,13 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   summary:hover { color: var(--muted); }
   details[open]:not(.is-closing) summary::after { transform: rotate(45deg); }
   .answer { display: grid; gap: var(--space-xs); padding-bottom: var(--space-s); }
-  .answer p { margin: 0; }
-  .answer :global(.nowrap) { white-space: nowrap; }
+  .answer :global(.text) { display: grid; gap: var(--space-xs); }
+  .answer :global(p) { margin: 0; }
+  .answer :global(ul) { margin: 0; padding-left: 1.2em; display: grid; gap: var(--space-xs); }
+  .answer :global(strong) { font-weight: 500; color: var(--ink); }
   .answer :global(a) { color: var(--ink); }
+  .ways { gap: var(--space-s); }
+  .ways > li { display: grid; gap: var(--space-xs); }
   .verify[hidden], .entry[hidden] { display: none; }
   .verify { justify-self: start; }
   .check-now { padding: 0; border: 0; background: none; color: var(--ink); font-family: inherit; cursor: pointer; }
@@ -326,7 +336,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .result :global(strong) { font-weight: 500; color: var(--available); }
   .result.bad { color: var(--accent); }
   .result :global(.by) { color: var(--muted); }
-  .files { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3xs); }
+  .ways .files { list-style: none; padding: 0; gap: var(--space-3xs); }
   .files li { display: flex; flex-wrap: wrap; gap: var(--space-3xs) var(--space-m); }
   .files strong { font-weight: 500; color: var(--ink); min-width: 9rem; }
 
