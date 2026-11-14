@@ -9,10 +9,7 @@
 // would ask (FAQ in src/content/<language>/ui.js), with a button that checks the records
 // against Bitcoin in the visitor's browser (src/lib/ots.js) and the files to check them
 // without this site.
-// The sheet is blurred until the visitor enters a code (the artist's, or the owner's code of
-// the work: src/lib/lock.js), through a small window opened from "View document". Printing
-// is disabled until then, and the printed page is blank. Internal: not in the menu or the
-// sitemap, hidden from search engines.
+// Internal: not in the menu or the sitemap, hidden from search engines.
 import { getImage } from 'astro:assets';
 import QRCode from 'qrcode';
 import { readFileSync } from 'node:fs';
@@ -20,7 +17,6 @@ import Base from '../../../layouts/Base.astro';
 import { useTexts, texts } from '../../../content/index.js';
 import { artworks } from '../../../data/artworks.js';
 import { timestamps } from '../../../data/timestamps.js';
-import { master, owners } from '../../../data/print-lock.js';
 import { artworkImages } from '../../../lib/images.js';
 import { explorers } from '../../../lib/ots.js';
 import { langParams, assetUrl } from '../../../lib/urls.js';
@@ -60,8 +56,6 @@ const records = (timestamps[artwork.coa] ?? []).map((r) => {
   };
 });
 const proof = records[0];
-// The codes that unlock printing: the artist's and, once sold, the owner's
-const unlockKeys = [master, owners[artwork.coa]].filter(Boolean);
 const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} · ${date(r.date)}` : c.pending;
 // The questions, with this work's data filled in
 const hasSale = records.some((r) => r.kind === 'sale');
@@ -82,8 +76,6 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
 <Base title={`${c.title}, ${title}`} path={path} noindex>
   <div class="container page">
 
-    <div class="paper">
-    <script is:inline>document.documentElement.setAttribute('data-locked', '')</script>
     <article class="sheet">
       <header class="head">
         <p class="eyebrow">{c.title}</p>
@@ -123,27 +115,8 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
         </p>
       </footer>
     </article>
-    <div class="gate">
-      <button class="button" type="button" data-open-gate>{c.viewDocument}</button>
-    </div>
-    </div>
 
-    <button class="button outline print" type="button" hidden disabled aria-disabled="true" data-print>{c.print}</button>
-    <dialog class="unlock" aria-label={c.viewDocument} data-unlock>
-      <form class="unlock-form" data-keys={JSON.stringify(unlockKeys)} novalidate>
-        <div class="unlock-head">
-          <label class="eyebrow" for="unlock-code">{c.printCode}</label>
-          <button class="unlock-close" type="button" aria-label={t.viewer.close} data-unlock-close>
-            <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" /></svg>
-          </button>
-        </div>
-        <input class="input" id="unlock-code" type="password" autocomplete="off" required autofocus />
-        <p class="unlock-hint">{c.unlockHint}</p>
-        <p class="unlock-error" hidden role="alert" data-unlock-error>{c.wrongCode}</p>
-        <button class="button" type="submit">{c.unlock}</button>
-      </form>
-    </dialog>
-    <p class="locked-print">{c.printLocked}</p>
+    <button class="button outline print" type="button" hidden data-print>{c.print}</button>
 
     {proof && (
       <section class="faq" aria-labelledby="faq">
@@ -189,7 +162,6 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
 
 <script>
   import { readProof, explorers } from '../../../lib/ots.js';
-  import { opens } from '../../../lib/lock.js';
 
   // Motion comes from the design tokens; nothing moves for visitors who ask for less motion
   const tokens = getComputedStyle(document.documentElement);
@@ -197,45 +169,10 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   const slow = still ? 0 : parseFloat(tokens.getPropertyValue('--slow')) * 1000;
   const ease = tokens.getPropertyValue('--ease').trim();
 
-  // The sheet is blurred until a code is entered (src/lib/lock.js): "View document" opens a
-  // small window for it, and printing stays disabled until then. Both need JavaScript, so
-  // without it the sheet is simply shown.
-  const root = document.documentElement;
+  // The print button needs JavaScript, so it only shows when it works
   const button = document.querySelector('[data-print]');
-  const dialog = document.querySelector('[data-unlock]');
-  const form = dialog.querySelector('form');
-  const field = form.querySelector('input');
-  const wrong = form.querySelector('[data-unlock-error]');
   button.hidden = false;
   button.addEventListener('click', () => print());
-  document.querySelector('[data-open-gate]').addEventListener('click', () => {
-    wrong.hidden = true;
-    dialog.showModal();
-  });
-  const close = () => {
-    dialog.classList.add('is-closing');
-    setTimeout(() => {
-      dialog.close();
-      dialog.classList.remove('is-closing');
-      field.value = '';
-    }, slow);
-  };
-  dialog.addEventListener('cancel', (event) => { event.preventDefault(); close(); });
-  dialog.addEventListener('click', (event) => { if (event.target === dialog) close(); });
-  dialog.querySelector('[data-unlock-close]').addEventListener('click', close);
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    wrong.hidden = true;
-    if (await opens(field.value, JSON.parse(form.dataset.keys))) {
-      delete root.dataset.locked;
-      button.disabled = false;
-      button.removeAttribute('aria-disabled');
-      close();
-    } else {
-      wrong.hidden = false;
-      field.select();
-    }
-  });
 
   // The questions open and close smoothly: the answer's height and opacity are animated
   document.querySelectorAll('.faq details').forEach((item) => {
@@ -306,44 +243,6 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .page { display: grid; justify-items: center; gap: var(--space-m); padding-block: var(--space-l) var(--space-xl); }
   .print[hidden] { display: none; }
 
-  /* The sheet and, over it, the button that asks for the code. Locked: the sheet is blurred
-     (html[data-locked] is set while the page loads and removed when the code is right). */
-  .paper { position: relative; width: min(100%, 210mm); }
-  .sheet { transition: filter var(--slow) var(--ease); }
-  :global(html[data-locked]) .sheet { filter: blur(12px); pointer-events: none; user-select: none; }
-  .gate {
-    position: absolute; inset: 0; display: grid; place-items: start center;
-    padding-top: clamp(8rem, 35vh, 22rem); pointer-events: none;
-    opacity: 0; transition: opacity var(--slow) var(--ease);
-  }
-  :global(html[data-locked]) .gate { opacity: 1; }
-  :global(html[data-locked]) .gate .button { pointer-events: auto; }
-
-  /* Printing waits for the code too */
-  .print { transition: background-color var(--slow) var(--ease), color var(--slow) var(--ease), border-color var(--slow) var(--ease); }
-  .print:disabled { pointer-events: none; }
-
-  /* The small window for the code: it rises in and fades out softly */
-  .unlock { margin: auto; padding: 0; width: min(calc(100% - 2 * var(--gutter)), 22rem); border: 1px solid var(--line); background: var(--paper); color: var(--ink); }
-  .unlock[open] { animation: arrive var(--slow) var(--ease) both; }
-  .unlock.is-closing { animation: leave var(--slow) var(--ease) both; }
-  .unlock::backdrop { background: color-mix(in srgb, var(--ink) 35%, transparent); }
-  .unlock[open]::backdrop { animation: veil var(--slow) var(--ease) both; }
-  .unlock.is-closing::backdrop { animation: veil var(--slow) var(--ease) reverse both; }
-  @keyframes arrive { from { opacity: 0; transform: translateY(.75rem); } }
-  @keyframes leave { to { opacity: 0; transform: translateY(.75rem); } }
-  @keyframes veil { from { opacity: 0; } }
-  .unlock-form { display: grid; gap: var(--space-xs); padding: var(--space-m); }
-  .unlock-head { display: flex; justify-content: space-between; align-items: center; margin-top: calc(var(--space-2xs) * -1); }
-  .unlock-head .eyebrow { margin: 0; }
-  .unlock-close { display: grid; place-items: center; width: var(--target); height: var(--target); margin-right: calc(var(--space-xs) * -1); padding: 0; border: 0; background: none; color: var(--muted); cursor: pointer; transition: color var(--fast) var(--ease); }
-  .unlock-close:hover { color: var(--ink); }
-  .unlock-close svg { width: .875rem; height: .875rem; }
-  .unlock-hint, .unlock-error { margin: 0; font-size: var(--text-xs); color: var(--muted); }
-  .unlock-error { font-size: var(--text-sm); color: var(--accent); }
-  .unlock-error[hidden] { display: none; }
-  .unlock .button { margin-top: var(--space-2xs); }
-  .locked-print { display: none; margin: 0; }
 
   /* An A4 sheet: white paper, always light, whatever the site theme */
   .sheet {
@@ -443,9 +342,6 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
     :global(.navbar), :global(.footer), :global(.cookies), :global(.skip-link), .print, .faq { display: none !important; }
     :global(body) { background: #fff; }
     .page { padding: 0; }
-    :global(html[data-locked]) .sheet { display: none !important; }
-    :global(html[data-locked]) .locked-print { display: block; padding: 16mm; font-size: var(--text-sm); }
-    .paper { width: 210mm; }
     .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; padding: 16mm; box-shadow: none; }
     .body { grid-template-columns: 1fr 1fr; }
   }

@@ -167,12 +167,6 @@ export default {
     signature: 'Firma',
     verify: 'Verifica este certificado en',
     print: 'Imprimir o guardar como PDF',
-    printCode: 'Código',
-    viewDocument: 'Ver documento',
-    unlockHint: 'Código del propietario, el mismo que figura escrito a mano en su certificado.',
-    unlock: 'Desbloquear',
-    wrongCode: 'El código no es correcto.',
-    printLocked: 'La impresión está bloqueada. Se desbloquea con el código del propietario, desde el botón «Ver documento» de esta página.',
     note: 'Válido solo con la firma manuscrita del artista.',
     // Registro en la blockchain de Bitcoin (solo certificados en src/data/timestamps.js)
     chain: 'Registrado en la blockchain de Bitcoin',

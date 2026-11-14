@@ -125,14 +125,6 @@ block and ask four independent explorers (Blockchain.com, Blockstream, Mempool,
 BlockCypher) whether that block holds it (`src/lib/ots.js`); the records and proofs can also
 be downloaded to check them on opentimestamps.org. The build stops if an authorship record
 and the artwork data differ.
-**Print lock.** The sheet is blurred, with a "View document" button over it, until the visitor
-enters a code in a small window (`src/lib/lock.js`): Don Andy's own, which opens every
-certificate, or the owner's code of that work, the one written by hand on the paper certificate.
-Then the sheet clears and "Print or save as PDF", disabled until then, is enabled; Ctrl+P prints
-a blank page while it is locked. Without JavaScript the sheet is simply shown. It only stops
-casual visitors: a printed copy has no handwritten signature, so it is worth nothing. The repo
-holds only salted fingerprints of the codes (`src/data/print-lock.js`), never a code. To add the
-code of a new sale: `node scripts/print-lock.mjs [code]`, then paste the key line under `owners`.
 The questions open and close with an animation that follows the motion tokens (`--slow`,
 `--ease`) and stops for visitors who ask for less motion.
 
