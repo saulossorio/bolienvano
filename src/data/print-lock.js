@@ -7,7 +7,7 @@
 //
 // To make a key: node scripts/print-lock.mjs [code]   (see the script)
 
-export const master = { salt: '78a9c37e43118d5731391b9fdfe458c7', hash: '4783dd92d418d2e81042cdd5852086f87a2fd6fe816edc4dd8fb7c38ca1abc75' };
+export const master = { salt: 'd2e157d932475b473a629b6afda3caf9', hash: '4c2f9f184b9a2c38c6e4da8220d83520ef56b007ace51f8942475de5db9e6d60' };
 
 export const owners = {
   // Test sale of Cuadrito
