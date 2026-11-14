@@ -19,7 +19,7 @@
   --muted:     light-dark(#6b6863, #a29e97);   /* secondary text (4.9:1 and 6.9:1 on --wall) */
   --line:      light-dark(#dcd9d3, #353330);   /* separators */
   --accent:    light-dark(#8a2b1d, #e0907d);   /* form errors only */
-  --available: light-dark(#3f7a52, #74b98b);   /* green dot of available works (a red dot means sold in galleries) */
+  --available: light-dark(#3f7a52, #74b98b);   /* green dot of available works (a red dot means sold in galleries), and the "verified" note of certificates */
   --night:     #121211;   /* background of the full-screen image viewer and the video players */
   /* Artwork photos: in light mode their white backgrounds take the wall color;
      in dark mode they stay as they are, like paper on a dark wall, with crisp edges

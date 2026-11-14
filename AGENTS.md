@@ -84,7 +84,7 @@ museum labels. Full reference: `/design-system.html` (internal page) and README,
   - Numbers in headings (years, prices) use `.numeral`, never Syne.
 - **Colors:** `--ink` for text, `--prose` for long texts, `--muted` for secondary text,
   `--line` for separators, `--accent` only for form errors, `--available` only for the green
-  dot. Light is the default theme; dark is only by the visitor's choice. Every color must work
+  dot and the certificate's "verified" note. Light is the default theme; dark is only by the visitor's choice. Every color must work
   in both themes: never use `var(--wall)` as a text color on something that is always dark
   (the image viewer uses fixed light text).
 - **Reuse the patterns:** `.eyebrow`, `.line-link`, `.button`, `.button.outline`, `.input`,

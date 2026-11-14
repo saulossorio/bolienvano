@@ -186,7 +186,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
         if (disagree) { result.className = 'result bad'; result.textContent = x.mismatch; return; }
         if (!agree.length) { result.className = 'result bad'; result.textContent = x.offline; return; }
         result.className = 'result good';
-        result.innerHTML = `<span class="mark" aria-hidden="true">✓</span><span class="lines"><strong>${x.verifiedTitle}</strong><span>${when(agree[0].time)} · ${x.block} ${block.height.toLocaleString(x.locale)}</span><span class="by">${x.confirmedBy} ${agree.map((a) => linkTo(a.e, a.hash)).join(' · ')}</span></span>`;
+        result.innerHTML = `<svg class="mark" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="lines"><strong>${x.verifiedTitle}</strong><span>${when(agree[0].time)} · ${x.block} ${block.height.toLocaleString(x.locale)}</span><span class="by">${x.confirmedBy} ${agree.map((a) => linkTo(a.e, a.hash)).join(' · ')}</span></span>`;
       } catch {
         result.className = 'result bad';
         result.textContent = x.offline;
@@ -253,18 +253,21 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .said p:first-child { color: var(--ink); }
   .said strong { font-weight: 500; }
   .said :global(.coa) { white-space: nowrap; }
-  /* The confirmation stands apart from the text: a small card with a check mark */
+  /* The confirmation stands apart from the text: a soft green note that settles in, never
+     a white card (it would look like part of the sheet). Green as for available works. */
+  .result { transition: color var(--fast) var(--ease); }
   .result.good {
-    display: grid; grid-template-columns: auto 1fr; gap: var(--space-xs); align-items: start;
+    display: flex; gap: var(--space-2xs); align-items: flex-start;
     margin-top: var(--space-3xs); padding: var(--space-xs) var(--space-s);
-    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+    border-left: 2px solid var(--available);
+    background: color-mix(in srgb, var(--available) 7%, transparent);
+    color: var(--ink);
+    animation: settle var(--slow) var(--ease) both;
   }
-  .result :global(.mark) {
-    display: grid; place-items: center; width: 1.5rem; height: 1.5rem;
-    border: 1px solid var(--ink); border-radius: 50%; font-size: var(--text-xs);
-  }
+  @keyframes settle { from { opacity: 0; transform: translateY(.35rem); } }
+  .result :global(.mark) { flex: none; width: 1em; height: 1em; margin-top: .3em; color: var(--available); }
   .result :global(.lines) { display: grid; gap: .1rem; }
-  .result :global(strong) { font-weight: 500; }
+  .result :global(strong) { font-weight: 500; color: var(--available); }
   .result.bad { color: var(--accent); }
   .result :global(.by) { color: var(--muted); }
   .verify { display: grid; justify-items: start; gap: var(--space-3xs); margin-top: var(--space-s); }
