@@ -182,20 +182,21 @@ export default {
     mismatch: 'This record does not match the Bitcoin blockchain.',
     offline: 'The Bitcoin sources could not be reached. Please try again in a moment.',
     sale: 'Private collection',
-    // Questions and answers under the certificate (only if it is registered on Bitcoin).
-    // In the texts: {coa} {date} {time} {block} {sources} are filled in by the page. An item can
-    // have aSale (used instead of a when the work has a recorded sale) and needs: 'block' (shown
-    // only once Bitcoin has confirmed); id: 'check' and 'independent' get the check button and
-    // the downloads under their answer.
+    // Questions and answers under the certificate (only if it is registered on Bitcoin), in the
+    // artist's voice. In the texts: {coa} {date} {sources} are filled in by the page. An item can
+    // have aSale (used instead of a when the work has a recorded sale), only: 'sale' (shown only
+    // then) and, for id: 'verify', a2 (second paragraph, after the check button and its result;
+    // the downloads of the records go under it).
     faq: {
       title: 'Frequently asked questions',
       items: [
-        { q: 'How do I know this certificate is authentic?', a: 'Compare three things: the artist’s handwritten signature (without it, this printed page is not valid), the number {coa} (it must match the one on this page, which the QR code leads to) and the Bitcoin record, which you can check right here. The record does not replace the signature: it only proves that this information existed on {date} and that nobody has changed it since.' },
-        { id: 'check', q: 'How do I check the Bitcoin record?', a: 'Press Check and your browser will query four independent sources ({sources}) to confirm that the record exists and has not been altered.' },
-        { id: 'independent', q: 'Can I check it without using this page?', a: 'Yes, and it is the safest way. Download the record and its proof, and upload them to <a class="line-link" href="https://opentimestamps.org" target="_blank" rel="noopener">opentimestamps.org</a>.' },
-        { q: 'What is a blockchain?', a: 'It is a database that nobody controls. Instead of being kept on a company’s server, the same copy lives on thousands of computers. Every new entry is added at the end and what came before cannot be touched: nobody can edit it in their own favor, not even whoever wrote in it. Bitcoin, from 2009, is the oldest and the one watched by the most computers.' },
-        { q: 'What is block {block}?', a: 'Bitcoin writes everything on pages called blocks and closes a new one roughly every ten minutes. Block {block} was closed on {date} at {time} UTC, and this work’s record was written in it.', needs: 'block' },
-        { q: 'What was recorded about this work?', a: 'Its authorship: artist, title, year, technique, dimensions and certificate number. Bitcoin does not store that information itself but its digital fingerprint: a unique code that changes completely if anyone alters a single letter.', aSale: 'Two things: its authorship (artist, title, year, technique, dimensions and certificate number) and its passing to a private collection. Bitcoin does not store that information itself but its digital fingerprint: a unique code that changes completely if anyone alters a single letter. The owner’s name does not appear: only the fingerprint of their name remains, together with a personal code that the artist writes by hand on the certificate, with which the owner can prove the record is theirs.' },
+        { q: 'How do I check the authenticity of this document?', a: 'Every certificate carries my handwritten signature and a unique number. This one, {coa}, is the same one shown on this page, which the QR code leads to. The work’s authorship was recorded on the Bitcoin blockchain on {date}.' },
+        { q: 'What is a blockchain?', a: 'A blockchain is a digital record, public and shared. It is decentralized because it is not stored on a company’s server but spread across thousands of computers around the world, each of which keeps a complete copy. That is why nobody can modify it on their own, since any change would need the agreement of most of them, and whatever is written in it stays fixed forever with its date. Bitcoin, created in 2009, was the first and is the one that backs this certificate’s record.' },
+        { id: 'verify', q: 'How is this work’s record verified?', a: 'The record can be checked in two ways. From this page, the Check button queries four independent sources ({sources}) and confirms that the record exists and has not been modified.', a2: 'It can also be verified independently, without going through this site: the record and its proof are available to download, and <a class="line-link" href="https://opentimestamps.org" target="_blank" rel="noopener">opentimestamps.org</a> confirms them directly against the Bitcoin blockchain.' },
+        { q: 'What was recorded about this work?', a: 'Its authorship: artist, title, year, technique, dimensions and certificate number. The blockchain does not hold that information itself but its digital fingerprint, a unique code that changes completely if a single letter is altered.', aSale: 'Two things: its authorship (artist, title, year, technique, dimensions and certificate number) and its passing to a private collection. The blockchain does not hold that information itself but its digital fingerprint, a unique code that changes completely if a single letter is altered.' },
+        { q: 'Does the owner’s name appear?', a: 'No. Only the fingerprint of their name remains, together with a personal code that I write by hand on the certificate. With it, the owner can prove the record is theirs without their name becoming public.', only: 'sale' },
+        { q: 'Why is it only valid with the handwritten signature?', a: 'Anyone can print this page. The certificate is only the copy I sign by hand.' },
+        { q: 'What does “Unique original, 1/1” mean?', a: 'It means this work has no copies, editions or signed reproductions.' },
       ],
     },
   },

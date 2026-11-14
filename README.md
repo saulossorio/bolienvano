@@ -118,9 +118,9 @@ holds the SHA-256 of the owner's record (`Owner: <name>` and `Code: <secret>`), 
 Don Andy and the owner keep, never in this repo. The secret code is written by hand on the
 paper certificate, in the "Owner code" line. The certificate then shows one line with
 the Bitcoin block and, on screen only, a "Frequently asked questions" section (texts in
-`certificate.faq` of each language's `ui.js`, with this work's number, date and block filled
-in): how to know it is authentic, what a blockchain and a block are, what was recorded, and
-how to check it. A "Check" button makes the visitor's browser follow the proof up to the
+`certificate.faq` of each language's `ui.js`, in the artist's voice, with this work's number
+and date filled in): how to check the authenticity, what a blockchain is, how the record is
+verified, what was recorded and why the signature matters. A "Check" button makes the visitor's browser follow the proof up to the
 block and ask four independent explorers (Blockchain.com, Blockstream, Mempool,
 BlockCypher) whether that block holds it (`src/lib/ots.js`); the records and proofs can also
 be downloaded to check them on opentimestamps.org. The build stops if an authorship record

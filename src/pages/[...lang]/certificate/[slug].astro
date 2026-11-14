@@ -68,8 +68,8 @@ const data = proof && {
 };
 const fill = (text) => Object.entries(data).reduce((out, [key, value]) => out.replaceAll(key, value), text);
 const faq = proof && c.faq.items
-  .filter((i) => i.needs !== 'block' || proof.block)
-  .map((i) => ({ ...i, q: fill(i.q), a: fill(hasSale && i.aSale ? i.aSale : i.a) }));
+  .filter((i) => i.only !== 'sale' || hasSale)
+  .map((i) => ({ ...i, q: fill(i.q), a: fill(hasSale && i.aSale ? i.aSale : i.a), a2: i.a2 && fill(i.a2) }));
 // Texts the checker writes, in this language
 const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.verifiedTitle, block: c.block, confirmedBy: c.confirmedBy, mismatch: c.mismatch, offline: c.offline, newTab: t.a11y.newTab };
 ---
@@ -127,7 +127,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
                 <summary>{i.q}</summary>
                 <div class="answer">
                   <p set:html={i.a} />
-                  {i.id === 'check' && (
+                  {i.id === 'verify' && (
                     <>
                       <p class="verify" hidden data-verify-box>
                         <button class="more check-now" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
@@ -138,18 +138,17 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
                           <div class="result" data-result aria-live="polite"></div>
                         </div>
                       ))}
+                      <p set:html={i.a2} />
+                      <ul class="files">
+                        {records.map((r) => (
+                          <li>
+                            <strong>{r.title}</strong>
+                            <a class="line-link" href={r.record} download>{c.record}</a>
+                            <a class="line-link" href={r.ots} download>{c.proof}</a>
+                          </li>
+                        ))}
+                      </ul>
                     </>
-                  )}
-                  {i.id === 'independent' && (
-                    <ul class="files">
-                      {records.map((r) => (
-                        <li>
-                          <strong>{r.title}</strong>
-                          <a class="line-link" href={r.record} download>{c.record}</a>
-                          <a class="line-link" href={r.ots} download>{c.proof}</a>
-                        </li>
-                      ))}
-                    </ul>
                   )}
                 </div>
               </details>
