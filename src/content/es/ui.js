@@ -189,7 +189,7 @@ export default {
     viewOn: 'ver en',
     verifyIntro: 'Tu navegador comprueba estos registros directamente contra la blockchain de Bitcoin, a través de cuatro fuentes independientes.',
     verifying: 'Comprobando en la blockchain de Bitcoin…',
-    verified: 'Registrado en la blockchain de Bitcoin el {date}',
+    verifiedTitle: 'Verificado en la blockchain de Bitcoin',
     confirmedBy: 'Confirmado por',
     mismatch: 'Este registro no coincide con la blockchain de Bitcoin.',
     offline: 'No se pudo consultar Bitcoin. Vuelve a intentarlo en un momento.',

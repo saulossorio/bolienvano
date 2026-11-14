@@ -66,7 +66,7 @@ const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} 
 // Before checking: the block, with a link to it on the best known explorer
 const blockLink = (height) => `https://www.blockchain.com/explorer/blocks/btc/${height}`;
 // Texts the checker writes, in this language
-const checkTexts = { locale: t.locale, verifying: c.verifying, verified: c.verified, block: c.block, confirmedBy: c.confirmedBy, mismatch: c.mismatch, offline: c.offline, again: c.verifyNow, newTab: t.a11y.newTab };
+const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.verifiedTitle, block: c.block, confirmedBy: c.confirmedBy, mismatch: c.mismatch, offline: c.offline, again: c.verifyNow, newTab: t.a11y.newTab };
 ---
 <Base title={`${c.title}, ${title}`} path={path} noindex>
   <div class="container page">
@@ -117,7 +117,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verified: c.verif
         {records.map((r) => (
           <div class="said" data-entry data-record={r.record} data-ots={r.ots}>
             <p><strong>{r.title}.</strong> <span set:html={r.words} /></p>
-            <p class="result" data-result>
+            <p class="result" data-result aria-live="polite">
               {c.chain} · {r.block
                 ? <>{date(r.date)} · {c.block} {r.block.toLocaleString(t.locale)}, <a class="line-link" href={blockLink(r.block)} target="_blank" rel="noopener">{c.viewOn} Blockchain.com<span class="visually-hidden"> ({t.a11y.newTab})</span></a></>
                 : c.pending}
@@ -186,7 +186,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verified: c.verif
         if (disagree) { result.className = 'result bad'; result.textContent = x.mismatch; return; }
         if (!agree.length) { result.className = 'result bad'; result.textContent = x.offline; return; }
         result.className = 'result good';
-        result.innerHTML = `<span aria-hidden="true">✓</span> ${x.verified.replace('{date}', when(agree[0].time))} · ${x.block} ${block.height.toLocaleString(x.locale)}<br><span class="by">${x.confirmedBy} ${agree.map((a) => linkTo(a.e, a.hash)).join(' · ')}</span>`;
+        result.innerHTML = `<span class="mark" aria-hidden="true">✓</span><span class="lines"><strong>${x.verifiedTitle}</strong><span>${when(agree[0].time)} · ${x.block} ${block.height.toLocaleString(x.locale)}</span><span class="by">${x.confirmedBy} ${agree.map((a) => linkTo(a.e, a.hash)).join(' · ')}</span></span>`;
       } catch {
         result.className = 'result bad';
         result.textContent = x.offline;
@@ -253,9 +253,20 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verified: c.verif
   .said p:first-child { color: var(--ink); }
   .said strong { font-weight: 500; }
   .said :global(.coa) { white-space: nowrap; }
-  .result.good { color: var(--ink); }
+  /* The confirmation stands apart from the text: a small card with a check mark */
+  .result.good {
+    display: grid; grid-template-columns: auto 1fr; gap: var(--space-xs); align-items: start;
+    margin-top: var(--space-3xs); padding: var(--space-xs) var(--space-s);
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+  }
+  .result :global(.mark) {
+    display: grid; place-items: center; width: 1.5rem; height: 1.5rem;
+    border: 1px solid var(--ink); border-radius: 50%; font-size: var(--text-xs);
+  }
+  .result :global(.lines) { display: grid; gap: .1rem; }
+  .result :global(strong) { font-weight: 500; }
   .result.bad { color: var(--accent); }
-  .result .by { color: var(--muted); }
+  .result :global(.by) { color: var(--muted); }
   .verify { display: grid; justify-items: start; gap: var(--space-3xs); margin-top: var(--space-s); }
   .check-now { padding: 0; border: 0; background: none; color: var(--ink); font-family: inherit; cursor: pointer; }
   .check-now::after { margin-left: .35em; }
