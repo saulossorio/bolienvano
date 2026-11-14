@@ -111,6 +111,9 @@ museum labels. Full reference: `/design-system.html` (internal page) and README,
 - **Never edit or delete the blockchain records** in `public/certificate/proof/` (`<coa>.txt`
   and `<coa>.ots`): a single changed letter makes the proof fail. If a work's details change,
   ask Don Andy before registering it again.
+- **Never write a print code** (the artist's or an owner's) in the repo, in a commit message or in
+  a page: only the fingerprints made by `scripts/print-lock.mjs` go in `src/data/print-lock.js`.
+  Codes are given to Don Andy and nobody else.
 - Never weaken the contact form's spam protection (the `elapsed` field, the trap field,
   gibberish filter, 5 per hour per IP).
 - Never send test messages through the live form without saying so (each one reaches Don

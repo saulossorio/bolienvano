@@ -125,6 +125,13 @@ block and ask four independent explorers (Blockchain.com, Blockstream, Mempool,
 BlockCypher) whether that block holds it (`src/lib/ots.js`); the records and proofs can also
 be downloaded to check them on opentimestamps.org. The build stops if an authorship record
 and the artwork data differ.
+**Print lock.** The "Print or save as PDF" button asks for a code (`src/lib/lock.js`): Don
+Andy's own, which opens every certificate, or the owner's code of that work, the one written by
+hand on the paper certificate. Until then the printed page is blank (Ctrl+P too). It only stops
+casual visitors: a printed copy has no handwritten signature, so it is worth nothing. The repo
+holds only salted fingerprints of the codes (`src/data/print-lock.js`), never a code. To add the
+code of a new sale: `node scripts/print-lock.mjs [code]`, then paste the key line under `owners`.
+
 To register one: `ots stamp <coa>.txt`, then a few hours later `ots upgrade <coa>.txt.ots`
 and fill in `block` and `date`.
 
