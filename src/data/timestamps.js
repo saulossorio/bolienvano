@@ -13,10 +13,11 @@
 //   stamped   day the record was sent (YYYY-MM-DD)
 //   block     Bitcoin block that confirms it; null while the confirmation is pending
 //   date      day of that block (YYYY-MM-DD)
+//   time      UTC time of that block (HH:MM)
 
 export const timestamps = {
   'AO-2019-ARE3': [
-    { file: 'AO-2019-ARE3',   kind: 'authorship', stamped: '2026-11-12', block: 975519, date: '2026-11-12' },
-    { file: 'AO-2019-ARE3-1', kind: 'sale',       stamped: '2026-11-12', block: 975519, date: '2026-11-12' },
+    { file: 'AO-2019-ARE3',   kind: 'authorship', stamped: '2026-11-12', block: 975519, date: '2026-11-12', time: '04:20' },
+    { file: 'AO-2019-ARE3-1', kind: 'sale',       stamped: '2026-11-12', block: 975519, date: '2026-11-12', time: '04:20' },
   ],
 };

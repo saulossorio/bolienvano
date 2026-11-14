@@ -246,6 +246,20 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
         {examples.map((a) => <div><Availability artwork={a} title={artworkTitles[a.slug]} /></div>)}
       </div>
 
+      <h3 class="eyebrow sub">Questions and answers · <code>pages/certificate/[slug].astro</code></h3>
+      <p class="use">Under a certificate: questions in the reader's own words, grouped under an <code>.eyebrow</code>. Each one is a <code>details</code> row with a thin <code>--line</code> rule and a + that turns into ×; its answer opens with a short fade and says the answer first, then the context. A confirmation is a soft <code>--available</code> green note with a small check, never a white card. Texts are in <code>src/content/&lt;language&gt;/ui.js</code> (<code>certificate.faq</code>).</p>
+      <div class="faq-demo">
+        <h4 class="eyebrow">Verifying this certificate</h4>
+        <details open>
+          <summary>How do I know this certificate is authentic?</summary>
+          <p>Compare three things: the artist's handwritten signature, the number, and the Bitcoin record.</p>
+        </details>
+        <details>
+          <summary>Why is it only valid with the handwritten signature?</summary>
+          <p>Anyone can print this page, so the certificate is only the copy signed by hand by the artist.</p>
+        </details>
+      </div>
+
       <h3 class="eyebrow sub">Contact form · <code>pages/contact.astro</code></h3>
       <p class="use">Only shared patterns: the reason to write as <code>.choice</code> options under an <code>.eyebrow</code>, <code>.input</code> fields (a <code>*</code> marks the required ones), one <code>.button</code> with the privacy line beside it. Coming from an artwork, "Buy a work" is picked and the work is named under the options. It never sends from this page.</p>
       <div class="form-demo">
@@ -305,6 +319,14 @@ const examples = ['available', 'ask', 'sold'].map(artwork);
   section { padding-top: var(--space-xl); scroll-margin-top: var(--bar); }
   .note { max-width: 44rem; color: var(--muted); }
   .use { font-size: var(--text-sm); color: var(--muted); }
+  .faq-demo { max-width: 40rem; }
+  .faq-demo h4 { margin: 0 0 var(--space-3xs); }
+  .faq-demo details { border-bottom: 1px solid var(--line); }
+  .faq-demo summary { display: flex; justify-content: space-between; gap: var(--space-s); padding-block: var(--space-xs); cursor: pointer; list-style: none; font-size: var(--text-sm); font-weight: 500; color: var(--ink); }
+  .faq-demo summary::-webkit-details-marker { display: none; }
+  .faq-demo summary::after { content: '+'; color: var(--muted); transition: transform var(--fast) var(--ease); }
+  .faq-demo details[open] summary::after { transform: rotate(45deg); }
+  .faq-demo p { margin: 0 0 var(--space-s); font-size: var(--text-sm); color: var(--muted); }
   .value { font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums; }
   code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9em; color: var(--ink); }
   .sub { margin-top: var(--space-l); }

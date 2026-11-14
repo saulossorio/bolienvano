@@ -5,19 +5,20 @@
 // saved as PDF from the print dialog) it is one A4 page, signed by hand.
 // The QR code leads back to this page, so anyone holding the paper can check it.
 // When the certificate is registered on the Bitcoin blockchain (src/data/timestamps.js),
-// the sheet says so in one line and, below it, the page says in words what each record
-// holds (authorship, then each change of ownership) and checks them against Bitcoin in the
-// visitor's browser (src/lib/ots.js). The files and manual steps stay folded for experts.
+// the sheet says so in one line and, below it, the page answers the questions a holder
+// would ask (FAQ in src/content/<language>/ui.js), with a button that checks the records
+// against Bitcoin in the visitor's browser (src/lib/ots.js) and the files to check them
+// without this site.
 // Internal: not in the menu or the sitemap, hidden from search engines.
 import { getImage } from 'astro:assets';
 import QRCode from 'qrcode';
-import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import Base from '../../../layouts/Base.astro';
 import { useTexts, texts } from '../../../content/index.js';
 import { artworks } from '../../../data/artworks.js';
 import { timestamps } from '../../../data/timestamps.js';
 import { artworkImages } from '../../../lib/images.js';
+import { explorers } from '../../../lib/ots.js';
 import { langParams, assetUrl } from '../../../lib/urls.js';
 const { t, artworkTitles, url, date } = useTexts(Astro);
 
@@ -34,39 +35,46 @@ const photo = await getImage({ src: artworkImages(artwork.slug)[0].src, width: 1
 const qr = await QRCode.toString(link.href, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#1d1c1aff', light: '#0000' } });
 const statement = c.statement.replace('{title}', `<em>${title}</em>`);
 
-// Blockchain records: each registered text, what it says in words, its SHA-256, and links
-// to it and its proof. The build stops if an authorship record and the artwork data differ.
+// Blockchain records: the registered text of each (authorship, then each change of
+// ownership) and links to it and its proof. The build stops if an authorship record and the
+// artwork data differ.
 const english = texts('en').t;
 const field = (text, name) => text.match(new RegExp(`^${name}: (.*)$`, 'm'))?.[1];
 const records = (timestamps[artwork.coa] ?? []).map((r) => {
-  const text = readFileSync(`public/certificate/proof/${r.file}.txt`);
-  const fields = text.toString();
+  const registered = readFileSync(`public/certificate/proof/${r.file}.txt`).toString();
   if (r.kind === 'authorship') {
     const expected = { Certificate: artwork.coa, Year: String(artwork.year), Medium: english.media[artwork.medium], Size: artwork.size };
     for (const [name, value] of Object.entries(expected)) {
-      if (field(fields, name) !== value) throw new Error(`${r.file}.txt: ${name} is "${field(fields, name)}", the artwork says "${value}"`);
+      if (field(registered, name) !== value) throw new Error(`${r.file}.txt: ${name} is "${field(registered, name)}", the artwork says "${value}"`);
     }
   }
-  const words = r.kind === 'sale'
-    ? c.saleWords.replace('{from}', field(fields, 'From')).replace('{date}', date(field(fields, 'Date')))
-    : c.authorshipWords.replace('{artist}', field(fields, 'Artist')).replace('{title}', `<em>${title}</em>`)
-        .replace('{details}', [artwork.year, t.media[artwork.medium].toLowerCase(), artwork.size, c.unique.split(',')[0].toLowerCase()].join(', ')).replace('{coa}', `<span class="coa">${artwork.coa}</span>`);
   return {
     ...r,
     title: r.kind === 'sale' ? c.sale : c.authorship,
-    words,
-    text: fields,
-    hash: createHash('sha256').update(text).digest('hex'),
     record: assetUrl(`certificate/proof/${r.file}.txt`),
     ots: assetUrl(`certificate/proof/${r.file}.ots`),
   };
 });
 const proof = records[0];
 const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} · ${date(r.date)}` : c.pending;
-// Before checking: the block, with a link to it on the best known explorer
-const blockLink = (height) => `https://www.blockchain.com/explorer/blocks/btc/${height}`;
+// The questions, with this work's data filled in
+const hasSale = records.some((r) => r.kind === 'sale');
+const data = proof && {
+  '{coa}': `<span class="nowrap">${artwork.coa}</span>`,
+  '{date}': date(proof.block ? proof.date : proof.stamped),
+  '{time}': proof.time,
+  '{block}': proof.block?.toLocaleString(t.locale),
+  '{sources}': new Intl.ListFormat(t.locale, { type: 'conjunction' }).format(explorers.map((e) => e.name)),
+};
+const fill = (text) => Object.entries(data).reduce((out, [key, value]) => out.replaceAll(key, value), text);
+const faq = proof && c.faq.groups.map((group) => ({
+  title: group.title,
+  items: group.items
+    .filter((i) => (i.only !== 'sale' || hasSale) && (i.needs !== 'block' || proof.block))
+    .map((i) => ({ ...i, q: fill(i.q), a: fill(hasSale && i.aSale ? i.aSale : i.a) })),
+}));
 // Texts the checker writes, in this language
-const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.verifiedTitle, block: c.block, confirmedBy: c.confirmedBy, mismatch: c.mismatch, offline: c.offline, again: c.verifyNow, newTab: t.a11y.newTab };
+const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.verifiedTitle, block: c.block, confirmedBy: c.confirmedBy, mismatch: c.mismatch, offline: c.offline, newTab: t.a11y.newTab };
 ---
 <Base title={`${c.title}, ${title}`} path={path} noindex>
   <div class="container page">
@@ -112,41 +120,45 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
     </article>
 
     {proof && (
-      <section class="check" aria-labelledby="check">
-        <h2 id="check" class="eyebrow">{c.checkTitle}</h2>
-        <p class="lead">{c.chainIntro}</p>
-        <p class="verify" hidden data-verify-box>
-          <button class="more check-now" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
-          <span>{c.verifyIntro}</span>
-        </p>
-        {records.map((r) => (
-          <div class="said" data-entry data-record={r.record} data-ots={r.ots}>
-            <p><strong>{r.title}.</strong> <span set:html={r.words} /></p>
-            <p class="result" data-result aria-live="polite">
-              {c.chain} · {r.block
-                ? <>{date(r.date)} · {c.block} {r.block.toLocaleString(t.locale)}, <a class="line-link" href={blockLink(r.block)} target="_blank" rel="noopener">{c.viewOn} Blockchain.com<span class="visually-hidden"> ({t.a11y.newTab})</span></a></>
-                : c.pending}
-            </p>
+      <section class="faq" aria-labelledby="faq">
+        <h2 id="faq" class="eyebrow">{c.faq.title}</h2>
+        {faq.map((group) => (
+          <div class="group">
+            <h3 class="eyebrow">{group.title}</h3>
+            {group.items.map((i) => (
+              <details>
+                <summary>{i.q}</summary>
+                <div class="answer">
+                  <p set:html={i.a} />
+                  {i.id === 'check' && (
+                    <>
+                      <p class="verify" hidden data-verify-box>
+                        <button class="more check-now" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
+                      </p>
+                      {records.map((r) => (
+                        <div class="entry" hidden data-entry data-record={r.record} data-ots={r.ots}>
+                          <p class="eyebrow">{r.title}</p>
+                          <div class="result" data-result aria-live="polite"></div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                  {i.id === 'independent' && (
+                    <ul class="files">
+                      {records.map((r) => (
+                        <li>
+                          <strong>{r.title}</strong>
+                          <a class="line-link" href={r.record} download>{c.record}</a>
+                          <a class="line-link" href={r.ots} download>{c.proof}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </details>
+            ))}
           </div>
         ))}
-        <details>
-        <summary>{c.howTo}</summary>
-        <div class="how">
-        <p>{c.checkIntro}</p>
-        <ol>{c.checkSteps.map((step) => <li set:html={step} />)}</ol>
-        {records.some((r) => r.kind === 'sale') && <p>{c.ownerNote}</p>}
-        {records.map((r) => (
-          <div class="entry">
-            <h3>{r.title}</h3>
-            <pre class="record">{r.text}</pre>
-            <p class="files">
-              <a class="line-link" href={r.record} download>{c.record}</a>
-              <a class="line-link" href={r.ots} download>{c.proof}</a>
-            </p>
-          </div>
-        ))}
-        </div>
-        </details>
       </section>
     )}
 
@@ -174,6 +186,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
 
     async function check(entry) {
       const result = entry.querySelector('[data-result]');
+      entry.hidden = false;
       result.className = 'result';
       result.textContent = x.verifying;
       try {
@@ -246,20 +259,38 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .foot p { margin: 0; font-size: var(--text-xs); line-height: 1.6; color: var(--muted); }
   .url { color: var(--ink); overflow-wrap: anywhere; }
 
-  /* How to check the blockchain record: on screen only, under the sheet */
-  .check { min-width: 0; width: min(100%, 210mm); display: grid; gap: var(--space-2xs); font-size: var(--text-sm); color: var(--muted); }
-  .check h2 { margin: 0; color: var(--ink); }
-  .check p, .check ol { margin: 0; }
-  .said { display: grid; gap: var(--space-3xs); padding-block: var(--space-xs); border-bottom: 1px solid var(--line); }
-  .said p:first-child { color: var(--ink); }
-  .said strong { font-weight: 500; }
-  .said :global(.coa) { white-space: nowrap; }
-  /* The confirmation stands apart from the text: a soft green note that settles in, never
-     a white card (it would look like part of the sheet). Green as for available works. */
+  /* Questions and answers under the sheet, on screen only. Each question opens its answer.
+     The confirmation of a check is a soft green note (green as for available works), never a
+     white card: it would look like part of the sheet. */
+  .faq { min-width: 0; width: min(100%, 210mm); display: grid; gap: var(--space-m); font-size: var(--text-sm); color: var(--muted); }
+  .faq > h2 { margin: 0; color: var(--ink); }
+  .group { display: grid; }
+  .group > h3 { margin: 0 0 var(--space-3xs); }
+  details { border-bottom: 1px solid var(--line); }
+  summary {
+    display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-s);
+    padding-block: var(--space-xs); cursor: pointer; list-style: none;
+    font-weight: 500; color: var(--ink); transition: color var(--fast) var(--ease);
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; flex: none; color: var(--muted); transition: transform var(--fast) var(--ease); }
+  summary:hover { color: var(--muted); }
+  details[open] summary::after { transform: rotate(45deg); }
+  .answer { display: grid; gap: var(--space-xs); justify-items: start; padding-bottom: var(--space-s); animation: unfold var(--fast) var(--ease) both; }
+  @keyframes unfold { from { opacity: 0; transform: translateY(-.25rem); } }
+  .answer p { margin: 0; max-width: 62ch; }
+  .answer :global(.nowrap) { white-space: nowrap; }
+  .answer :global(a) { color: var(--ink); }
+  .verify[hidden], .entry[hidden] { display: none; }
+  .check-now { padding: 0; border: 0; background: none; color: var(--ink); font-family: inherit; cursor: pointer; }
+  .check-now::after { margin-left: .35em; }
+  .check-now:disabled { color: var(--muted); cursor: default; }
+  .entry { display: grid; gap: var(--space-3xs); width: 100%; }
+  .entry .eyebrow { margin: 0; }
   .result { transition: color var(--fast) var(--ease); }
   .result.good {
     display: flex; gap: var(--space-2xs); align-items: flex-start;
-    margin-top: var(--space-3xs); padding: var(--space-xs) var(--space-s);
+    padding: var(--space-xs) var(--space-s);
     border-left: 2px solid var(--available);
     background: color-mix(in srgb, var(--available) 7%, transparent);
     color: var(--ink);
@@ -271,20 +302,9 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .result :global(strong) { font-weight: 500; color: var(--available); }
   .result.bad { color: var(--accent); }
   .result :global(.by) { color: var(--muted); }
-  .lead { color: var(--ink); }
-  .verify { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-3xs) var(--space-s); margin-bottom: var(--space-2xs) !important; }
-  .check-now { padding: 0; border: 0; background: none; color: var(--ink); font-family: inherit; cursor: pointer; }
-  .check-now::after { margin-left: .35em; }
-  .check-now:disabled { color: var(--muted); cursor: default; }
-  .verify[hidden] { display: none; }
-  details summary { cursor: pointer; width: fit-content; margin-top: var(--space-2xs); font-weight: 500; color: var(--ink); }
-  .how { display: grid; gap: var(--space-2xs); margin-top: var(--space-s); }
-  .entry { display: grid; gap: var(--space-2xs); margin-top: var(--space-s); }
-  .entry h3 { margin: 0; font-family: var(--sans); font-size: var(--text-sm); font-weight: 500; color: var(--ink); }
-  .entry h3 span { font-weight: 400; color: var(--muted); }
-  .record { overflow-wrap: anywhere; margin: 0; padding: var(--space-s); border: 1px solid var(--line); font: inherit; font-size: var(--text-xs); line-height: 1.6; color: var(--ink); white-space: pre-wrap; }
-  .check ol { padding-left: 1.2em; display: grid; gap: var(--space-3xs); }
-  .files { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-m); color: var(--ink); }
+  .files { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3xs); }
+  .files li { display: flex; flex-wrap: wrap; gap: var(--space-3xs) var(--space-m); }
+  .files strong { font-weight: 500; color: var(--ink); min-width: 9rem; }
 
   /* Phone: no fixed paper shape, everything in one column */
   @media (max-width: 599px) {
@@ -295,7 +315,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   /* Printed: only the sheet, on one A4 page, with the page margins inside it */
   @page { size: A4; margin: 0; }
   @media print {
-    :global(.navbar), :global(.footer), :global(.cookies), :global(.skip-link), .print, .check { display: none !important; }
+    :global(.navbar), :global(.footer), :global(.cookies), :global(.skip-link), .print, .faq { display: none !important; }
     :global(body) { background: #fff; }
     .page { padding: 0; }
     .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; padding: 16mm; box-shadow: none; }
