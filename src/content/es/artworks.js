@@ -44,6 +44,6 @@ export default {
   'reflejo':       'Reflejo',
   'joven-y-viejo': 'Joven y viejo',
 
-  'inspired': 'Inspired',
+  'inspired': 'Inspirado',
   'cuadrito': 'Cuadrito',
 };
