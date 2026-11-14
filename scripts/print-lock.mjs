@@ -1,7 +1,7 @@
 // Makes the print lock of a certificate (see src/lib/lock.js).
 //
 //   node scripts/print-lock.mjs            a new random owner code, and its key
-//   node scripts/print-lock.mjs 54GW-AGST  the key of a code you already have
+//   node scripts/print-lock.mjs AB12-CDEF  the key of a code you already have
 //
 // Paste the key line into src/data/print-lock.js. The code itself goes only on the paper
 // certificate (and in Don Andy's private records), never in this repo.
