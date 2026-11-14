@@ -8,7 +8,7 @@
 
 const ITERATIONS = 210000;
 
-// Codes are read without case, spaces or dashes: 54gw agst = 54GW-AGST
+// Codes are read without case, spaces or dashes: ab12 cdef = AB12-CDEF
 export const normalize = (code) => code.toUpperCase().replace(/[^A-Z0-9]/g, '');
 
 const hex = (bytes) => [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('');
