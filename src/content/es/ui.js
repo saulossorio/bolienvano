@@ -166,8 +166,8 @@ export default {
     date: 'Fecha',
     signature: 'Firma',
     verify: 'Verifica este certificado en',
-    viewWork: 'Ver la obra',
-    print: 'Imprimir o guardar como PDF',
+    viewWork: 'Ver obra',
+    print: 'Imprimir certificado',
     note: 'Válido solo con la firma manuscrita del artista.',
     // Registro en la blockchain de Bitcoin (solo certificados en src/data/timestamps.js)
     chain: 'Registrado en la blockchain de Bitcoin',

@@ -106,7 +106,7 @@ Every artwork has its certificate at `certificate/<slug>.html`
 (`src/pages/certificate/[slug].astro`), filled in from `src/data/artworks.js`: photo, title,
 year, technique, size and its number (`coa`, AO-<year>- and 4 random characters, so it reveals nothing about how many works there are; never changed). It prints
 (or saves as PDF) on one A4 page with blank lines for the owner, the date and the artist's
-handwritten signature. Its QR code leads back to the same page to check it. Under it, on screen only, the print button (primary, solid) and a "View the work" link to the artwork's page (secondary, outlined).
+handwritten signature. Its QR code leads back to the same page to check it. Under it, on screen only, the "Print certificate" button (outlined), and above the sheet a "← View work" link to the artwork's page (nothing links back from the artwork).
 Two spaces stay empty for the artist's seals, applied by hand: a 4 cm embossed seal beside the
 signature and a 2.2 cm holographic sticker at the right end of the footer. Not in the menu or the
 sitemap, hidden from search engines. Every certificate comes from this one
