@@ -318,14 +318,16 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   summary::after { content: '+'; flex: none; color: var(--muted); transition: transform var(--slow) var(--ease); }
   summary:hover { color: var(--muted); }
   details[open]:not(.is-closing) summary::after { transform: rotate(45deg); }
-  .answer { display: grid; gap: var(--space-xs); padding-bottom: var(--space-s); }
+  .answer { display: grid; gap: var(--space-s); padding-bottom: var(--space-m); }
   .answer :global(.text) { display: grid; gap: var(--space-xs); }
   .answer :global(p) { margin: 0; }
   .answer :global(ul) { margin: 0; padding-left: 1.2em; display: grid; gap: var(--space-xs); }
   .answer :global(strong) { font-weight: 500; color: var(--ink); }
   .answer :global(a) { color: var(--ink); }
-  .ways { gap: var(--space-s); }
-  .ways > li { display: grid; gap: var(--space-xs); }
+  /* Links in an answer keep their thin line drawn, so they read as links */
+  .answer :global(.line-link)::after { transform: scaleX(1); }
+  .ways { gap: var(--space-m); }
+  .ways > li { display: grid; gap: var(--space-s); }
   .verify[hidden], .entry[hidden] { display: none; }
   .verify { justify-self: start; }
   /* While it checks: the same look as a disabled .button (global.css) */
@@ -347,7 +349,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .result :global(strong) { font-weight: 500; color: var(--available); }
   .result.bad { color: var(--accent); }
   .result :global(.by) { color: var(--muted); }
-  .ways .files { list-style: none; padding: 0; gap: var(--space-3xs); }
+  .ways .files { list-style: none; padding: 0; gap: var(--space-xs); }
   .files li { display: flex; flex-wrap: wrap; gap: var(--space-3xs) var(--space-m); }
   .files strong { font-weight: 500; color: var(--ink); min-width: 9rem; }
 
