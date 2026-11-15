@@ -107,7 +107,9 @@ Every artwork has its certificate at `certificate/<slug>.html`
 year, technique, size and its number (`coa`, AO-<year>- and 4 random characters, so it reveals nothing about how many works there are; never changed). It prints
 (or saves as PDF) on one A4 page with blank lines for the owner, the date and the artist's
 handwritten signature. Its QR code leads back to the same page to check it. Under it, on screen only, the print button (primary, solid) and a "View the work" link to the artwork's page (secondary, outlined).
-Not in the menu or the sitemap, hidden from search engines. Every certificate comes from this one
+Two spaces stay empty for the artist's seals, applied by hand: a 4 cm embossed seal beside the
+signature and a 2.2 cm holographic sticker at the right end of the footer. Not in the menu or the
+sitemap, hidden from search engines. Every certificate comes from this one
 template, so a change to it applies to all of them, present and future.
 
 **Bitcoin blockchain record (test with Cuadrito).** A certificate can be registered on the
@@ -121,7 +123,7 @@ paper certificate, in the "Owner code" line. The certificate then shows one line
 the Bitcoin block and, on screen only, a "Frequently asked questions" section (texts in
 `certificate.faq` of each language's `ui.js`, in the artist's voice, with this work's number
 and date filled in): how to check the authenticity, what a blockchain is, how the record is
-verified, what was recorded and why the signature matters. A "Check" button makes the visitor's browser follow the proof up to the
+verified and whether the owner's data is public. Only questions every certificate can answer. A "Check" button makes the visitor's browser follow the proof up to the
 block and ask four independent explorers (Blockchain.com, Blockstream, Mempool,
 BlockCypher) whether that block holds it (`src/lib/ots.js`); the records and proofs can also
 be downloaded to check them on opentimestamps.org. The build stops if an authorship record

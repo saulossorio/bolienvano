@@ -56,7 +56,7 @@ const records = (timestamps[artwork.coa] ?? []).map((r) => {
   };
 });
 const proof = records[0];
-const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} · ${date(r.date)}` : c.pending;
+const status = (r) => r.block ? `${c.block} ${r.block.toLocaleString(t.locale)} · ${r.date}` : c.pending;
 // The questions are the same for every certificate; only the block explorers are filled in
 const sources = new Intl.ListFormat(t.locale, { type: 'conjunction' }).format(explorers.map((e) => e.name));
 const fill = (text) => text.replaceAll('{sources}', sources);
@@ -94,7 +94,8 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
         <div class="field wide"><span class="line" /><span class="eyebrow">{c.owner}</span></div>
         <div class="field"><span class="line" /><span class="eyebrow">{c.ownerCode}</span></div>
         <div class="field"><span class="line" /><span class="eyebrow">{c.date}</span></div>
-        <div class="field wide"><span class="line" /><span class="eyebrow">{c.signature}, {t.site.name}</span></div>
+        <div class="field"><span class="line" /><span class="eyebrow">{c.signature}, {t.site.name}</span></div>
+        <div class="seal" aria-hidden="true" />
       </div>
 
       <footer class="foot">
@@ -104,6 +105,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
           {proof && <><span class="chain">{c.chain} · {status(proof)}</span><br /></>}
           <span class="note">{c.note}</span>
         </p>
+        <div class="holo" aria-hidden="true" />
       </footer>
     </article>
 
@@ -280,10 +282,16 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
 
   .statement { margin: 0; font-size: var(--text-sm); line-height: 1.7; }
 
-  /* Lines to fill in by hand, pushed to the bottom of the sheet. The owner code is the
+  /* Lines to fill in by hand, centred in the space between the statement and the footer
+     (moved up half of a line's height, because the first line starts 10mm below the block). The owner code is the
      secret code of the sale record on the blockchain (src/data/timestamps.js) */
-  .sign { margin-top: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 9mm 8mm; }
+  .sign { position: relative; margin-block: auto; translate: 0 -5mm; display: grid; grid-template-columns: 1fr 1fr; gap: 9mm 8mm; }
   .field { display: grid; gap: 1.5mm; }
+  /* Two spaces left empty for the artist's seals, applied by hand after printing: a dry
+     embossed seal (4 cm) beside the signature, centred in the right half of the sheet, and a
+     holographic sticker (2.2 cm) at the right end of the footer. Nothing is drawn in them */
+  .seal { position: absolute; right: calc((100% - 8mm) / 4 - 20mm); bottom: -16mm; width: 40mm; height: 40mm; }
+  .holo { flex: none; width: 22mm; height: 22mm; }
   .field.wide { grid-column: 1 / -1; }
   .line { height: 10mm; border-bottom: 1px solid var(--ink); }
   .field .eyebrow { margin: 0; }
@@ -347,6 +355,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   /* Phone: no fixed paper shape, everything in one column */
   @media (max-width: 599px) {
     .sheet { aspect-ratio: auto; }
+    .seal, .holo { display: none; }
     .body { grid-template-columns: 1fr; }
   }
 
