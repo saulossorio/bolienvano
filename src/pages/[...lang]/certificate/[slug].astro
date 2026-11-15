@@ -291,7 +291,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .foot { display: flex; align-items: center; gap: 5mm; padding-top: 4mm; border-top: 1px solid var(--line); }
   .qr { flex: none; width: 20mm; }
   .qr :global(svg) { display: block; width: 100%; height: auto; }
-  .foot p { margin: 0; font-size: var(--text-xs); line-height: 1.6; color: var(--muted); }
+  .foot p { flex: 1; min-width: 0; margin: 0; font-size: var(--text-xs); line-height: 1.6; color: var(--muted); }
   .url { color: var(--ink); overflow-wrap: anywhere; }
 
   /* Questions and answers under the sheet, on screen only. Each question opens its answer.
