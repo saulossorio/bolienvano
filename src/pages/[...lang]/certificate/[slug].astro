@@ -326,7 +326,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .answer :global(a) { color: var(--ink); }
   /* Links in an answer keep their thin line drawn, so they read as links */
   .answer :global(.line-link)::after { transform: scaleX(1); }
-  .ways { gap: var(--space-m); }
+  .answer .ways { gap: var(--space-l); }
   .ways > li { display: grid; gap: var(--space-s); }
   .verify[hidden], .entry[hidden] { display: none; }
   .verify { justify-self: start; }
