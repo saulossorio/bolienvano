@@ -129,7 +129,7 @@ The questions open and close with an animation that follows the motion tokens (`
 `--ease`) and stops for visitors who ask for less motion.
 
 To register one: `ots stamp <coa>.txt`, then a few hours later `ots upgrade <coa>.txt.ots`
-and fill in `block` and `date`.
+and fill in `block`, `date` and `time`.
 
 ## Analytics
 
