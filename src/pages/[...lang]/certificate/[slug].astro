@@ -364,7 +364,10 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
     :global(.navbar), :global(.footer), :global(.cookies), :global(.skip-link), .back, .print, .faq { display: none !important; }
     :global(body) { background: #fff; }
     .page { padding: 0; }
-    .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; padding: 16mm; box-shadow: none; }
+    :global(html), :global(body) { height: auto; margin: 0; }
+    /* 1 mm shorter than the A4 page: at exactly 297mm, rounding in some browsers pushes the sheet
+       onto a second, blank page */
+    .sheet { width: 210mm; height: 296mm; overflow: hidden; break-inside: avoid; break-after: avoid; aspect-ratio: auto; padding: 16mm; box-shadow: none; }
     .body { grid-template-columns: 1fr 1fr; }
   }
 </style>
