@@ -108,6 +108,8 @@ museum labels. Full reference: `/design-system.html` (internal page) and README,
 - **Never change or reuse a certificate number** (`coa` in `src/data/artworks.js`). New works
   get `AO-<year>-` plus 4 random characters from `ABCDEFGHJKMNPQRSTUVWXYZ23456789`, unique.
   They are random so they reveal nothing about how many works exist; never sequential.
+- **Before registering a work or a sale on Bitcoin, read `CERTIFICATES.md`** (exact record
+  formats, the owner code rules, the commands). Never invent a format.
 - **Never edit or delete the blockchain records** in `public/certificate/proof/` (`<coa>.txt`
   and `<coa>.ots`): a single changed letter makes the proof fail. If a work's details change,
   ask Don Andy before registering it again.

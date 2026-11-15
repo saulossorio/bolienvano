@@ -131,8 +131,9 @@ and the artwork data differ.
 The questions open and close with an animation that follows the motion tokens (`--slow`,
 `--ease`) and stops for visitors who ask for less motion.
 
-To register one: `ots stamp <coa>.txt`, then a few hours later `ots upgrade <coa>.txt.ots`
-and fill in `block`, `date` and `time`.
+**How every field of a record is made, the allowed formats, the commands to compute the
+fingerprints and the steps to register a work or a sale: `CERTIFICATES.md`.** It needs no assistant,
+only a terminal.
 
 ## Analytics
 
