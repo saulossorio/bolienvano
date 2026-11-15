@@ -108,8 +108,8 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
     </article>
 
     <div class="actions">
+      <button class="button print" type="button" hidden data-print>{c.print}</button>
       <a class="button outline" href={url(`gallery/${artwork.slug}`)}>{c.viewWork} <span class="arrow" aria-hidden="true">→</span></a>
-      <button class="button outline print" type="button" hidden data-print>{c.print}</button>
     </div>
 
     {proof && (
