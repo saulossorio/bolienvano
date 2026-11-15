@@ -19,6 +19,10 @@ with `README.md` ("Certificates of authenticity") and `AGENTS.md`.
 the SHA-256 of the exact bytes of the text file. One changed letter, space or line break and it
 no longer matches. A wrong record is not fixed: ask Don Andy, then register a new one.
 
+**The test sale of Cuadrito** (`AO-2019-ARE3-1`) was a simulation to try the process. Its files stay
+(never delete a record) and it is on Bitcoin, but it is not listed in `timestamps.js`, so no page shows it.
+There is no real sale yet.
+
 ## 2. The fingerprint (SHA-256)
 
 A SHA-256 fingerprint turns any text or file into 64 characters (digits 0-9 and letters a-f,
