@@ -107,7 +107,10 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
       </footer>
     </article>
 
-    <button class="button outline print" type="button" hidden data-print>{c.print}</button>
+    <div class="actions">
+      <a class="button outline" href={url(`gallery/${artwork.slug}`)}>{c.viewWork} <span class="arrow" aria-hidden="true">→</span></a>
+      <button class="button outline print" type="button" hidden data-print>{c.print}</button>
+    </div>
 
     {proof && (
       <section class="faq" aria-labelledby="faq">
@@ -247,6 +250,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
 
 <style>
   .page { display: grid; justify-items: center; gap: var(--space-m); padding-block: var(--space-l) var(--space-xl); }
+  .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-xs); }
   .print[hidden] { display: none; }
 
 
@@ -349,7 +353,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   /* Printed: only the sheet, on one A4 page, with the page margins inside it */
   @page { size: A4; margin: 0; }
   @media print {
-    :global(.navbar), :global(.footer), :global(.cookies), :global(.skip-link), .print, .faq { display: none !important; }
+    :global(.navbar), :global(.footer), :global(.cookies), :global(.skip-link), .actions, .faq { display: none !important; }
     :global(body) { background: #fff; }
     .page { padding: 0; }
     .sheet { width: 210mm; height: 297mm; aspect-ratio: auto; padding: 16mm; box-shadow: none; }

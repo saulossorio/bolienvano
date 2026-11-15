@@ -106,8 +106,9 @@ Every artwork has its certificate at `certificate/<slug>.html`
 (`src/pages/certificate/[slug].astro`), filled in from `src/data/artworks.js`: photo, title,
 year, technique, size and its number (`coa`, AO-<year>- and 4 random characters, so it reveals nothing about how many works there are; never changed). It prints
 (or saves as PDF) on one A4 page with blank lines for the owner, the date and the artist's
-handwritten signature. Its QR code leads back to the same page to check it. Not in the menu
-or the sitemap, hidden from search engines.
+handwritten signature. Its QR code leads back to the same page to check it. Under it, on screen only, a "View the work" link to the artwork's page and the print button.
+Not in the menu or the sitemap, hidden from search engines. Every certificate comes from this one
+template, so a change to it applies to all of them, present and future.
 
 **Bitcoin blockchain record (test with Cuadrito).** A certificate can be registered on the
 Bitcoin blockchain with [OpenTimestamps](https://opentimestamps.org):
