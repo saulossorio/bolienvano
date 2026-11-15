@@ -127,7 +127,7 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
                     <li>
                       <span set:html={i.steps[0]} />
                       <p class="verify" hidden data-verify-box>
-                        <button class="more check-now" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
+                        <button class="button outline check-now" type="button" data-verify data-texts={JSON.stringify(checkTexts)}>{c.verifyNow}</button>
                       </p>
                       {records.map((r) => (
                         <div class="entry" hidden data-entry data-record={r.record} data-ots={r.ots}>
@@ -328,9 +328,8 @@ const checkTexts = { locale: t.locale, verifying: c.verifying, verifiedTitle: c.
   .ways > li { display: grid; gap: var(--space-xs); }
   .verify[hidden], .entry[hidden] { display: none; }
   .verify { justify-self: start; }
-  .check-now { padding: 0; border: 0; background: none; color: var(--ink); font-family: inherit; cursor: pointer; }
-  .check-now::after { margin-left: .35em; }
-  .check-now:disabled { color: var(--muted); cursor: default; }
+  /* While it checks: the same look as a disabled .button (global.css) */
+  .check-now:disabled { cursor: default; background: transparent; color: var(--muted); border-color: var(--line); }
   .entry { display: grid; gap: var(--space-3xs); width: 100%; }
   .entry .eyebrow { margin: 0; }
   .result { transition: color var(--fast) var(--ease); }
