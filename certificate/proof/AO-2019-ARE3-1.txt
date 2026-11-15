@@ -1,0 +1,6 @@
+Certificate: AO-2019-ARE3
+Transfer: 1
+Date: 2026-11-12
+From: Andy Ossorio
+To (SHA-256 of the owner record): 06b7ad331485b9b48ff9080ea057f38d53bffd8494725492ae6db0a105b857ac
+Previous record (SHA-256): 19edbfc84abf3cf16b84a9adb90204ded0ed35f9ff86ab21a2838a36a7c5dbac
